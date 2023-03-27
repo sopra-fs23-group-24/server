@@ -7,6 +7,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Internal User Representation
@@ -27,8 +28,13 @@ public class Game implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue
     private Long gameId;
+
+
+    @Column(nullable = false, unique = true)
+    private String gamePin;
+
 
     @Column
     @OneToMany
@@ -85,6 +91,27 @@ public class Game implements Serializable {
         this.hostId = hostId;
     }
 
+    public String getGamePin() {
+        return gamePin;
+    }
+
+    public void setGamePin(String gamePin) {
+        this.gamePin = gamePin;
+    }
+
+    //-------------------
+
+    public String generateGamePin() {
+        Random random = new Random();
+
+        StringBuilder pin = new StringBuilder();
+        for(int i=0; i<6; i++) {
+            pin.append(random.nextInt(10));
+        }
+
+        //check for uniqueness...? -> is done in the repository
+        return pin.toString();
+    }
 
     //-------------------
 

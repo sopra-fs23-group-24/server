@@ -1,7 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
-import ch.uzh.ifi.hase.soprafs23.service.UserService;
+import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +15,12 @@ import java.util.List;
  * UserService and finally return the result.
  */
 @RestController
-public class UserController {
+public class PlayerController {
 
-  private final UserService userService;
+  private final PlayerService playerService;
 
-  UserController(UserService userService) {
-    this.userService = userService;
+  PlayerController(PlayerService userService) {
+    this.playerService = userService;
   }
 
   @GetMapping("/users")
