@@ -27,6 +27,9 @@ public class Player implements Serializable {
     @GeneratedValue
     private Long playerId;
 
+    @Column (nullable = false)
+    private String associatedGamePin;
+
     @Column
     private String playerName;
 
@@ -45,9 +48,17 @@ public class Player implements Serializable {
         this.playerId = id;
     }
 
-    public String getPlayerName() {
-        return playerName;
+    public String getAssociatedGamePin() {
+        return associatedGamePin;
     }
+
+    public void setAssociatedGamePin(String associatedGamePin) {
+        this.associatedGamePin = associatedGamePin;
+    }
+
+    public String getPlayerName() {
+          return playerName;
+      }
 
     public void setPlayerName(String name) {
         this.playerName = name;

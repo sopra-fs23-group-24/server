@@ -31,6 +31,9 @@ public class GameService {
     private final GameRepository gameRepository;
 
     @Autowired
+    private PlayerService playerService;
+
+    @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository) {
         this.gameRepository = gameRepository;
     }
@@ -39,6 +42,7 @@ public class GameService {
         return this.gameRepository.findAll();
     }
 
+    @Transactional
     public Game createGame() {
         Game newGame = new Game();
         newGame.setStatus(GameStatus.LOBBY);
@@ -53,7 +57,10 @@ public class GameService {
             }
         }
 
-        // TODO: create host and add to playerGroup
+
+        Player host = playerService.createUser(newGame.getGamePin());
+        newGame.setHostId(host.getPlayerId());
+        newGame.addPlayer(host);
 
         newGame = gameRepository.save(newGame);
         gameRepository.flush();

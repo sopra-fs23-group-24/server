@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.slf4j.Logger;
@@ -28,25 +29,29 @@ public class PlayerService {
   private final PlayerRepository userRepository;
 
   @Autowired
-  public PlayerService(@Qualifier("userRepository") PlayerRepository userRepository) {
+  public PlayerService(@Qualifier("playerRepository") PlayerRepository userRepository) {
     this.userRepository = userRepository;
   }
 
-  public List<Player> getUsers() {
+  public List<Player> getPlayers() {
     return this.userRepository.findAll();
   }
 
-  public Player createUser(Player newUser) {
-    newUser.setToken(UUID.randomUUID().toString());
+  public Player createUser(String aGamePin) {
+    System.out.println("started creating host");
+    Player newPlayer = new Player();
+    newPlayer.setToken(UUID.randomUUID().toString());
+    newPlayer.setAssociatedGamePin(aGamePin);
+    System.out.println("trying to set game");
     //newUser.setStatus(UserStatus.OFFLINE);
     //checkIfUserExists(newUser);
     // saves the given entity but data is only persisted in the database once
     // flush() is called
-    newUser = userRepository.save(newUser);
+    newPlayer = userRepository.save(newPlayer);
     userRepository.flush();
 
-    log.debug("Created Information for User: {}", newUser);
-    return newUser;
+    log.debug("Created Information for User: {}", newPlayer);
+    return newPlayer;
   }
 
 }
