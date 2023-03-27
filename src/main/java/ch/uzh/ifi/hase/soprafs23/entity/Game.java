@@ -1,9 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Internal User Representation
@@ -16,64 +19,85 @@ import java.io.Serializable;
  * the primary key
  */
 @Entity
-@Table(name = "USER")
+@Table(name = "GAME")
 public class Game implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+    //TODO: Find out how to get this values / change them to be e.g. length 6
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue
-  private Long id;
+    @Id
+    @GeneratedValue(generator = "uuid")
+    private Long gameId;
 
-  @Column(nullable = false)
-  private String name;
+    @Column
+    @OneToMany
+    private List<Player> playerGroup = new ArrayList<Player>();
+    //TODO: should we use players or id? - and why does id not work?
 
-  @Column(nullable = false, unique = true)
-  private String username;
+    @Column(nullable = false)
+    private GameStatus status;
 
-  @Column(nullable = false, unique = true)
-  private String token;
+    @Column
+    private int hostId;
 
-  @Column(nullable = false)
-  private UserStatus status;
+    //@Column @ManyToMany
+    //private List<Prompt> promptSet = new ArrayList<Prompt>();
 
-  public Long getId() {
-    return id;
-  }
+    //@Column @OneToMany
+    //private List<GameQuestion> quizQuestionSet = new ArrayList<GameQuestion>();
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    //@Column
+    //private QuizQuestion currentQuestion;
 
-  public String getName() {
-    return name;
-  }
+    // add getters and setters
 
-  public void setName(String name) {
-    this.name = name;
-  }
 
-  public String getUsername() {
-    return username;
-  }
+    public Long getGameId() {
+        return gameId;
+    }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
 
-  public String getToken() {
-    return token;
-  }
+    public List<Player> getPlayerGroup() {
+        return playerGroup;
+    }
 
-  public void setToken(String token) {
-    this.token = token;
-  }
+    public void setPlayerGroup(List<Player> playerGroup) {
+        this.playerGroup = playerGroup;
+    }
 
-  public UserStatus getStatus() {
-    return status;
-  }
+    public GameStatus getStatus() {
+        return status;
+    }
 
-  public void setStatus(UserStatus status) {
-    this.status = status;
-  }
+    public void setStatus(GameStatus status) {
+        this.status = status;
+    }
+
+    public int getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(int hostId) {
+        this.hostId = hostId;
+    }
+
+
+    //-------------------
+
+    public void addPlayer(Player player) {
+        playerGroup.add(player);
+    }
+
+    public void removePlayer(Player player) {
+        playerGroup.remove(player);
+    }
+
+    // public nextQuestion() {
+    // TODO: implement
+    // }
+
 }

@@ -2,7 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
-public class UserGetDTO {
+public class PlayerGetDTO {
   private Long id;
   private String name;
   private String username;

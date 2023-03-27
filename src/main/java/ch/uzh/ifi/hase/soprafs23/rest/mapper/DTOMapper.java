@@ -1,8 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -17,18 +17,22 @@ import org.mapstruct.factory.Mappers;
  * Always created one mapper for getting information (GET) and one mapper for
  * creating information (POST).
  */
+
 @Mapper
 public interface DTOMapper {
 
   DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
+
+  // TODO: change
+
   @Mapping(source = "name", target = "name")
   @Mapping(source = "username", target = "username")
-  User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
+  Player convertUserPostDTOtoEntity(UserPutDTO userPostDTO);
 
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "username", target = "username")
   @Mapping(source = "status", target = "status")
-  UserGetDTO convertEntityToUserGetDTO(User user);
+  PlayerGetDTO convertEntityToUserGetDTO(Player user);
 }
