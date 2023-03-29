@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameJoinDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -41,5 +42,18 @@ public class GameController {
         return DTOMapper.INSTANCE.convertToGameGetDTO(game);
 
     }
+
+  @PostMapping("/join")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public GameGetDTO joinGame(@RequestBody GameJoinDTO gameWithPin) {
+      Game game = DTOMapper.INSTANCE.convertToGamePin(gameWithPin);
+
+      game = gameService.joinGame(gameWithPin.getGamePin());
+
+    //convert to ...
+      return DTOMapper.INSTANCE.convertToGameGetDTO(game);
+
+  }
 
 }

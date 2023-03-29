@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameJoinDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
 import org.mapstruct.*;
@@ -40,6 +41,9 @@ public interface DTOMapper {
   @Mapping(source = "token", target = "token")
   @Mapping(source = "score", target = "score")
   PlayerGetDTO convertToPlayerGetDTO(Player player);
+
+  @Mapping(source = "gamePin", target = "gamePin")
+  Game convertToGamePin(GameJoinDTO game);
 
 /*
 

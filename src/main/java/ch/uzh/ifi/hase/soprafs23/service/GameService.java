@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -68,5 +70,25 @@ public class GameService {
         log.debug("Created Information for User: {}", newGame);
         return newGame;
     }
+
+  public Game joinGame(String pin) {
+      System.out.println(pin);
+
+      Game joinedGame = gameRepository.findByGamePin(pin);
+      System.out.println(joinedGame);
+
+      if(joinedGame == null){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+      }
+
+      Player user = playerService.createUser(joinedGame.getGamePin());
+      joinedGame.addPlayer(user);
+
+      joinedGame = gameRepository.save(joinedGame);
+      gameRepository.flush();
+
+      log.debug("Created Information for User: {}", joinedGame);
+      return joinedGame;
+  }
 
 }
