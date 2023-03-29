@@ -63,7 +63,7 @@ public class PlayerController {
   public PlayerGetDTO changeUsername(@RequestBody PlayerPutDTO changes, @PathVariable("id") long playerId){
     Player updatedPlayerInfo = DTOMapper.INSTANCE.convertFromPlayerPutDTO(changes);
 
-    Player updatedPlayer = playerService.updatePlayerUsername(updatedPlayerInfo.getPlayerName(), playerId);
+    Player updatedPlayer = playerService.changePlayerUsername(updatedPlayerInfo.getPlayerName(), playerId);
 
     return DTOMapper.INSTANCE.convertToPlayerGetDTO(updatedPlayer);
   }
