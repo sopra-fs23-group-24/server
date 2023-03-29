@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class GameService {
     }
 
     @Transactional
-    public Game createGame() {
+    public Player createGameAndReturnHost() {
         Game newGame = new Game();
         newGame.setStatus(GameStatus.LOBBY);
 
@@ -59,7 +60,6 @@ public class GameService {
             }
         }
 
-
         Player host = playerService.createUser(newGame.getGamePin());
         newGame.setHostId(host.getPlayerId());
         newGame.addPlayer(host);
@@ -67,15 +67,15 @@ public class GameService {
         newGame = gameRepository.save(newGame);
         gameRepository.flush();
 
-        log.debug("Created Information for User: {}", newGame);
-        return newGame;
+        log.debug("Created game: {}", newGame);
+        log.debug("Created host: {}", host);
+        return host;
     }
 
-  public Game joinGame(String pin) {
+  public Player joinGameAndReturnUser(String pin) {
       System.out.println(pin);
 
       Game joinedGame = gameRepository.findByGamePin(pin);
-      System.out.println(joinedGame);
 
       if(joinedGame == null){
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
@@ -87,8 +87,9 @@ public class GameService {
       joinedGame = gameRepository.save(joinedGame);
       gameRepository.flush();
 
-      log.debug("Created Information for User: {}", joinedGame);
-      return joinedGame;
+      log.debug("Added to game: {}", joinedGame);
+      log.debug("created user: {}", user);
+      return user;
   }
 
 }

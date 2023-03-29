@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameGetDTO {
-
-
     private Long gameId;
     private String gamePin;
     private List<Player> playerGroup = new ArrayList<Player>();

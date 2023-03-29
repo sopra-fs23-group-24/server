@@ -1,15 +1,18 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameJoinDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,38 +24,50 @@ import java.util.List;
  */
 @RestController
 public class GameController {
-
+    //headers: @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin
+    /*
+      System.out.println("Received PlayerId: " + playerId);
+      System.out.println("Received GamePin: " + gamePin);
+    */
     private final GameService gameService;
 
     GameController(GameService gameService) {
         this.gameService = gameService;
     }
 
-    // get all games mapping
+  @GetMapping("/allGames")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<GameGetDTO> getAllGames() {
+    List<Game> allGames = gameService.getGames();
+
+    List<GameGetDTO> gamesGetDTOs = new ArrayList<>();
+
+    for (Game game : allGames) {
+      gamesGetDTOs.add(DTOMapper.INSTANCE.convertToGameGetDTO(game));
+    }
+
+    return gamesGetDTOs;
+  }
 
 
     @PostMapping("/host")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO hostNewGame() {
-
-        Game game = gameService.createGame();
-
+    public PlayerGetDTO hostNewGame() {
+        Player newHost = gameService.createGameAndReturnHost();
         //convert to ...
-        return DTOMapper.INSTANCE.convertToGameGetDTO(game);
-
+        return DTOMapper.INSTANCE.convertToPlayerGetDTO(newHost);
     }
 
   @PostMapping("/join")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public GameGetDTO joinGame(@RequestBody GameJoinDTO gameWithPin) {
-      Game game = DTOMapper.INSTANCE.convertToGamePin(gameWithPin);
-
-      game = gameService.joinGame(gameWithPin.getGamePin());
+  public PlayerGetDTO joinGame(@RequestBody GameJoinDTO gameWithPin) {
+      Player newPlayer = gameService.joinGameAndReturnUser(gameWithPin.getGamePin());
 
     //convert to ...
-      return DTOMapper.INSTANCE.convertToGameGetDTO(game);
+      return DTOMapper.INSTANCE.convertToPlayerGetDTO(newPlayer);
 
   }
 

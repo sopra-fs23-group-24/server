@@ -2,10 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.GameJoinDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -43,7 +40,10 @@ public interface DTOMapper {
   PlayerGetDTO convertToPlayerGetDTO(Player player);
 
   @Mapping(source = "gamePin", target = "gamePin")
-  Game convertToGamePin(GameJoinDTO game);
+  Game convertFromGameJoinDTO(GameJoinDTO game);
+
+  @Mapping(source = "playerName", target = "playerName")
+  Player convertFromPlayerPutDTO(PlayerPutDTO player);
 
 /*
 
