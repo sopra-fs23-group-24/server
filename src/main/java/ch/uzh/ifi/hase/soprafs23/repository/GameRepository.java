@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface GameRepository extends JpaRepository<Game, Long> {
   Game findByGameId(Long id);
   Game findByGamePin(String pin);
+    void deleteByGamePin(String pin);
 
 }

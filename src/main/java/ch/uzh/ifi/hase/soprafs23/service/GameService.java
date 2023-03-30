@@ -45,6 +45,22 @@ public class GameService {
         return this.gameRepository.findAll();
     }
 
+    public Game getGameByPin(String pin){
+        Game gameByPin = gameRepository.findByGamePin(pin);
+        if(gameByPin == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+        }else{
+            return gameByPin;
+        }
+    }
+
+    public boolean checkIfHost(Game game, long userId){
+        if(game.getHostId() != userId){
+            return false;
+        }
+        return true;
+    }
+
     @Transactional
     public Player createGameAndReturnHost() {
         Game newGame = new Game();
@@ -72,14 +88,9 @@ public class GameService {
         return host;
     }
 
-    public Player joinGameAndReturnUser(String pin) {
-        System.out.println(pin);
+    public Player joinGameAndReturnUser(String gamePin) {
 
-        Game joinedGame = gameRepository.findByGamePin(pin);
-
-        if (joinedGame == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
-        }
+        Game joinedGame = getGameByPin(gamePin);
 
         Player user = playerService.createUser(joinedGame.getGamePin());
         joinedGame.addPlayer(user);
@@ -90,6 +101,36 @@ public class GameService {
         log.debug("Added to game: {}", joinedGame);
         log.debug("created user: {}", user);
         return user;
+    }
+
+    public Game changeGameStatus(String requestedStatus, String gamePin, long userId){
+        System.out.println(requestedStatus);
+        GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
+
+        Game gameByPin = getGameByPin(gamePin);
+        if(!checkIfHost(gameByPin, userId)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
+        }
+
+        gameByPin.setStatus(newStatus);
+        gameByPin = gameRepository.save(gameByPin); // TODO: does it need the "newGame = " part?
+        gameRepository.flush();
+
+        return gameByPin;
+    }
+
+
+    public void deleteGameByPin(String gamePin, long userId){
+        Game gameByPin = getGameByPin(gamePin);
+        if(!checkIfHost(gameByPin, userId)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
+        }
+
+        gameRepository.deleteByGamePin(gamePin);
+        playerService.deletePlayersByGamePin(gamePin);
+        //TODO: delete questions
+        //TODO: delete answers
+
     }
 
 }

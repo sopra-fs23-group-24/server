@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameJoinDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -71,4 +72,29 @@ public class GameController {
 
     }
 
+    @GetMapping("/games")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO getGameStatus (@RequestHeader("gamePin") String gamePin){
+        Game currentGame = gameService.getGameByPin(gamePin);
+        return DTOMapper.INSTANCE.convertToGameGetDTO(currentGame);
+    }
+
+    @PutMapping("/games")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO updateGameStatus (@RequestBody String newStatus, @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin){
+        //TODO: properly unpack status String or find better option
+        Game updatedGame = gameService.changeGameStatus(newStatus, gamePin, playerId);
+        return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
+    }
+
+    @DeleteMapping("/games")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String deleteGame (@RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin){
+        gameService.deleteGameByPin(gamePin, playerId);
+
+        return "Deleted player successfully";
+    }
 }

@@ -45,6 +45,9 @@ public interface DTOMapper {
   @Mapping(source = "playerName", target = "playerName")
   Player convertFromPlayerPutDTO(PlayerPutDTO player);
 
+  @Mapping(source = "status", target = "status")
+  Game convertFromGamePutDTO(GamePutDTO game);
+
 /*
 
   @Mapping(source = "name", target = "name")

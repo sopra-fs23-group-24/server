@@ -4,7 +4,9 @@ import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
+import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,9 @@ public class PlayerController {
       System.out.println("Received GamePin: " + gamePin);
     */
     private final PlayerService playerService;
+
+    @Autowired
+    private GameService gameService;
 
     PlayerController(PlayerService playerService) {
         this.playerService = playerService;
@@ -60,10 +65,10 @@ public class PlayerController {
     @PutMapping("/players/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public PlayerGetDTO changeUsername(@RequestBody PlayerPutDTO changes, @PathVariable("id") long playerId) {
+    public PlayerGetDTO changeUsername(@RequestBody PlayerPutDTO changes, @PathVariable("id") long playerToBeChangedId, @RequestHeader("playerId") long playerId) {
         Player updatedPlayerInfo = DTOMapper.INSTANCE.convertFromPlayerPutDTO(changes);
 
-        Player updatedPlayer = playerService.changePlayerUsername(updatedPlayerInfo.getPlayerName(), playerId);
+        Player updatedPlayer = playerService.changePlayerUsername(updatedPlayerInfo.getPlayerName(), playerToBeChangedId, playerId);
 
         return DTOMapper.INSTANCE.convertToPlayerGetDTO(updatedPlayer);
     }
@@ -75,13 +80,10 @@ public class PlayerController {
     @ResponseBody
     // TODO: do we need the PlayerPutDTO here, or would the id be enough?
     // TODO: maybe change to @RequestHeader
-    public String deletePlayer(@RequestBody PlayerPutDTO playerPutDTO, @PathVariable ("id") long playerId) {
+    public String deletePlayer(@RequestBody PlayerPutDTO playerPutDTO, @PathVariable ("id") long playerToBeDeletedId, @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin) {
         Player playerToDelete = DTOMapper.INSTANCE.convertFromPlayerPutDTO(playerPutDTO); // is not needed at the moment...
 
-        playerService.deletePlayer(playerId);
-
-        // TODO: do we need more error checking
-        //  (the check for if id exists is done in the getById method in PlayerService.)
+        playerService.deletePlayer(playerToBeDeletedId, playerId, gamePin);
 
         // TODO: maybe change the return type
         return "Deleted player successfully";

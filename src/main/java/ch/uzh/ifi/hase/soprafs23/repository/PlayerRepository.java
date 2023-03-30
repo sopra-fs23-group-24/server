@@ -10,4 +10,5 @@ import java.util.List;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
   Player findByPlayerId(Long id);
   List<Player> findAllByAssociatedGamePin(String pin);
+  void deleteAllByAssociatedGamePin(String pin);
 }
