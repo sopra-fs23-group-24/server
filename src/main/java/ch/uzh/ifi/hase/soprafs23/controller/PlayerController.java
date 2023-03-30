@@ -25,47 +25,66 @@ public class PlayerController {
       System.out.println("Received PlayerId: " + playerId);
       System.out.println("Received GamePin: " + gamePin);
     */
-  private final PlayerService playerService;
+    private final PlayerService playerService;
 
-  PlayerController(PlayerService playerService) {
-    this.playerService = playerService;
-  }
-
-  @GetMapping("/allPlayers")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public List<PlayerGetDTO> getAllUsers() {
-      List<Player> players = playerService.getPlayers();
-      List<PlayerGetDTO> playerGetDTOs = new ArrayList<>();
-
-      for (Player player : players) {
-          playerGetDTOs.add(DTOMapper.INSTANCE.convertToPlayerGetDTO(player));
-      }
-      return playerGetDTOs;
-  }
-
-  @GetMapping("/players")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public List<PlayerGetDTO> getAllUsersOfGame(@RequestHeader("gamePin") String gamePin) {
-    List<Player> players = playerService.getPlayersWithPin(gamePin);
-    List<PlayerGetDTO> playerGetDTOs = new ArrayList<>();
-
-    for (Player player : players) {
-      playerGetDTOs.add(DTOMapper.INSTANCE.convertToPlayerGetDTO(player));
+    PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
     }
-    return playerGetDTOs;
-  }
 
-  @PutMapping("/players/{id}")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public PlayerGetDTO changeUsername(@RequestBody PlayerPutDTO changes, @PathVariable("id") long playerId){
-    Player updatedPlayerInfo = DTOMapper.INSTANCE.convertFromPlayerPutDTO(changes);
+    @GetMapping("/allPlayers")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<PlayerGetDTO> getAllUsers() { // TODO: rename to getAllPlayers?
+        List<Player> players = playerService.getPlayers();
+        List<PlayerGetDTO> playerGetDTOs = new ArrayList<>();
 
-    Player updatedPlayer = playerService.changePlayerUsername(updatedPlayerInfo.getPlayerName(), playerId);
+        for (Player player : players) {
+            playerGetDTOs.add(DTOMapper.INSTANCE.convertToPlayerGetDTO(player));
+        }
+        return playerGetDTOs;
+    }
 
-    return DTOMapper.INSTANCE.convertToPlayerGetDTO(updatedPlayer);
-  }
+    @GetMapping("/players")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<PlayerGetDTO> getAllUsersOfGame(@RequestHeader("gamePin") String gamePin) {
+        List<Player> players = playerService.getPlayersWithPin(gamePin);
+        List<PlayerGetDTO> playerGetDTOs = new ArrayList<>();
+
+        for (Player player : players) {
+            playerGetDTOs.add(DTOMapper.INSTANCE.convertToPlayerGetDTO(player));
+        }
+        return playerGetDTOs;
+    }
+
+    @PutMapping("/players/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public PlayerGetDTO changeUsername(@RequestBody PlayerPutDTO changes, @PathVariable("id") long playerId) {
+        Player updatedPlayerInfo = DTOMapper.INSTANCE.convertFromPlayerPutDTO(changes);
+
+        Player updatedPlayer = playerService.changePlayerUsername(updatedPlayerInfo.getPlayerName(), playerId);
+
+        return DTOMapper.INSTANCE.convertToPlayerGetDTO(updatedPlayer);
+    }
+
+
+    // TODO: check if this works
+    @DeleteMapping("/players/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    // TODO: do we need the PlayerPutDTO here, or would the id be enough?
+    // TODO: maybe change to @RequestHeader
+    public String deletePlayer(@RequestBody PlayerPutDTO playerPutDTO, @PathVariable ("id") long playerId) {
+        Player playerToDelete = DTOMapper.INSTANCE.convertFromPlayerPutDTO(playerPutDTO); // is not needed at the moment...
+
+        playerService.deletePlayer(playerId);
+
+        // TODO: do we need more error checking
+        //  (the check for if id exists is done in the getById method in PlayerService.)
+
+        // TODO: maybe change the return type
+        return "Deleted player successfully";
+    }
 
 }

@@ -35,20 +35,20 @@ public class GameController {
         this.gameService = gameService;
     }
 
-  @GetMapping("/allGames")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public List<GameGetDTO> getAllGames() {
-    List<Game> allGames = gameService.getGames();
+    @GetMapping("/allGames")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<GameGetDTO> getAllGames() {
+        List<Game> allGames = gameService.getGames();
 
-    List<GameGetDTO> gamesGetDTOs = new ArrayList<>();
+        List<GameGetDTO> gamesGetDTOs = new ArrayList<>();
 
-    for (Game game : allGames) {
-      gamesGetDTOs.add(DTOMapper.INSTANCE.convertToGameGetDTO(game));
+        for (Game game : allGames) {
+            gamesGetDTOs.add(DTOMapper.INSTANCE.convertToGameGetDTO(game));
+        }
+
+        return gamesGetDTOs;
     }
-
-    return gamesGetDTOs;
-  }
 
 
     @PostMapping("/host")
@@ -60,15 +60,15 @@ public class GameController {
         return DTOMapper.INSTANCE.convertToPlayerGetDTO(newHost);
     }
 
-  @PostMapping("/join")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public PlayerGetDTO joinGame(@RequestBody GameJoinDTO gameWithPin) {
-      Player newPlayer = gameService.joinGameAndReturnUser(gameWithPin.getGamePin());
+    @PostMapping("/join")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public PlayerGetDTO joinGame(@RequestBody GameJoinDTO gameWithPin) {
+        Player newPlayer = gameService.joinGameAndReturnUser(gameWithPin.getGamePin());
 
-    //convert to ...
-      return DTOMapper.INSTANCE.convertToPlayerGetDTO(newPlayer);
+        //convert to ...
+        return DTOMapper.INSTANCE.convertToPlayerGetDTO(newPlayer);
 
-  }
+    }
 
 }

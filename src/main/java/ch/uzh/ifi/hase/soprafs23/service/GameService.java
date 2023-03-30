@@ -54,7 +54,7 @@ public class GameService {
         boolean noPin = true;
         while (noPin) {
             String pin = newGame.generateGamePin();
-            if(gameRepository.findByGamePin(pin) == null) {
+            if (gameRepository.findByGamePin(pin) == null) {
                 newGame.setGamePin(pin);
                 noPin = false;
             }
@@ -64,7 +64,7 @@ public class GameService {
         newGame.setHostId(host.getPlayerId());
         newGame.addPlayer(host);
 
-        newGame = gameRepository.save(newGame);
+        newGame = gameRepository.save(newGame); // TODO: does it need the "newGame = " part?
         gameRepository.flush();
 
         log.debug("Created game: {}", newGame);
@@ -72,24 +72,24 @@ public class GameService {
         return host;
     }
 
-  public Player joinGameAndReturnUser(String pin) {
-      System.out.println(pin);
+    public Player joinGameAndReturnUser(String pin) {
+        System.out.println(pin);
 
-      Game joinedGame = gameRepository.findByGamePin(pin);
+        Game joinedGame = gameRepository.findByGamePin(pin);
 
-      if(joinedGame == null){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
-      }
+        if (joinedGame == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+        }
 
-      Player user = playerService.createUser(joinedGame.getGamePin());
-      joinedGame.addPlayer(user);
+        Player user = playerService.createUser(joinedGame.getGamePin());
+        joinedGame.addPlayer(user);
 
-      joinedGame = gameRepository.save(joinedGame);
-      gameRepository.flush();
+        joinedGame = gameRepository.save(joinedGame); // TODO: does it need the "newGame = " part?
+        gameRepository.flush();
 
-      log.debug("Added to game: {}", joinedGame);
-      log.debug("created user: {}", user);
-      return user;
-  }
+        log.debug("Added to game: {}", joinedGame);
+        log.debug("created user: {}", user);
+        return user;
+    }
 
 }
