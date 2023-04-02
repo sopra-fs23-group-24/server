@@ -1,0 +1,47 @@
+## This is the log of Group 24 - "Who said that?" 
+
+### Info: 
+Each entry should consist of:
+- the (week-) date,
+- your name,
+- links to the GitHub Issues you worked on,
+- and optionally a short description of your work.
+
+---
+
+### Week 1 (27. - 31. march)
+
+- Tim:
+	- work on: 
+		- https://github.com/sopra-fs23-group-24/server/issues/34
+		- https://github.com/sopra-fs23-group-24/server/issues/38
+	- description:
+		- creating the user entity and a delete method
+
+- Lara: 
+	- work on: 
+	- description:
+
+- Jan:
+	- work on: 
+	- description:
+
+- Mike
+	- work on: 
+	- description:
+
+- Linda: 
+	- work on: 
+	- description:
+
+---
+Week 2 (3. - 7. april)
+
+---
+*Vacation Week 3 (10. - 14. april)*
+
+---
+Week 4 (17. -21. april)
+
+---
+Week 5 (24. - 28. april)
