@@ -28,7 +28,12 @@ Each entry should consist of:
 
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/2
+	    - https://github.com/sopra-fs23-group-24/client/issues/6
 	- description:
+	    - Join Game and Enter Code
+	    - Click on button to start host
+	    - 
 
 - Mike
 	- work on: 
