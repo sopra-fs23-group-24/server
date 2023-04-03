@@ -20,8 +20,11 @@ Each entry should consist of:
 
 - Lara: 
 	- work on: 
-	-   
+	    - https://github.com/sopra-fs23-group-24/client/issues/9 (unfinished)
+	    - https://github.com/sopra-fs23-group-24/client/issues/3      
 	- description:
+	    - display users in lobby
+	    - button to leave lobby
 
 - Jan:
 	- work on: 
