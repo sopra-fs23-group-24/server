@@ -20,6 +20,7 @@ Each entry should consist of:
 
 - Lara: 
 	- work on: 
+	-   
 	- description:
 
 - Jan:
@@ -32,7 +33,18 @@ Each entry should consist of:
 
 - Linda: 
 	- work on: 
+        -  https://github.com/sopra-fs23-group-24/server/issues/41
+        -  https://github.com/sopra-fs23-group-24/server/issues/42
+        -  https://github.com/sopra-fs23-group-24/server/issues/44
+        -  https://github.com/sopra-fs23-group-24/server/issues/45
+        -  https://github.com/sopra-fs23-group-24/server/issues/46
 	- description:
+        -   host game
+        -   join game
+        -   update username
+        -   delete game
+        -   update game status
+        -   retrieve user and game information
 
 ---
 Week 2 (3. - 7. april)
