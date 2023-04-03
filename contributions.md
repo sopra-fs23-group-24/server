@@ -39,6 +39,7 @@ Each entry should consist of:
         -  https://github.com/sopra-fs23-group-24/server/issues/45
         -  https://github.com/sopra-fs23-group-24/server/issues/46
 	- description:
+	    -   (no tests yet)
         -   host game
         -   join game
         -   update username
