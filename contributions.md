@@ -37,8 +37,8 @@ Each entry should consist of:
 
 - Mike
 	- work on:
-	    - https://github.com/sopra-fs23-group-24/server/issues/28
-	    - https://github.com/sopra-fs23-group-24/server/issues/45
+	    - https://github.com/sopra-fs23-group-24/client/issues/1
+	    - https://github.com/sopra-fs23-group-24/client/issues/5
 
 	- description:
 	    - Enter User Name
