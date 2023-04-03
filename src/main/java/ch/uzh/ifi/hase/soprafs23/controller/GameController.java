@@ -12,8 +12,10 @@ import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatConversionException;
 import java.util.List;
 
 /**
@@ -83,10 +85,16 @@ public class GameController {
     @PutMapping("/games")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO updateGameStatus (@RequestBody String newStatus, @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin){
-        //TODO: properly unpack status String or find better option
-        Game updatedGame = gameService.changeGameStatus(newStatus, gamePin, playerId);
-        return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
+    public GameGetDTO updateGameStatus (@RequestBody GamePutDTO newStatus, @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin){
+        //TODO: error catching doesn't work yet
+        try{
+            Game newStatusGame = DTOMapper.INSTANCE.convertFromGamePutDTO(newStatus);
+            Game updatedGame = gameService.changeGameStatus(newStatusGame.getStatus(), gamePin, playerId);
+            return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
+        }catch(Exception e){
+            System.out.println("error caught");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Requested status does not match any known case.");
+        }
     }
 
     @DeleteMapping("/games")
@@ -95,6 +103,6 @@ public class GameController {
     public String deleteGame (@RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin){
         gameService.deleteGameByPin(gamePin, playerId);
 
-        return "Deleted player successfully";
+        return "Deleted game successfully";
     }
 }

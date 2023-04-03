@@ -103,16 +103,16 @@ public class GameService {
         return user;
     }
 
-    public Game changeGameStatus(String requestedStatus, String gamePin, long userId){
+    public Game changeGameStatus(GameStatus requestedStatus, String gamePin, long userId){
         System.out.println(requestedStatus);
-        GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
+        //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
 
         Game gameByPin = getGameByPin(gamePin);
         if(!checkIfHost(gameByPin, userId)){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
-        gameByPin.setStatus(newStatus);
+        gameByPin.setStatus(requestedStatus);
         gameByPin = gameRepository.save(gameByPin); // TODO: does it need the "newGame = " part?
         gameRepository.flush();
 
