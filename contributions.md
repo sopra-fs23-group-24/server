@@ -36,8 +36,14 @@ Each entry should consist of:
 	    - 
 
 - Mike
-	- work on: 
+	- work on:
+	    - https://github.com/sopra-fs23-group-24/server/issues/28
+	    - https://github.com/sopra-fs23-group-24/server/issues/45
+
 	- description:
+	    - Enter User Name
+	    - Redirection to lobby view
+
 
 - Linda: 
 	- work on: 
