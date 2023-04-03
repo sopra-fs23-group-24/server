@@ -80,8 +80,8 @@ public class PlayerController {
     @ResponseBody
     // TODO: do we need the PlayerPutDTO here, or would the id be enough?
     // TODO: maybe change to @RequestHeader
-    public String deletePlayer(@RequestBody PlayerPutDTO playerPutDTO, @PathVariable ("id") long playerToBeDeletedId, @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin) {
-        Player playerToDelete = DTOMapper.INSTANCE.convertFromPlayerPutDTO(playerPutDTO); // is not needed at the moment...
+    public String deletePlayer(@PathVariable ("id") long playerToBeDeletedId, @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin) {
+        //Player playerToDelete = DTOMapper.INSTANCE.convertFromPlayerPutDTO(playerPutDTO); // is not needed at the moment...
 
         playerService.deletePlayer(playerToBeDeletedId, playerId, gamePin);
 
