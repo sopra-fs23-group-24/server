@@ -50,7 +50,7 @@ public class GameControllerTest {
 
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
                 .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
     }
@@ -159,6 +159,43 @@ public class GameControllerTest {
 
         // then
         mockMvc.perform(getRequest)
+                .andExpect(status().isUnauthorized());
+    }
+    @Test
+    public void deleteGame_success() throws Exception {
+        // given
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.LOBBY);
+
+        given(gameService.deleteGameByPin(Mockito.anyString(), Mockito.anyString())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder deleteRequest = delete("/games/123456")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("playerToken", "1");
+
+        // then
+        mockMvc.perform(deleteRequest)
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    public void deleteGame_notByHost() throws Exception {
+        // given
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.SELECTION);
+
+        given(gameService.deleteGameByPin(Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        // when
+        MockHttpServletRequestBuilder deleteRequest = delete("/games/123456")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("playerToken", "1");
+
+        // then
+        mockMvc.perform(deleteRequest)
                 .andExpect(status().isUnauthorized());
     }
 

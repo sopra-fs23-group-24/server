@@ -39,7 +39,7 @@ public class GameController {
     }
 
     @PostMapping("/games")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public GameGetDTO createNewGame() {
         Game newGame = gameService.createGame();
@@ -82,7 +82,7 @@ public class GameController {
     }
 
     @DeleteMapping("/games/{pin}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public String deleteGame (@RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin){
         gameService.deleteGameByPin(gamePin, loggedInToken);

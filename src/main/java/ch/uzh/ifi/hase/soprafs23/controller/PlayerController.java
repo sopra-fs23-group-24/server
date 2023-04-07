@@ -37,7 +37,7 @@ public class PlayerController {
     }
 
     @PostMapping("/games/{pin}/players")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public PlayerGetDTO newPlayerInGame(@RequestBody PlayerPostDTO newPlayerDTO, @PathVariable ("pin") String gamePin, HttpServletResponse response) {
         Player newPlayer = DTOMapper.INSTANCE.convertFromPlayerPostDTO(newPlayerDTO);
@@ -94,7 +94,7 @@ public class PlayerController {
 
     // TODO: check if this works
     @DeleteMapping("/games/{pin}/players/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     // TODO: do we need the PlayerPutDTO here, or would the id be enough?
     // TODO: maybe change to @RequestHeader

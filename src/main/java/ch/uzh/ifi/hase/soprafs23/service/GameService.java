@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,7 +116,7 @@ public class GameService {
     }
 
 
-    public void deleteGameByPin(String gamePin, String loggedInToken){
+    public Game deleteGameByPin(String gamePin, String loggedInToken){
         Game gameByPin = getGameByPin(gamePin);
         Player loggedInPlayer = playerService.getByToken(loggedInToken);
 
@@ -128,6 +129,7 @@ public class GameService {
         //TODO: delete questions
         //TODO: delete answers
 
+        return gameByPin;
     }
 
 

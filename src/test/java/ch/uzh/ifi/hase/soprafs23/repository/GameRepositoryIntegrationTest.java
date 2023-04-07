@@ -44,7 +44,7 @@ public class GameRepositoryIntegrationTest {
         assertEquals(new ArrayList<Player>(), found.getPlayerGroup());
     }
 
-    /*@Test
+    @Test
     public void deleteByGamePin_success() {
         // given
         Game game = new Game();
@@ -64,6 +64,6 @@ public class GameRepositoryIntegrationTest {
         gameRepository.deleteByGamePin(game.getGamePin());
 
         assertNull(gameRepository.findByGamePin(game.getGamePin()));
-    }*/
+    }
 
 }

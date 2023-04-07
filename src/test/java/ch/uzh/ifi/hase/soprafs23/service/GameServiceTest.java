@@ -28,8 +28,7 @@ public class GameServiceTest {
     private GameRepository gameRepository;
 
     @Mock
-    @Autowired
-    private PlayerService playerService;
+    private PlayerRepository playerRepository;
 
     @InjectMocks
     private GameService gameService;
@@ -82,18 +81,28 @@ public class GameServiceTest {
         assertThrows(ResponseStatusException.class, () -> gameService.getGameByPin("invalidPin"));
     }
 
-    //TODO: figure out how to do this
+    //TODO: figure out how to do this, fails because cannot connect to playerService/playerRepository properly
     /*@Test
     public void changeGameStatus_success(){
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
 
-        Mockito.when(playerService.getByToken(Mockito.anyString())).thenReturn(testHost);
+        Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(testHost);
 
         Game updatedGame = gameService.changeGameStatus(GameStatus.SELECTION, testGame.getGamePin(), testHost.getToken());
 
         assertEquals(GameStatus.SELECTION, updatedGame.getStatus());
+    }
+
+    @Test
+    public void deleteGameByPin_success(){
+
+    }
+
+    @Test
+    public void deleteGameByPin_notHost(){
+
     }*/
 }
 
