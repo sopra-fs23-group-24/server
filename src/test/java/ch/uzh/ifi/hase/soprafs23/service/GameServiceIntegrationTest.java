@@ -58,5 +58,6 @@ public class GameServiceIntegrationTest {
         assertNotNull(gameRepository.findByGamePin(createdGame.getGamePin()));
     }
 
+    //TODO: figure out if we can/need to also test getters and updateGameStatus
 
 }

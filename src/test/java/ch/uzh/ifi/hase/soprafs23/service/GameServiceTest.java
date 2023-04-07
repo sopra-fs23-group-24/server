@@ -11,12 +11,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 public class GameServiceTest {
     private Game testGame;
@@ -24,9 +27,13 @@ public class GameServiceTest {
     @Mock
     private GameRepository gameRepository;
 
+    @Mock
+    @Autowired
+    private PlayerService playerService;
 
     @InjectMocks
     private GameService gameService;
+
 
 
     @BeforeEach
@@ -40,7 +47,6 @@ public class GameServiceTest {
 
         Mockito.when(gameRepository.save(Mockito.any())).thenReturn(testGame);
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
-        Mockito.when(gameRepository.findByGamePin("invalidPin")).thenReturn(null);
         Mockito.when(gameRepository.findAll()).thenReturn(List.of(testGame));
     }
 
@@ -59,7 +65,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void findGameByPin_success(){
+    public void getGameByPin_success(){
         Game foundGame = gameService.getGameByPin(testGame.getGamePin());
 
         assertEquals(testGame.getGameId(), foundGame.getGameId());
@@ -70,9 +76,25 @@ public class GameServiceTest {
     }
 
     @Test
-    public void findGameByPin_failure(){
+    public void getGameByPin_failure(){
+        Mockito.when(gameRepository.findByGamePin("invalidPin")).thenReturn(null);
+
         assertThrows(ResponseStatusException.class, () -> gameService.getGameByPin("invalidPin"));
     }
+
+    //TODO: figure out how to do this
+    /*@Test
+    public void changeGameStatus_success(){
+        Player testHost = new Player();
+        testHost.setPlayerId(testGame.getHostId());
+        testHost.setToken("1");
+
+        Mockito.when(playerService.getByToken(Mockito.anyString())).thenReturn(testHost);
+
+        Game updatedGame = gameService.changeGameStatus(GameStatus.SELECTION, testGame.getGamePin(), testHost.getToken());
+
+        assertEquals(GameStatus.SELECTION, updatedGame.getStatus());
+    }*/
 }
 
 

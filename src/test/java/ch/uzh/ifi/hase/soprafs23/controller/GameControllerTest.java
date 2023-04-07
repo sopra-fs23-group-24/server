@@ -46,10 +46,10 @@ public class GameControllerTest {
         given(gameService.createGame()).willReturn(game);
 
         // when
-        MockHttpServletRequestBuilder getRequest = post("/games").contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletRequestBuilder postRequest = post("/games").contentType(MediaType.APPLICATION_JSON);
 
         // then
-        mockMvc.perform(getRequest)
+        mockMvc.perform(postRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
                 .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
@@ -114,7 +114,7 @@ public class GameControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    /*@Test
+    @Test
     public void updateGameStatus_returnsGame() throws Exception {
         // given
         Game game = new Game();
@@ -137,7 +137,30 @@ public class GameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
                 .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
-    }*/
+    }
+
+    @Test
+    public void updateGameStatus_notByHost() throws Exception {
+        // given
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.SELECTION);
+
+        GamePutDTO gamePutDTO = new GamePutDTO();
+        gamePutDTO.setStatus(GameStatus.SELECTION);
+
+        given(gameService.changeGameStatus(Mockito.any(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        // when
+        MockHttpServletRequestBuilder getRequest = put("/games/123456")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(gamePutDTO))
+                .header("playerToken", "1");
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isUnauthorized());
+    }
 
 
     private String asJsonString(final Object object) {

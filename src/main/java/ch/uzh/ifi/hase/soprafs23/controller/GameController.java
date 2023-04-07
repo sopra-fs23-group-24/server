@@ -76,14 +76,9 @@ public class GameController {
     @ResponseBody
     public GameGetDTO updateGameStatus (@RequestBody GamePutDTO newStatus, @RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin){
         //TODO: error catching doesn't work yet
-        try{
-            Game newStatusGame = DTOMapper.INSTANCE.convertFromGamePutDTO(newStatus);
-            Game updatedGame = gameService.changeGameStatus(newStatusGame.getStatus(), gamePin, loggedInToken);
-            return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
-        }catch(Throwable e){
-            System.out.println("error caught");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Requested status does not match any known case.");
-        }
+        Game newStatusGame = DTOMapper.INSTANCE.convertFromGamePutDTO(newStatus);
+        Game updatedGame = gameService.changeGameStatus(newStatusGame.getStatus(), gamePin, loggedInToken);
+        return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
     }
 
     @DeleteMapping("/games/{pin}")
