@@ -27,17 +27,13 @@ public interface DTOMapper {
   @Mapping(source = "gameId", target = "gameId")
   @Mapping(source = "gamePin", target = "gamePin")
   @Mapping(source = "status", target = "status")
-  @Mapping(source = "hostId", target = "hostId")
-  @Mapping(source = "playerGroup", target = "playerGroup")
   GameGetDTO convertToGameGetDTO(Game game);
   @Mapping(source = "status", target = "status")
   Game convertFromGamePutDTO(GamePutDTO game);
 
 
   @Mapping(source = "playerId", target = "playerId")
-  @Mapping(source = "associatedGamePin", target = "associatedGamePin")
   @Mapping(source = "playerName", target = "playerName")
-  @Mapping(source = "token", target = "token")
   @Mapping(source = "score", target = "score")
   PlayerGetDTO convertToPlayerGetDTO(Player player);
 

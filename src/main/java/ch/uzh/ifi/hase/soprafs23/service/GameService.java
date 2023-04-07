@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -42,6 +43,7 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
+
     public List<Game> getGames() {
         return this.gameRepository.findAll();
     }
@@ -55,26 +57,12 @@ public class GameService {
         }
     }
 
-    public boolean checkIfHost(Game game, long userId){
-        if(game.getHostId() != userId){
-            return false;
-        }
-        return true;
-    }
-
     public Game createGame() {
         Game newGame = new Game();
         newGame.setStatus(GameStatus.LOBBY);
 
-        // generate and check pin
-        boolean noPin = true;
-        while (noPin) {
-            String pin = newGame.generateGamePin();
-            if (gameRepository.findByGamePin(pin) == null) {
-                newGame.setGamePin(pin);
-                noPin = false;
-            }
-        }
+        String pin = generateUniqueGamePin();
+        newGame.setGamePin(pin);
 
         newGame = gameRepository.save(newGame);
         gameRepository.flush();
@@ -140,6 +128,34 @@ public class GameService {
         //TODO: delete questions
         //TODO: delete answers
 
+    }
+
+
+    /**
+     * Helper functions
+     */
+
+    public boolean checkIfHost(Game game, long userId){
+        if(game.getHostId() != userId){
+            return false;
+        }
+        return true;
+    }
+
+    private String generateUniqueGamePin(){
+        Random random = new Random();
+
+        StringBuilder pin = new StringBuilder();
+        for(int i=0; i<6; i++) {
+            pin.append(random.nextInt(10));
+        }
+        String pinString = pin.toString();
+
+        if (gameRepository.findByGamePin(pinString) == null) {
+            return pinString;
+        }else{
+            return generateUniqueGamePin();
+        }
     }
 
 }

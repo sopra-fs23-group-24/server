@@ -42,7 +42,7 @@ public class Game implements Serializable {
     //TODO: should we use players or id? - and why does id not work?
 
     @Column(nullable = false)
-    private GameStatus status;
+    private GameStatus status = GameStatus.LOBBY;
 
     @Column
     private Long hostId;
@@ -99,21 +99,6 @@ public class Game implements Serializable {
         this.gamePin = gamePin;
     }
 
-    //-------------------
-
-    public String generateGamePin() {
-        Random random = new Random();
-
-        StringBuilder pin = new StringBuilder();
-        for(int i=0; i<6; i++) {
-            pin.append(random.nextInt(10));
-        }
-
-        //check for uniqueness...? -> is done in the repository
-        return pin.toString();
-    }
-
-    //-------------------
 
     public void addPlayer(Player player) {
         playerGroup.add(player);

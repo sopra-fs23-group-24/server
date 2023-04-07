@@ -51,22 +51,6 @@ public class PlayerService {
         return players;
     }
 
-    // TODO: use this method when a getById call is needed - instead of using individual calls - if possible.
-    public Player getById(long id) {
-        Optional<Player> player = playerRepository.findById(id);
-        if (player.isPresent()) {
-            return player.get();
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this id found.");
-    }
-
-    public Player getByToken(String token) {
-        Player player = playerRepository.findByToken(token);
-        if (player == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
-        }
-        return player;
-    }
 
     public Player createPlayerAndAddToGame(Player newPlayer) {
 
@@ -127,5 +111,26 @@ public class PlayerService {
     public void deletePlayersByGamePin(String gamePin){
         playerRepository.deleteAllByAssociatedGamePin(gamePin);
         playerRepository.flush();
+    }
+
+    /**
+     * Helper functions
+     */
+
+    // TODO: use this method when a getById call is needed - instead of using individual calls - if possible.
+    public Player getById(long id) {
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isPresent()) {
+            return player.get();
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this id found.");
+    }
+
+    public Player getByToken(String token) {
+        Player player = playerRepository.findByToken(token);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
+        }
+        return player;
     }
 }

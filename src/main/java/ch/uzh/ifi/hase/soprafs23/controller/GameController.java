@@ -62,10 +62,11 @@ public class GameController {
         return gamesGetDTOs;
     }
 
+
     @GetMapping("/games/{pin}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO getGameStatus (@PathVariable ("pin") String gamePin){
+    public GameGetDTO getGameByPin (@PathVariable ("pin") String gamePin){
         Game currentGame = gameService.getGameByPin(gamePin);
         return DTOMapper.INSTANCE.convertToGameGetDTO(currentGame);
     }

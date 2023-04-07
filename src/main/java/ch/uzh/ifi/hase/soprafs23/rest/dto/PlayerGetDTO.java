@@ -5,11 +5,7 @@ public class PlayerGetDTO {
 
     private String playerName;
 
-    private String token;
-
     private int score = 0;
-
-    private Long associatedGamePin;
 
     public Long getPlayerId() {
       return playerId;
@@ -27,14 +23,6 @@ public class PlayerGetDTO {
       this.playerName = playerName;
     }
 
-    public String getToken() {
-      return token;
-    }
-
-    public void setToken(String token) {
-      this.token = token;
-    }
-
     public int getScore() {
       return score;
     }
@@ -43,11 +31,4 @@ public class PlayerGetDTO {
       this.score = score;
     }
 
-  public Long getAssociatedGamePin() {
-    return associatedGamePin;
-  }
-
-  public void setAssociatedGamePin(Long associatedGamePin) {
-    this.associatedGamePin = associatedGamePin;
-  }
 }

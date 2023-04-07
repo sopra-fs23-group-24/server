@@ -1,5 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +34,120 @@ public class GameControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private GameService userService;
+    private GameService gameService;
+
+    @Test
+    public void createNewGame_returnsGame() throws Exception {
+        // given
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.LOBBY);
+
+        given(gameService.createGame()).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = post("/games").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
+                .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
+    }
+
+    @Test
+    public void getGames_returnsAllGames() throws Exception {
+        // given
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.LOBBY);
+
+
+        List<Game> allGames = Collections.singletonList(game);
+
+        given(gameService.getGames()).willReturn(allGames);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/games").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].gamePin", is(game.getGamePin())))
+                .andExpect(jsonPath("$[0].status", is(game.getStatus().toString())));
+    }
+
+    @Test
+    public void getGameByPin_returnsGame() throws Exception {
+        // given
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.LOBBY);
+
+        given(gameService.getGameByPin(Mockito.anyString())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/games/123456").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
+                .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
+    }
+
+    @Test
+    public void getGameByPin_invalidPin_throwsNotFound() throws Exception {
+        // given
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.LOBBY);
+
+        given(gameService.getGameByPin(Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/games/654321").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    /*@Test
+    public void updateGameStatus_returnsGame() throws Exception {
+        // given
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.SELECTION);
+
+        GamePutDTO gamePutDTO = new GamePutDTO();
+        gamePutDTO.setStatus(GameStatus.SELECTION);
+
+        given(gameService.changeGameStatus(Mockito.any(), Mockito.anyString(), Mockito.anyString())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = put("/games/123456")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(gamePutDTO))
+                .header("playerToken", "1");
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
+                .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
+    }*/
+
+
+    private String asJsonString(final Object object) {
+        try {
+            return new ObjectMapper().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    String.format("The request body could not be created.%s", e.toString()));
+        }
+    }
+
 
 }
