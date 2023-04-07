@@ -82,6 +82,7 @@ public class GameServiceTest {
     }
 
     //TODO: figure out how to do this, fails because cannot connect to playerService/playerRepository properly
+
     /*@Test
     public void changeGameStatus_success(){
         Player testHost = new Player();

@@ -2,8 +2,8 @@ package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,4 +38,36 @@ public class DTOMapperTest {
         Game game = DTOMapper.INSTANCE.convertFromGamePutDTO(gamePutDTO);
         assertEquals(gamePutDTO.getStatus(), game.getStatus());
     }
+
+    @Test
+    public void convertFromPlayerPostDTO_toPlayer_success(){
+        PlayerPostDTO playerPostDTO = new PlayerPostDTO();
+        playerPostDTO.setPlayerName("test");
+        playerPostDTO.setIsHost(true);
+
+        Player player = DTOMapper.INSTANCE.convertFromPlayerPostDTO(playerPostDTO);
+        assertEquals(playerPostDTO.getPlayerName(), player.getPlayerName());
+        assertEquals(playerPostDTO.isHost(), player.isHost());
+    }
+    @Test
+    public void convertToPlayerGetDTO_fromPlayer_success(){
+        Player player = new Player();
+        player.setPlayerName("test");
+        player.setPlayerId(1L);
+        player.setScore(0);
+
+        PlayerGetDTO playerGetDTO = DTOMapper.INSTANCE.convertToPlayerGetDTO(player);
+        assertEquals(playerGetDTO.getPlayerName(), player.getPlayerName());
+        assertEquals(playerGetDTO.getScore(), player.getScore());
+        assertEquals(playerGetDTO.getPlayerId(), player.getPlayerId());
+    }
+    /*@Test
+    public void convertFromPlayerPutDTO_toPlayer_success(){
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setPlayerName("test");
+
+        Player player = DTOMapper.INSTANCE.convertFromPlayerPutDTO(playerPutDTO);
+        assertEquals(playerPutDTO.getPlayerName(), player.getPlayerName());
+    }*/
+
 }
