@@ -45,7 +45,7 @@ public class Game implements Serializable {
     private GameStatus status;
 
     @Column
-    private long hostId;
+    private Long hostId;
 
     //@Column @ManyToMany
     //private List<Prompt> promptSet = new ArrayList<Prompt>();
@@ -83,7 +83,7 @@ public class Game implements Serializable {
         this.status = status;
     }
 
-    public long getHostId() {
+    public Long getHostId() {
         return hostId;
     }
 

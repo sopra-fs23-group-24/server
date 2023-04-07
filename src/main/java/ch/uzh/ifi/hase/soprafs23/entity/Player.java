@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
-
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -30,14 +28,16 @@ public class Player implements Serializable {
     @Column (nullable = false)
     private String associatedGamePin;
 
-    @Column
+    @Column (nullable = false)
     private String playerName;
 
     @Column(nullable = false, unique = true)
     private String token;
-
     @Column
     private int score = 0;
+
+    @Column
+    private boolean isHost;
 
 
     public Long getPlayerId() {
@@ -80,6 +80,13 @@ public class Player implements Serializable {
         this.score = score;
     }
 
+    public boolean isHost() {
+        return isHost;
+    }
+
+    public void setHost(boolean host) {
+        isHost = host;
+    }
 
     //-------------------------
 

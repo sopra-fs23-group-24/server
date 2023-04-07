@@ -60,48 +60,62 @@ public class PlayerService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this id found.");
     }
 
-    public Player createUser(String aGamePin) {
-        Player newPlayer = new Player();
+    public Player getByToken(String token) {
+        Player player = playerRepository.findByToken(token);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
+        }
+        return player;
+    }
+
+    public Player createPlayerAndAddToGame(Player newPlayer) {
+
         newPlayer.setToken(UUID.randomUUID().toString());
-        newPlayer.setAssociatedGamePin(aGamePin);
 
         newPlayer = playerRepository.save(newPlayer);
         playerRepository.flush();
 
-        log.debug("Created Information for User: {}", newPlayer);
+        Game joinedGame = gameService.addPlayerToGame(newPlayer);
+
+        log.debug("Created Information for Player: {}", newPlayer);
+        log.debug("Added to Game: {}", joinedGame);
+
         return newPlayer;
     }
 
-    public Player changePlayerUsername(String username, long playerToBeChangedId, long loggedInPlayerId) {
-        Player playerById = playerRepository.findByPlayerId(playerToBeChangedId);
+    public Player changePlayerUsername(Player newPlayerInfo, String loggedInPlayerToken) {
+        Player playerById = playerRepository.findByPlayerId(newPlayerInfo.getPlayerId());
+        Player loggedInPlayer = playerRepository.findByToken(loggedInPlayerToken);
 
-        if (playerById == null) {
+        if(playerById == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this id found.");
         }
-        if(playerToBeChangedId != loggedInPlayerId){
+        if(playerById != loggedInPlayer){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
-        if (username.isBlank()) {
+        if (newPlayerInfo.getPlayerName().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Empty username.");
         }
 
-        playerById.setPlayerName(username);
+        playerById.setPlayerName(newPlayerInfo.getPlayerName());
         playerById = playerRepository.save(playerById);
         playerRepository.flush();
 
         return playerById;
     }
 
-    public void deletePlayer(long playerToBeDeletedId, long loggedInPlayerId, String gamePin) {
-        if(gameService.checkIfHost(gameService.getGameByPin(gamePin), playerToBeDeletedId)){
+    public void deletePlayer(long playerToBeDeletedId, String loggedInPlayerToken, String gamePin) {
+        Player loggedInPlayer = getByToken(loggedInPlayerToken);
+        Player playerToDelete = getById(playerToBeDeletedId);
+
+        if(gameService.checkIfHost(gameService.getGameByPin(gamePin), playerToDelete.getPlayerId())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "May not delete host.");
         }
 
-        if(playerToBeDeletedId != loggedInPlayerId && !gameService.checkIfHost(gameService.getGameByPin(gamePin), loggedInPlayerId)){
+        if(playerToBeDeletedId != loggedInPlayer.getPlayerId() && !gameService.checkIfHost(gameService.getGameByPin(gamePin), loggedInPlayer.getPlayerId())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
-        Player playerToDelete = getById(playerToBeDeletedId);
 
         Game gameByPin = gameService.getGameByPin(playerToDelete.getAssociatedGamePin());
         gameByPin.removePlayer(playerToDelete);

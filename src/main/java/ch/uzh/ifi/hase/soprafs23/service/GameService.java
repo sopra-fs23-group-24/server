@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -61,8 +62,7 @@ public class GameService {
         return true;
     }
 
-    @Transactional
-    public Player createGameAndReturnHost() {
+    public Game createGame() {
         Game newGame = new Game();
         newGame.setStatus(GameStatus.LOBBY);
 
@@ -76,53 +76,62 @@ public class GameService {
             }
         }
 
-        Player host = playerService.createUser(newGame.getGamePin());
-        newGame.setHostId(host.getPlayerId());
-        newGame.addPlayer(host);
-
-        newGame = gameRepository.save(newGame); // TODO: does it need the "newGame = " part?
+        newGame = gameRepository.save(newGame);
         gameRepository.flush();
 
         log.debug("Created game: {}", newGame);
-        log.debug("Created host: {}", host);
-        return host;
+        return newGame;
     }
 
-    public Player joinGameAndReturnUser(String gamePin) {
+    public Game addPlayerToGame(Player newPlayer) {
 
-        Game joinedGame = getGameByPin(gamePin);
+        Game joinedGame = getGameByPin(newPlayer.getAssociatedGamePin());
+        if(joinedGame == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+        }
+        if(joinedGame.getStatus() != GameStatus.LOBBY){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is already running. Try again with a different pin or join later.");
+        }
 
-        Player user = playerService.createUser(joinedGame.getGamePin());
-        joinedGame.addPlayer(user);
+        joinedGame.addPlayer(newPlayer);
+        if(newPlayer.isHost()){
+            if(joinedGame.getHostId() != null){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game already has a host. Please try to join instead.");
+            }
+            joinedGame.setHostId(newPlayer.getPlayerId());
+        }
 
-        joinedGame = gameRepository.save(joinedGame); // TODO: does it need the "newGame = " part?
+        joinedGame = gameRepository.save(joinedGame);
         gameRepository.flush();
 
         log.debug("Added to game: {}", joinedGame);
-        log.debug("created user: {}", user);
-        return user;
+        return joinedGame;
     }
 
-    public Game changeGameStatus(GameStatus requestedStatus, String gamePin, long userId){
+    public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken){
         System.out.println(requestedStatus);
         //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
 
+        Player loggedInPlayer = playerService.getByToken(loggedInToken);
+
         Game gameByPin = getGameByPin(gamePin);
-        if(!checkIfHost(gameByPin, userId)){
+        if(!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
         gameByPin.setStatus(requestedStatus);
-        gameByPin = gameRepository.save(gameByPin); // TODO: does it need the "newGame = " part?
+        gameByPin = gameRepository.save(gameByPin);
         gameRepository.flush();
 
         return gameByPin;
     }
 
 
-    public void deleteGameByPin(String gamePin, long userId){
+    public void deleteGameByPin(String gamePin, String loggedInToken){
         Game gameByPin = getGameByPin(gamePin);
-        if(!checkIfHost(gameByPin, userId)){
+        Player loggedInPlayer = playerService.getByToken(loggedInToken);
+
+        if(!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 

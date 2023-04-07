@@ -49,7 +49,7 @@ public class GameServiceTest {
 
     }
 
-    @Test
+    /*@Test
     public void testCreateGameAndReturnHost() {
 
         Player host = gameService.createGameAndReturnHost();
@@ -62,7 +62,7 @@ public class GameServiceTest {
         assertEquals(0, host.getScore());
         assertNull(host.getPlayerName());
         assertNull(host.getToken());
-        }
+        }*/
 }
 
 

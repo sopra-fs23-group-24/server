@@ -30,6 +30,8 @@ public interface DTOMapper {
   @Mapping(source = "hostId", target = "hostId")
   @Mapping(source = "playerGroup", target = "playerGroup")
   GameGetDTO convertToGameGetDTO(Game game);
+  @Mapping(source = "status", target = "status")
+  Game convertFromGamePutDTO(GamePutDTO game);
 
 
   @Mapping(source = "playerId", target = "playerId")
@@ -39,25 +41,13 @@ public interface DTOMapper {
   @Mapping(source = "score", target = "score")
   PlayerGetDTO convertToPlayerGetDTO(Player player);
 
-  @Mapping(source = "gamePin", target = "gamePin")
-  Game convertFromGameJoinDTO(GameJoinDTO game);
+  @Mapping(source = "playerName", target = "playerName")
+  @Mapping(source = "host", target = "host")
+  Player convertFromPlayerPostDTO(PlayerPostDTO game);
 
   @Mapping(source = "playerName", target = "playerName")
   Player convertFromPlayerPutDTO(PlayerPutDTO player);
 
-  @Mapping(source = "status", target = "status")
-  Game convertFromGamePutDTO(GamePutDTO game);
 
-/*
 
-  @Mapping(source = "name", target = "name")
-  @Mapping(source = "username", target = "username")
-  Player convertUserPostDTOtoEntity(UserPutDTO userPostDTO);
-
-  @Mapping(source = "id", target = "id")
-  @Mapping(source = "name", target = "name")
-  @Mapping(source = "username", target = "username")
-  @Mapping(source = "status", target = "status")
-  PlayerGetDTO convertEntityToUserGetDTO(Player user);
- */
 }

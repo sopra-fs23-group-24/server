@@ -7,18 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GamePutDTO {
-    private String gamePin;
     private GameStatus status;
-
-
-    public String getGamePin() {
-        return gamePin;
-    }
-
-    public void setGamePin(String gamePin) {
-        this.gamePin = gamePin;
-    }
-
 
     public GameStatus getStatus() {
         return status;

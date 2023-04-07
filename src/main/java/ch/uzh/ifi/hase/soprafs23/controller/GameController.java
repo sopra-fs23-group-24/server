@@ -27,9 +27,9 @@ import java.util.List;
  */
 @RestController
 public class GameController {
-    //headers: @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin
+    //headers: @RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin
     /*
-      System.out.println("Received PlayerId: " + playerId);
+      System.out.println("Received PlayerToken: " + loggedInToken);
       System.out.println("Received GamePin: " + gamePin);
     */
     private final GameService gameService;
@@ -38,7 +38,16 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/allGames")
+    @PostMapping("/games")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO createNewGame() {
+        Game newGame = gameService.createGame();
+
+        return DTOMapper.INSTANCE.convertToGameGetDTO(newGame);
+    }
+
+    @GetMapping("/games")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<GameGetDTO> getAllGames() {
@@ -53,55 +62,34 @@ public class GameController {
         return gamesGetDTOs;
     }
 
-
-    @PostMapping("/host")
+    @GetMapping("/games/{pin}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public PlayerGetDTO hostNewGame() {
-        Player newHost = gameService.createGameAndReturnHost();
-        //convert to ...
-        return DTOMapper.INSTANCE.convertToPlayerGetDTO(newHost);
-    }
-
-    @PostMapping("/join")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public PlayerGetDTO joinGame(@RequestBody GameJoinDTO gameWithPin) {
-        Player newPlayer = gameService.joinGameAndReturnUser(gameWithPin.getGamePin());
-
-        //convert to ...
-        return DTOMapper.INSTANCE.convertToPlayerGetDTO(newPlayer);
-
-    }
-
-    @GetMapping("/games")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public GameGetDTO getGameStatus (@RequestHeader("gamePin") String gamePin){
+    public GameGetDTO getGameStatus (@PathVariable ("pin") String gamePin){
         Game currentGame = gameService.getGameByPin(gamePin);
         return DTOMapper.INSTANCE.convertToGameGetDTO(currentGame);
     }
 
-    @PutMapping("/games")
+    @PutMapping("/games/{pin}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO updateGameStatus (@RequestBody GamePutDTO newStatus, @RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin){
+    public GameGetDTO updateGameStatus (@RequestBody GamePutDTO newStatus, @RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin){
         //TODO: error catching doesn't work yet
         try{
             Game newStatusGame = DTOMapper.INSTANCE.convertFromGamePutDTO(newStatus);
-            Game updatedGame = gameService.changeGameStatus(newStatusGame.getStatus(), gamePin, playerId);
+            Game updatedGame = gameService.changeGameStatus(newStatusGame.getStatus(), gamePin, loggedInToken);
             return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
-        }catch(Exception e){
+        }catch(Throwable e){
             System.out.println("error caught");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Requested status does not match any known case.");
         }
     }
 
-    @DeleteMapping("/games")
+    @DeleteMapping("/games/{pin}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String deleteGame (@RequestHeader("playerId") long playerId, @RequestHeader("gamePin") String gamePin){
-        gameService.deleteGameByPin(gamePin, playerId);
+    public String deleteGame (@RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin){
+        gameService.deleteGameByPin(gamePin, loggedInToken);
 
         return "Deleted game successfully";
     }
