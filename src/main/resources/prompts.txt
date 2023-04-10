@@ -1,8 +1,9 @@
 \\
 \\Document to gather prompts
-\\rules: one prompts per line, no empty lines, first type as string (TRUEFALSE, DRAWING, TEXT), then ": ", then prompt itself
+\\promptNR: promptType: promptText
+\\rules: one prompts per line, no empty lines, split information with ": ", promptNr has to be unique, promptTypes: TRUEFALSE/DRAWING/TEXT
 \\comments can be made with "\\"
 \\
-TRUEFALSE: Tell a story about your last holiday. Then mark whether it is true or false.
-DRAWING: Draw a rat.
-TEXT: What is your favourite food?
+1: TRUEFALSE: Tell a story about your last holiday. Then mark whether it is true or false.
+2: DRAWING: Draw a rat.
+3: TEXT: What is your favourite food?

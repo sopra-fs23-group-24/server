@@ -53,8 +53,9 @@ public class PromptService {
                 }
                 String[] promptInfo = line.split(": ");
                 Prompt newPrompt = new Prompt();
-                newPrompt.setPromptType(PromptType.transformToType(promptInfo[0]));
-                newPrompt.setPromptText(promptInfo[1]);
+                newPrompt.setPromptNr(Integer.parseInt(promptInfo[0]));
+                newPrompt.setPromptType(PromptType.transformToType(promptInfo[1]));
+                newPrompt.setPromptText(promptInfo[2]);
                 promptRepository.save(newPrompt);
                 promptRepository.flush();
             }

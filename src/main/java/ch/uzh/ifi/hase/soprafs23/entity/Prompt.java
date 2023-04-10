@@ -16,6 +16,9 @@ public class Prompt implements Serializable {
     @GeneratedValue
     private Long promptId;
 
+    @Column(nullable = false, unique = true)
+    private Integer promptNr;
+
     @Column(nullable = false)
     private PromptType promptType;
 
@@ -28,6 +31,14 @@ public class Prompt implements Serializable {
 
     public void setPromptId(Long promptId) {
         this.promptId = promptId;
+    }
+
+    public Integer getPromptNr() {
+        return promptNr;
+    }
+
+    public void setPromptNr(Integer promptNr) {
+        this.promptNr = promptNr;
     }
 
     public PromptType getPromptType() {

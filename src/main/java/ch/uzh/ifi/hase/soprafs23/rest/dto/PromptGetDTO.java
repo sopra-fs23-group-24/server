@@ -8,6 +8,7 @@ import javax.persistence.Id;
 
 public class PromptGetDTO {
     private Long promptId;
+    private Integer promptNr;
 
     private PromptType promptType;
 
@@ -24,7 +25,13 @@ public class PromptGetDTO {
     public PromptType getPromptType() {
         return promptType;
     }
+    public Integer getPromptNr() {
+        return promptNr;
+    }
 
+    public void setPromptNr(Integer promptNr) {
+        this.promptNr = promptNr;
+    }
     public void setPromptType(PromptType promptType) {
         this.promptType = promptType;
     }

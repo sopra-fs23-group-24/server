@@ -46,6 +46,7 @@ public interface DTOMapper {
   Player convertFromPlayerPutDTO(PlayerPutDTO player);
 
   @Mapping(source = "promptId", target = "promptId")
+  @Mapping(source = "promptNr", target = "promptNr")
   @Mapping(source = "promptType", target = "promptType")
   @Mapping(source = "promptText", target = "promptText")
   PromptGetDTO convertToPromptGetDTO(Prompt prompt);
