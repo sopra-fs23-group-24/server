@@ -156,6 +156,28 @@ public class GameService {
         return gameByPin.getPromptSet();
     }
 
+    public Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin){
+
+        Game gameByPin = getGameByPin(gamePin);
+        if(gameByPin.getStatus() != GameStatus.SELECTION){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is in the wrong state to take prompts.");
+        }
+        if(!gameByPin.getPromptSet().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has prompts selected.");
+        }
+
+        for(Prompt prompt : promptsForGame){
+            gameByPin.addPrompt(prompt);
+        }
+
+        gameByPin.setStatus(GameStatus.PROMPT);
+
+        gameRepository.save(gameByPin);
+        gameRepository.flush();
+
+        return gameByPin;
+    }
+
     /**
      * Helper functions
      */

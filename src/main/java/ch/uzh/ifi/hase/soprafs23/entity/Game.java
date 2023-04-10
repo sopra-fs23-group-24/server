@@ -45,7 +45,8 @@ public class Game implements Serializable {
     @Column
     private Long hostId;
 
-    @Column @ManyToMany
+    @Column
+    @ManyToMany(cascade=CascadeType.ALL)
     private List<Prompt> promptSet = new ArrayList<Prompt>();
 
     //@Column @OneToMany
@@ -114,8 +115,20 @@ public class Game implements Serializable {
         this.promptSet = promptSet;
     }
 
+    public void addPrompt(Prompt prompt) {
+        promptSet.add(prompt);
+    }
+
     // public nextQuestion() {
     // TODO: implement
     // }
+
+    public boolean checkIfHasPrompt(Prompt prompt){
+        if(promptSet.contains(prompt)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }

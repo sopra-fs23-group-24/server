@@ -1,20 +1,27 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.exceptions.PromptSetupException;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.PromptPostDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * User Service
@@ -31,11 +38,17 @@ public class PromptService {
 
     private final PromptRepository promptRepository;
 
+    private GameService gameService;
 
     @Autowired
     public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository) throws PromptSetupException {
         this.promptRepository = promptRepository;
         initialiseRepository();
+    }
+
+    @Autowired
+    private void setGameService(GameService gameService) {
+        this.gameService = gameService;
     }
 
     public List<Prompt> getPrompts(){
@@ -63,7 +76,53 @@ public class PromptService {
             System.out.println("Something went wrong while creating the prompts.");
             throw new PromptSetupException();
         }
+    }
 
+    public List<Prompt> pickPrompts(PromptPostDTO userRequest, String gamePin){
+
+        int wantedTextPrompts = userRequest.getTextNr();
+        int wantedTrueFalsePrompts = userRequest.getTruefalseNr();
+        int wantedDrawingPrompts = userRequest.getDrawingNr();
+
+        List<Prompt> allTextPrompts = promptRepository.findAllByPromptType(PromptType.TEXT);
+        List<Prompt> allTrueFalsePrompts = promptRepository.findAllByPromptType(PromptType.TRUEFALSE);
+        List<Prompt> allDrawingPrompts = promptRepository.findAllByPromptType(PromptType.DRAWING);
+
+        List<Prompt> promptsForGame = new ArrayList<>();
+        Random rand = new Random();
+
+        for (int i = 0; i < wantedTextPrompts; i++) {
+            if(allTextPrompts.size() < 1){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more text prompts than are available.");
+            }
+            int randomIndex = rand.nextInt(allTextPrompts.size());
+            Prompt randomPrompt = allTextPrompts.get(randomIndex);
+            promptsForGame.add(randomPrompt);
+            allTextPrompts.remove(randomIndex);
+        }
+
+        for (int i = 0; i < wantedTrueFalsePrompts; i++) {
+            if(allTrueFalsePrompts.size() < 1){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more true-false prompts than are available.");
+            }
+            int randomIndex = rand.nextInt(allTrueFalsePrompts.size());
+            Prompt randomPrompt = allTrueFalsePrompts.get(randomIndex);
+            promptsForGame.add(randomPrompt);
+            allTrueFalsePrompts.remove(randomIndex);
+        }
+
+        for (int i = 0; i < wantedDrawingPrompts; i++) {
+            if(allDrawingPrompts.size() < 1){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more drawing prompts than are available.");
+            }
+            int randomIndex = rand.nextInt(allDrawingPrompts.size());
+            Prompt randomPrompt = allDrawingPrompts.get(randomIndex);
+            promptsForGame.add(randomPrompt);
+            allDrawingPrompts.remove(randomIndex);
+        }
+
+        gameService.addPromptsToGame(promptsForGame, gamePin);
+        return promptsForGame;
     }
 
 
