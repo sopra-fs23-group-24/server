@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerPutDTO;
@@ -34,6 +36,12 @@ public class PromptController {
         this.promptService = promptService;
     }
 
+    @PostMapping("/prompts")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void testRepoCreation() {
+        System.out.println(promptService.calledFunction());
+    }
 
 
 }

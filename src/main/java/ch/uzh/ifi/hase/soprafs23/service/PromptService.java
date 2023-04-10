@@ -1,5 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
+import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
+import ch.uzh.ifi.hase.soprafs23.exceptions.PromptSetupException;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 /**
  * User Service
@@ -25,12 +32,33 @@ public class PromptService {
 
 
     @Autowired
-    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository) {
+    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository) throws PromptSetupException {
         this.promptRepository = promptRepository;
         initialiseRepository();
     }
 
-    private void initialiseRepository(){
+    public String calledFunction(){
+        return "Function called";
+    }
+
+    private void initialiseRepository() throws PromptSetupException {
+        try{
+            BufferedReader promptsInput = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
+            String line;
+            while((line = promptsInput.readLine()) != null){
+                if(line.startsWith("\\")){
+                    continue;
+                }
+                String[] promptInfo = line.split(": ");
+                Prompt newPrompt = new Prompt();
+                newPrompt.setPromptType(PromptType.transformToType(promptInfo[0]));
+                newPrompt.setPromptText(promptInfo[1]);
+                System.out.println(newPrompt + "; Type = " + newPrompt.getPromptType() + "; Text = " + newPrompt.getPromptText());
+            }
+        }catch(Exception e){
+            System.out.println("Something went wrong while creating the prompts.");
+            throw new PromptSetupException();
+        }
 
     }
 
