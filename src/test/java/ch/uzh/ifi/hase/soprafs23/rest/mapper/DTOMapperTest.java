@@ -61,13 +61,13 @@ public class DTOMapperTest {
         assertEquals(playerGetDTO.getScore(), player.getScore());
         assertEquals(playerGetDTO.getPlayerId(), player.getPlayerId());
     }
-    /*@Test
+    @Test
     public void convertFromPlayerPutDTO_toPlayer_success(){
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("test");
 
         Player player = DTOMapper.INSTANCE.convertFromPlayerPutDTO(playerPutDTO);
         assertEquals(playerPutDTO.getPlayerName(), player.getPlayerName());
-    }*/
+    }
 
 }

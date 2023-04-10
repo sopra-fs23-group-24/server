@@ -7,7 +7,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Internal User Representation
@@ -23,7 +22,6 @@ import java.util.Random;
 @Table(name = "GAME")
 public class Game implements Serializable {
 
-    //TODO: Find out how to get this values / change them to be e.g. length 6
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -37,7 +35,7 @@ public class Game implements Serializable {
 
 
     @Column
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL)
     private List<Player> playerGroup = new ArrayList<Player>();
     //TODO: should we use players or id? - and why does id not work?
 
@@ -87,7 +85,7 @@ public class Game implements Serializable {
         return hostId;
     }
 
-    public void setHostId(long hostId) {
+    public void setHostId(Long hostId) {
         this.hostId = hostId;
     }
 

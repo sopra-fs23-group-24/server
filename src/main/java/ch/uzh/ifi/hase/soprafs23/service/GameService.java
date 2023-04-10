@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,19 +37,30 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
-    @Autowired
     private PlayerService playerService;
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository) {
         this.gameRepository = gameRepository;
+        //this.playerService = playerService;
     }
 
+    @Autowired
+    private void setPlayerService(PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
+    /*public PlayerService getPlayerService(){
+        return this.playerService;
+    }*/
+
+
+    //TODO: test Integration?
     public List<Game> getGames() {
         return this.gameRepository.findAll();
     }
 
+    //TODO: test Integration?
     public Game getGameByPin(String pin){
         Game gameByPin = gameRepository.findByGamePin(pin);
         if(gameByPin == null){
@@ -72,6 +84,7 @@ public class GameService {
         return newGame;
     }
 
+    //TODO: test Integration?
     public Game addPlayerToGame(Player newPlayer) {
 
         Game joinedGame = getGameByPin(newPlayer.getAssociatedGamePin());
@@ -97,6 +110,8 @@ public class GameService {
         return joinedGame;
     }
 
+    //TODO: test Integration?
+    //TODO: test Service
     public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken){
         System.out.println(requestedStatus);
         //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
@@ -115,7 +130,8 @@ public class GameService {
         return gameByPin;
     }
 
-
+    //TODO: test Integration?
+    //TODO: test Service
     public Game deleteGameByPin(String gamePin, String loggedInToken){
         Game gameByPin = getGameByPin(gamePin);
         Player loggedInPlayer = playerService.getByToken(loggedInToken);
@@ -125,7 +141,7 @@ public class GameService {
         }
 
         gameRepository.deleteByGamePin(gamePin);
-        playerService.deletePlayersByGamePin(gamePin);
+        playerService.deleteAllPlayersByGamePin(gamePin);
         //TODO: delete questions
         //TODO: delete answers
 
@@ -144,6 +160,7 @@ public class GameService {
         return true;
     }
 
+    //TODO: test?
     private String generateUniqueGamePin(){
         Random random = new Random();
 

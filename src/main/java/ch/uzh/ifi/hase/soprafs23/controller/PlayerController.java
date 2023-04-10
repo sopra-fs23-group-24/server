@@ -91,20 +91,13 @@ public class PlayerController {
         return DTOMapper.INSTANCE.convertToPlayerGetDTO(updatedPlayer);
     }
 
-
-    // TODO: check if this works
     @DeleteMapping("/games/{pin}/players/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    // TODO: do we need the PlayerPutDTO here, or would the id be enough?
-    // TODO: maybe change to @RequestHeader
-    public String deletePlayer(@PathVariable ("id") long playerToBeDeletedId, @RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin) {
-        //Player playerToDelete = DTOMapper.INSTANCE.convertFromPlayerPutDTO(playerPutDTO); // is not needed at the moment...
+    public PlayerGetDTO deletePlayer(@PathVariable ("id") long playerToBeDeletedId, @RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin) {
+        Player deletedPlayer = playerService.deletePlayer(playerToBeDeletedId, loggedInToken, gamePin);
 
-        playerService.deletePlayer(playerToBeDeletedId, loggedInToken, gamePin);
-
-        // TODO: maybe change the return type
-        return "Deleted player successfully";
+        return DTOMapper.INSTANCE.convertToPlayerGetDTO(deletedPlayer);
     }
 
 }

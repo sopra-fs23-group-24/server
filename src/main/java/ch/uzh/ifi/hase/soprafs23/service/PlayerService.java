@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,18 +32,28 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
 
-    @Autowired
     private GameService gameService;
 
     @Autowired
     public PlayerService(@Qualifier("playerRepository") PlayerRepository userRepository) {
         this.playerRepository = userRepository;
+        //this.gameService = gameService;
+    }
+    @Autowired
+    private void setGameService(GameService gameService) {
+        this.gameService = gameService;
     }
 
+    /*public GameService getGameService(){
+        return this.gameService;
+    }*/
+
+    //TODO: test Integration?
     public List<Player> getPlayers() {
         return this.playerRepository.findAll();
     }
 
+    //TODO: test Integration?
     public List<Player> getPlayersWithPin(String gamePin) {
         List<Player> players = playerRepository.findAllByAssociatedGamePin(gamePin);
         if (players.isEmpty()) {
@@ -51,7 +62,8 @@ public class PlayerService {
         return players;
     }
 
-
+    //TODO: test Integration?
+    //TODO: test Service
     public Player createPlayerAndAddToGame(Player newPlayer) {
 
         newPlayer.setToken(UUID.randomUUID().toString());
@@ -67,6 +79,7 @@ public class PlayerService {
         return newPlayer;
     }
 
+    //TODO: test Integration?
     public Player changePlayerUsername(Player newPlayerInfo, String loggedInPlayerToken) {
         Player playerById = playerRepository.findByPlayerId(newPlayerInfo.getPlayerId());
         Player loggedInPlayer = playerRepository.findByToken(loggedInPlayerToken);
@@ -88,7 +101,9 @@ public class PlayerService {
         return playerById;
     }
 
-    public void deletePlayer(long playerToBeDeletedId, String loggedInPlayerToken, String gamePin) {
+    //TODO: test Integration?
+    //TODO: test Service
+    public Player deletePlayer(long playerToBeDeletedId, String loggedInPlayerToken, String gamePin) {
         Player loggedInPlayer = getByToken(loggedInPlayerToken);
         Player playerToDelete = getById(playerToBeDeletedId);
 
@@ -106,11 +121,23 @@ public class PlayerService {
 
         playerRepository.delete(playerToDelete);
         playerRepository.flush();
+
+        return playerToDelete;
     }
 
-    public void deletePlayersByGamePin(String gamePin){
-        playerRepository.deleteAllByAssociatedGamePin(gamePin);
-        playerRepository.flush();
+    //TODO: test Integration?
+    //TODO: test Service
+    public List<Player> deleteAllPlayersByGamePin(String gamePin){
+        List<Player> allPlayersToDelete = playerRepository.findAllByAssociatedGamePin(gamePin);
+        for(Player player : allPlayersToDelete){
+            Game gameByPin = gameService.getGameByPin(gamePin);
+            gameByPin.removePlayer(player);
+
+            playerRepository.delete(player);
+            playerRepository.flush();
+        }
+
+        return allPlayersToDelete;
     }
 
     /**

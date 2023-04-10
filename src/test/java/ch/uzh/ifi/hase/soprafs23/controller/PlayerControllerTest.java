@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerPutDTO;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -161,6 +162,128 @@ public class PlayerControllerTest {
                 .andExpect(jsonPath("$[0].score", is(testPlayer.getScore())));
     }
 
+    @Test
+    public void changeUsername_success() throws Exception {
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setPlayerName("newName");
+
+        Player updatedPlayer = new Player();
+        updatedPlayer.setPlayerName("newName");
+        updatedPlayer.setPlayerId(2L);
+        updatedPlayer.setToken("2");
+        updatedPlayer.setAssociatedGamePin("123456");
+
+        given(playerService.changePlayerUsername(Mockito.any(), Mockito.anyString())).willReturn(updatedPlayer);
+
+        MockHttpServletRequestBuilder putRequest = put("/players/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerPutDTO))
+                .header("playerToken", "2");
+
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.playerName", is(updatedPlayer.getPlayerName())))
+                .andExpect(jsonPath("$.score", is(updatedPlayer.getScore())));
+    }
+
+    @Test
+    public void changeUsername_invalidPlayerId() throws Exception {
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setPlayerName("newName");
+
+        given(playerService.changePlayerUsername(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/players/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerPutDTO))
+                .header("playerToken", "2");
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void changeUsername_idAndTokenDoNotMatch() throws Exception {
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setPlayerName("newName");
+
+        given(playerService.changePlayerUsername(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/players/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerPutDTO))
+                .header("playerToken", "1");
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void changeUsername_usernameIsBlank() throws Exception {
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setPlayerName("");
+
+        given(playerService.changePlayerUsername(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/players/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerPutDTO))
+                .header("playerToken", "2");
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void deletePlayer_success() throws Exception{
+        given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willReturn(testPlayer);
+
+        // when
+        MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("playerToken", "2");
+
+        mockMvc.perform(deleteRequest)
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.playerName", is(testPlayer.getPlayerName())))
+                .andExpect(jsonPath("$.score", is(testPlayer.getScore())));
+
+    }
+
+    @Test
+    public void deletePlayer_playerIsHost() throws Exception{
+        given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        // when
+        MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("playerToken", "2");
+
+        mockMvc.perform(deleteRequest)
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void deletePlayer_notLoggedInAsHostOrPlayer() throws Exception{
+        given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        // when
+        MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("playerToken", "2");
+
+        mockMvc.perform(deleteRequest)
+                .andExpect(status().isUnauthorized());
+
+    }
 
     private String asJsonString(final Object object) {
         try {

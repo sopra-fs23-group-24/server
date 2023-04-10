@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -24,16 +25,19 @@ import static org.mockito.BDDMockito.given;
 public class GameServiceTest {
     private Game testGame;
 
+    private Player testPlayer;
+
     @Mock
     private GameRepository gameRepository;
+
+    @InjectMocks
+    private GameService gameService;
 
     @Mock
     private PlayerRepository playerRepository;
 
     @InjectMocks
-    private GameService gameService;
-
-
+    private PlayerService playerService;
 
     @BeforeEach
     public void setup() {
@@ -47,6 +51,12 @@ public class GameServiceTest {
         Mockito.when(gameRepository.save(Mockito.any())).thenReturn(testGame);
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
         Mockito.when(gameRepository.findAll()).thenReturn(List.of(testGame));
+
+        testPlayer = new Player();
+        testPlayer.setPlayerId(2L);
+        testPlayer.setAssociatedGamePin("123456");
+        testPlayer.setPlayerName("test");
+        testPlayer.setToken("1");
     }
 
     @Test
@@ -61,6 +71,12 @@ public class GameServiceTest {
         assertEquals(testGame.getHostId(), createdGame.getHostId());
         assertEquals(GameStatus.LOBBY, createdGame.getStatus());
         assertEquals(testGame.getPlayerGroup(), createdGame.getPlayerGroup());
+    }
+
+    @Test
+    public void getGames_success(){
+        List<Game> allGames = gameService.getGames();
+        assertEquals(allGames, List.of(testGame));
     }
 
     @Test
@@ -79,6 +95,53 @@ public class GameServiceTest {
         Mockito.when(gameRepository.findByGamePin("invalidPin")).thenReturn(null);
 
         assertThrows(ResponseStatusException.class, () -> gameService.getGameByPin("invalidPin"));
+    }
+
+    @Test
+    public void addPlayerToGame_success(){
+        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
+
+        assertEquals(gameService.getGameByPin(testGame.getGamePin()).getPlayerGroup(), new ArrayList<Player>());
+
+        testGame.setStatus(GameStatus.LOBBY);
+        testGame.setHostId(null);
+
+        Game gameWithPlayer = gameService.addPlayerToGame(testPlayer);
+
+        Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
+        assertTrue(gameWithPlayer.getPlayerGroup().contains(testPlayer));
+    }
+
+    @Test
+    public void addPlayerToGame_invalidGamePin(){
+        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        testGame.setStatus(GameStatus.LOBBY);
+        testGame.setHostId(null);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
+    }
+
+    @Test
+    public void addPlayerToGame_gameNotInLobbyStage(){
+        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
+
+        testPlayer.setHost(true);
+        testGame.setStatus(GameStatus.SELECTION);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
+    }
+
+    @Test
+    public void addPlayerToGame_alreadyHasHost(){
+        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
+
+        assertNotNull(gameService.getGameByPin(testGame.getGamePin()).getHostId());
+
+        testPlayer.setHost(true);
+        testGame.setStatus(GameStatus.LOBBY);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
     }
 
     //TODO: figure out how to do this, fails because cannot connect to playerService/playerRepository properly
@@ -105,6 +168,26 @@ public class GameServiceTest {
     public void deleteGameByPin_notHost(){
 
     }*/
+
+    /**
+     * Helper functions tests
+     */
+
+    @Test
+    public void checkIfHost_true(){
+        testGame.setHostId(2L);
+        testPlayer.setPlayerId(2L);
+
+        assertTrue(gameService.checkIfHost(testGame, testPlayer.getPlayerId()));
+    }
+
+    @Test
+    public void checkIfHost_false(){
+        testGame.setHostId(3L);
+        testPlayer.setPlayerId(2L);
+
+        assertFalse(gameService.checkIfHost(testGame, testPlayer.getPlayerId()));
+    }
 }
 
 

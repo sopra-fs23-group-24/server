@@ -12,5 +12,4 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
   Player findByToken(String token);
 
   List<Player> findAllByAssociatedGamePin(String pin);
-  void deleteAllByAssociatedGamePin(String pin);
 }
