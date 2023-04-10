@@ -45,8 +45,8 @@ public class Game implements Serializable {
     @Column
     private Long hostId;
 
-    //@Column @ManyToMany
-    //private List<Prompt> promptSet = new ArrayList<Prompt>();
+    @Column @ManyToMany
+    private List<Prompt> promptSet = new ArrayList<Prompt>();
 
     //@Column @OneToMany
     //private List<GameQuestion> quizQuestionSet = new ArrayList<GameQuestion>();
@@ -104,6 +104,14 @@ public class Game implements Serializable {
 
     public void removePlayer(Player player) {
         playerGroup.remove(player);
+    }
+
+    public List<Prompt> getPromptSet() {
+        return promptSet;
+    }
+
+    public void setPromptSet(List<Prompt> promptSet) {
+        this.promptSet = promptSet;
     }
 
     // public nextQuestion() {

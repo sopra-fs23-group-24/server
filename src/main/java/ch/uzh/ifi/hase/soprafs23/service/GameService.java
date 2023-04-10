@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.slf4j.Logger;
@@ -142,12 +143,18 @@ public class GameService {
 
         gameRepository.deleteByGamePin(gamePin);
         playerService.deleteAllPlayersByGamePin(gamePin);
+        //TODO: delete prompts
+        //TODO: delete prompt answers
         //TODO: delete questions
         //TODO: delete answers
 
         return gameByPin;
     }
 
+    public List<Prompt> getPromptsOfGame(String gamePin){
+        Game gameByPin = getGameByPin(gamePin);
+        return gameByPin.getPromptSet();
+    }
 
     /**
      * Helper functions
