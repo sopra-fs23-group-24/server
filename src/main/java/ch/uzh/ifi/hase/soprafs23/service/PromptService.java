@@ -2,9 +2,12 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
+import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.exceptions.PromptSetupException;
+import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionsRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PromptPostDTO;
 import org.slf4j.Logger;
@@ -38,11 +41,14 @@ public class PromptService {
 
     private final PromptRepository promptRepository;
 
+    private final PotentialQuestionsRepository potentialQuestionsRepository;
+
     private GameService gameService;
 
     @Autowired
-    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository) throws PromptSetupException {
+    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException {
         this.promptRepository = promptRepository;
+        this.potentialQuestionsRepository = potentialQuestionsRepository;
         initialiseRepository();
     }
 
@@ -52,8 +58,7 @@ public class PromptService {
     }
 
     public List<Prompt> getPrompts(){
-        List<Prompt> allPromptsInRepository = promptRepository.findAll();
-        return allPromptsInRepository;
+      return promptRepository.findAll();
     }
 
     private void initialiseRepository() throws PromptSetupException {
@@ -71,6 +76,28 @@ public class PromptService {
                 newPrompt.setPromptText(promptInfo[2]);
                 promptRepository.save(newPrompt);
                 promptRepository.flush();
+            }
+
+
+            BufferedReader potentialQuestionsInput = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
+            while((line = potentialQuestionsInput.readLine()) != null){
+                if(line.startsWith("\\")){
+                    continue;
+                }
+                String[] questionInfo = line.split(": ");
+                PotentialQuestion newPotentialQuestion = new PotentialQuestion();
+                newPotentialQuestion.setAssociatedPrompt(promptRepository.findByPromptNr(Long.valueOf(questionInfo[0])));
+                newPotentialQuestion.setQuestionType(QuestionType.transformToType(questionInfo[1]));
+                newPotentialQuestion.setQuestionText(questionInfo[2]);
+                potentialQuestionsRepository.save(newPotentialQuestion);
+                potentialQuestionsRepository.flush();
+            }
+
+            for(Prompt prompt : promptRepository.findAll()){
+                if(potentialQuestionsRepository.findAllByAssociatedPrompt(prompt) == null){
+                  System.out.println("Prompt is missing a potential question!");
+                    throw new PromptSetupException();
+                }
             }
         }catch(Exception e){
             System.out.println("Something went wrong while creating the prompts.");

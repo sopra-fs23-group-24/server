@@ -1,0 +1,25 @@
+\\
+\\Document to gather potential questions
+\\associatedPromptNR: questionType: questionText
+\\rules: one question per line, no empty lines, split information with ": ", promptTypes: PLAYER/PROMPTANSWER/BOOLEAN
+\\comments can be made with "\\"
+\\please do not change promptNr again! potential questions are based on that
+\\
+1: USER: Which player told the following true story about their last holiday?
+1: BOOLEAN: Is the following story by %s about their last holiday true or false?
+2: USER: Which player drew this rat?
+2: PROMPTANSWER: Which rat was drawn by %s?
+3: USER: Whose favourite food is the following:
+3: PROMPTANSWER: What is the favourite food of %s?
+//unfinished, just so we don't get errors
+3: USER: Whose favourite food is the following:
+4: USER: Whose favourite food is the following:
+5: USER: Whose favourite food is the following:
+6: USER: Whose favourite food is the following:
+7: USER: Whose favourite food is the following:
+8: USER: Whose favourite food is the following:
+9: USER: Whose favourite food is the following:
+10: USER: Whose favourite food is the following:
+11: USER: Whose favourite food is the following:
+12: USER: Whose favourite food is the following:
+

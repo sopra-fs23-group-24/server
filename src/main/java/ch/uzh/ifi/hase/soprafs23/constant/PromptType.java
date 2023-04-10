@@ -9,16 +9,16 @@ public enum PromptType {
     TRUEFALSE("TRUEFALSE", "2"),
     DRAWING("DRAWING", "3");
 
-    private final String statusAsString;
-    private final String statusAsStringNr;
-    PromptType(String statusAsString, String statusAsStringNr){
-        this.statusAsString = statusAsString;
-        this.statusAsStringNr = statusAsStringNr;
+    private final String prompttypeAsString;
+    private final String prompttypeAsNr;
+    PromptType(String prompttypeAsString, String prompttypeAsNr){
+        this.prompttypeAsString = prompttypeAsString;
+        this.prompttypeAsNr = prompttypeAsNr;
     }
 
-    public static PromptType transformToType(String wantedStatus){
+    public static PromptType transformToType(String promptType){
         for(PromptType s : PromptType.values()){
-            if(wantedStatus.equals(s.statusAsString) || wantedStatus.equals(s.statusAsStringNr)){
+            if(promptType.equals(s.prompttypeAsString) || promptType.equals(s.prompttypeAsNr)){
                 return s;
             }
         }
