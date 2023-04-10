@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -44,6 +45,9 @@ public interface DTOMapper {
   @Mapping(source = "playerName", target = "playerName")
   Player convertFromPlayerPutDTO(PlayerPutDTO player);
 
-
+  @Mapping(source = "promptId", target = "promptId")
+  @Mapping(source = "promptType", target = "promptType")
+  @Mapping(source = "promptText", target = "promptText")
+  PromptGetDTO convertToPromptGetDTO(Prompt prompt);
 
 }

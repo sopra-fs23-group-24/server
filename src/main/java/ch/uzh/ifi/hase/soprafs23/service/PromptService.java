@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.List;
 
 /**
  * User Service
@@ -37,8 +38,9 @@ public class PromptService {
         initialiseRepository();
     }
 
-    public String calledFunction(){
-        return "Function called";
+    public List<Prompt> getPrompts(){
+        List<Prompt> allPromptsInRepository = promptRepository.findAll();
+        return allPromptsInRepository;
     }
 
     private void initialiseRepository() throws PromptSetupException {
@@ -53,7 +55,8 @@ public class PromptService {
                 Prompt newPrompt = new Prompt();
                 newPrompt.setPromptType(PromptType.transformToType(promptInfo[0]));
                 newPrompt.setPromptText(promptInfo[1]);
-                System.out.println(newPrompt + "; Type = " + newPrompt.getPromptType() + "; Text = " + newPrompt.getPromptText());
+                promptRepository.save(newPrompt);
+                promptRepository.flush();
             }
         }catch(Exception e){
             System.out.println("Something went wrong while creating the prompts.");
