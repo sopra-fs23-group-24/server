@@ -1,8 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -17,18 +17,33 @@ import org.mapstruct.factory.Mappers;
  * Always created one mapper for getting information (GET) and one mapper for
  * creating information (POST).
  */
+
 @Mapper
 public interface DTOMapper {
 
-  DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
+    DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
-  @Mapping(source = "name", target = "name")
-  @Mapping(source = "username", target = "username")
-  User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
 
-  @Mapping(source = "id", target = "id")
-  @Mapping(source = "name", target = "name")
-  @Mapping(source = "username", target = "username")
+  @Mapping(source = "gameId", target = "gameId")
+  @Mapping(source = "gamePin", target = "gamePin")
   @Mapping(source = "status", target = "status")
-  UserGetDTO convertEntityToUserGetDTO(User user);
+  GameGetDTO convertToGameGetDTO(Game game);
+  @Mapping(source = "status", target = "status")
+  Game convertFromGamePutDTO(GamePutDTO game);
+
+
+  @Mapping(source = "playerId", target = "playerId")
+  @Mapping(source = "playerName", target = "playerName")
+  @Mapping(source = "score", target = "score")
+  PlayerGetDTO convertToPlayerGetDTO(Player player);
+
+  @Mapping(source = "playerName", target = "playerName")
+  @Mapping(source = "host", target = "host")
+  Player convertFromPlayerPostDTO(PlayerPostDTO game);
+
+  @Mapping(source = "playerName", target = "playerName")
+  Player convertFromPlayerPutDTO(PlayerPutDTO player);
+
+
+
 }
