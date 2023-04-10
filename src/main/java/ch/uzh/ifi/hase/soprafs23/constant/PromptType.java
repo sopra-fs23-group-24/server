@@ -16,7 +16,7 @@ public enum PromptType {
         this.statusAsStringNr = statusAsStringNr;
     }
 
-    public static PromptType transformToStatus(String wantedStatus){
+    public static PromptType transformToType(String wantedStatus){
         for(PromptType s : PromptType.values()){
             if(wantedStatus.equals(s.statusAsString) || wantedStatus.equals(s.statusAsStringNr)){
                 return s;
