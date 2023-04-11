@@ -1,39 +1,17 @@
-package ch.uzh.ifi.hase.soprafs23.entity;
+package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import javax.persistence.*;
-import java.io.Serial;
-import java.io.Serializable;
+public class TrueFalsePromptAnswerPostDTO {
 
-@Entity
-@Table(name = "TRUEFALSEPROMPTANSWER")
-public class TrueFalsePromptAnswer implements PromptAnswer, Serializable {
-
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue
-    private Long trueFalsePromptAnswerId;
-
-    @Column(nullable = false)
     private int associatedPromptNr;
 
-    @Column(nullable = false)
     private long associatedPlayerId;
 
-    @Column(nullable = false)
     private String answerText;
 
-    @Column(nullable = false)
     private Boolean answerBoolean;
 
 
     // getters + setters
-    public Long getTrueFalsePromptAnswerId() {
-        return trueFalsePromptAnswerId;
-    }
-
     public int getAssociatedPromptNr() {
         return associatedPromptNr;
     }
