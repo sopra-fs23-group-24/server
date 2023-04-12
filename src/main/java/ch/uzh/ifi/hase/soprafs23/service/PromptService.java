@@ -69,10 +69,19 @@ public class PromptService {
     }
 
     public List<Prompt> pickPrompts(PromptPostDTO userRequest, String gamePin){
+        int wantedTextPrompts = 4;
+        int wantedTrueFalsePrompts = 2;
+        int wantedDrawingPrompts = 3;
 
-        int wantedTextPrompts = userRequest.getTextNr();
-        int wantedTrueFalsePrompts = userRequest.getTruefalseNr();
-        int wantedDrawingPrompts = userRequest.getDrawingNr();
+        if(userRequest.getTextNr() != null){
+          wantedTextPrompts = userRequest.getTextNr();
+        }
+        if(userRequest.getTruefalseNr() != null){
+          wantedTrueFalsePrompts = userRequest.getTruefalseNr();
+        }
+        if(userRequest.getDrawingNr() != null){
+          wantedDrawingPrompts = userRequest.getDrawingNr();
+        }
 
         List<Prompt> allTextPrompts = promptRepository.findAllByPromptType(PromptType.TEXT);
         List<Prompt> allTrueFalsePrompts = promptRepository.findAllByPromptType(PromptType.TRUEFALSE);

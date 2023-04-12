@@ -75,7 +75,8 @@ public class GameService {
         Game newGame = new Game();
         newGame.setStatus(GameStatus.LOBBY);
 
-        String pin = generateUniqueGamePin();
+        Random rand = new Random();
+        String pin = generateUniqueGamePin(rand);
         newGame.setGamePin(pin);
 
         newGame = gameRepository.save(newGame);
@@ -188,19 +189,18 @@ public class GameService {
     }
 
     //TODO: test?
-    private String generateUniqueGamePin(){
-        Random random = new Random();
+    private String generateUniqueGamePin(Random rand){
 
         StringBuilder pin = new StringBuilder();
         for(int i=0; i<6; i++) {
-            pin.append(random.nextInt(10));
+            pin.append(rand.nextInt(10));
         }
         String pinString = pin.toString();
 
         if (gameRepository.findByGamePin(pinString) == null) {
             return pinString;
         }else{
-            return generateUniqueGamePin();
+            return generateUniqueGamePin(rand);
         }
     }
 
