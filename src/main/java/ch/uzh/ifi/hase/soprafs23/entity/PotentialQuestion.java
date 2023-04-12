@@ -27,6 +27,9 @@ public class PotentialQuestion implements Serializable {
     @Column(nullable = false)
     private String questionText;
 
+    @Column
+    private boolean requiresTextInput;
+
     public Long getPotentialQuestionId() {
         return potentialQuestionId;
     }
@@ -58,4 +61,12 @@ public class PotentialQuestion implements Serializable {
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
     }
+
+  public boolean isRequiresTextInput() {
+    return requiresTextInput;
+  }
+
+  public void setRequiresTextInput(boolean requiresTextInput) {
+    this.requiresTextInput = requiresTextInput;
+  }
 }

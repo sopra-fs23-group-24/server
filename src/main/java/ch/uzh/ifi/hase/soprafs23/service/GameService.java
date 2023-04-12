@@ -166,9 +166,7 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has prompts selected.");
         }
 
-        for(Prompt prompt : promptsForGame){
-            gameByPin.addPrompt(prompt);
-        }
+        gameByPin.addPrompts(promptsForGame);
 
         gameByPin.setStatus(GameStatus.PROMPT);
 

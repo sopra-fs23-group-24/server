@@ -115,20 +115,13 @@ public class Game implements Serializable {
         this.promptSet = promptSet;
     }
 
-    public void addPrompt(Prompt prompt) {
-        promptSet.add(prompt);
+    public void addPrompts(List<Prompt> newPrompts) {
+      promptSet.addAll(newPrompts);
     }
 
     // public nextQuestion() {
     // TODO: implement
     // }
 
-    public boolean checkIfHasPrompt(Prompt prompt){
-        if(promptSet.contains(prompt)){
-            return true;
-        }else{
-            return false;
-        }
-    }
 
 }

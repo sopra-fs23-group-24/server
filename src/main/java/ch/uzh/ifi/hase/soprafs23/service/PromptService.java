@@ -22,6 +22,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -46,10 +49,11 @@ public class PromptService {
     private GameService gameService;
 
     @Autowired
-    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException {
+    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, IOException {
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
-        initialiseRepository();
+      initialisePromptRepository();
+      initialisePotentialQuestionRepository();
     }
 
     @Autowired
@@ -59,50 +63,6 @@ public class PromptService {
 
     public List<Prompt> getPrompts(){
       return promptRepository.findAll();
-    }
-
-    private void initialiseRepository() throws PromptSetupException {
-        try{
-            BufferedReader promptsInput = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
-            String line;
-            while((line = promptsInput.readLine()) != null){
-                if(line.startsWith("\\")){
-                    continue;
-                }
-                String[] promptInfo = line.split(": ");
-                Prompt newPrompt = new Prompt();
-                newPrompt.setPromptNr(Integer.parseInt(promptInfo[0]));
-                newPrompt.setPromptType(PromptType.transformToType(promptInfo[1]));
-                newPrompt.setPromptText(promptInfo[2]);
-                promptRepository.save(newPrompt);
-                promptRepository.flush();
-            }
-
-
-            BufferedReader potentialQuestionsInput = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
-            while((line = potentialQuestionsInput.readLine()) != null){
-                if(line.startsWith("\\")){
-                    continue;
-                }
-                String[] questionInfo = line.split(": ");
-                PotentialQuestion newPotentialQuestion = new PotentialQuestion();
-                newPotentialQuestion.setAssociatedPrompt(promptRepository.findByPromptNr(Long.valueOf(questionInfo[0])));
-                newPotentialQuestion.setQuestionType(QuestionType.transformToType(questionInfo[1]));
-                newPotentialQuestion.setQuestionText(questionInfo[2]);
-                potentialQuestionsRepository.save(newPotentialQuestion);
-                potentialQuestionsRepository.flush();
-            }
-
-            for(Prompt prompt : promptRepository.findAll()){
-                if(potentialQuestionsRepository.findAllByAssociatedPrompt(prompt) == null){
-                  System.out.println("Prompt is missing a potential question!");
-                    throw new PromptSetupException();
-                }
-            }
-        }catch(Exception e){
-            System.out.println("Something went wrong while creating the prompts.");
-            throw new PromptSetupException();
-        }
     }
 
     public List<Prompt> pickPrompts(PromptPostDTO userRequest, String gamePin){
@@ -116,41 +76,105 @@ public class PromptService {
         List<Prompt> allDrawingPrompts = promptRepository.findAllByPromptType(PromptType.DRAWING);
 
         List<Prompt> promptsForGame = new ArrayList<>();
-        Random rand = new Random();
 
-        for (int i = 0; i < wantedTextPrompts; i++) {
-            if(allTextPrompts.size() < 1){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more text prompts than are available.");
-            }
-            int randomIndex = rand.nextInt(allTextPrompts.size());
-            Prompt randomPrompt = allTextPrompts.get(randomIndex);
-            promptsForGame.add(randomPrompt);
-            allTextPrompts.remove(randomIndex);
-        }
-
-        for (int i = 0; i < wantedTrueFalsePrompts; i++) {
-            if(allTrueFalsePrompts.size() < 1){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more true-false prompts than are available.");
-            }
-            int randomIndex = rand.nextInt(allTrueFalsePrompts.size());
-            Prompt randomPrompt = allTrueFalsePrompts.get(randomIndex);
-            promptsForGame.add(randomPrompt);
-            allTrueFalsePrompts.remove(randomIndex);
-        }
-
-        for (int i = 0; i < wantedDrawingPrompts; i++) {
-            if(allDrawingPrompts.size() < 1){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more drawing prompts than are available.");
-            }
-            int randomIndex = rand.nextInt(allDrawingPrompts.size());
-            Prompt randomPrompt = allDrawingPrompts.get(randomIndex);
-            promptsForGame.add(randomPrompt);
-            allDrawingPrompts.remove(randomIndex);
-        }
+        promptsForGame.addAll(selectNrOfPromptsFromList(allTextPrompts, wantedTextPrompts));
+        promptsForGame.addAll(selectNrOfPromptsFromList(allTrueFalsePrompts, wantedTrueFalsePrompts));
+        promptsForGame.addAll(selectNrOfPromptsFromList(allDrawingPrompts, wantedDrawingPrompts));
 
         gameService.addPromptsToGame(promptsForGame, gamePin);
         return promptsForGame;
     }
 
+    /**
+     * set up functions
+     */
 
+    private void initialisePromptRepository() throws IOException {
+      BufferedReader promptsInput = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
+      String line;
+      while ((line = promptsInput.readLine()) != null) {
+        if (line.startsWith("\\")) {
+          continue;
+        }
+        String[] promptInfo = line.split(": ");
+        Prompt newPrompt = parsePrompt(promptInfo);
+        if(newPrompt == null){
+          System.out.println("Could not properly parse prompt input: " + line);
+          continue;
+        }
+        promptRepository.save(newPrompt);
+        promptRepository.flush();
+      }
+    }
+
+    private void initialisePotentialQuestionRepository() throws IOException, PromptSetupException {
+      String line;
+      BufferedReader potentialQuestionsInput = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
+      while((line = potentialQuestionsInput.readLine()) != null){
+        if(line.startsWith("\\")){
+          continue;
+        }
+        String[] questionInfo = line.split(": ");
+        PotentialQuestion newPotentialQuestion = parsePotentialQuestion(questionInfo);
+        if(newPotentialQuestion == null){
+          System.out.println("Could not properly parse potential question input: " + line);
+          continue;
+        }
+        potentialQuestionsRepository.save(newPotentialQuestion);
+        potentialQuestionsRepository.flush();
+      }
+
+      for(Prompt prompt : promptRepository.findAll()){
+        if(potentialQuestionsRepository.findAllByAssociatedPrompt(prompt) == null){
+          throw new PromptSetupException("Prompt is missing a potential question!");
+        }
+      }
+    }
+
+    /**
+    * Helper functions
+    */
+    private Prompt parsePrompt(String[] promptLine){
+      try{
+        Prompt newPrompt = new Prompt();
+        newPrompt.setPromptNr(Integer.parseInt(promptLine[0]));
+        newPrompt.setPromptType(PromptType.transformToType(promptLine[1]));
+        newPrompt.setPromptText(promptLine[2]);
+
+        return newPrompt;
+      }catch(Exception e){
+        return null;
+      }
+    }
+
+    private PotentialQuestion parsePotentialQuestion(String[] potentialQuestionLine){
+      try {
+        PotentialQuestion newPotentialQuestion = new PotentialQuestion();
+        newPotentialQuestion.setAssociatedPrompt(promptRepository.findByPromptNr(Long.valueOf(potentialQuestionLine[0])));
+        newPotentialQuestion.setQuestionType(QuestionType.transformToType(potentialQuestionLine[1]));
+        newPotentialQuestion.setQuestionText(potentialQuestionLine[2]);
+        newPotentialQuestion.setRequiresTextInput(Boolean.parseBoolean(potentialQuestionLine[3]));
+
+        return newPotentialQuestion;
+      }catch(Error e){
+        return null;
+      }
+    }
+
+    private List<Prompt> selectNrOfPromptsFromList(List<Prompt> allPromptsOfType, int wantedNumber){
+      List<Prompt> selectedPrompts = new ArrayList<>();
+      Random rand = new Random();
+
+      for (int i = 0; i < wantedNumber; i++) {
+        if(allPromptsOfType.size() < 1){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more text prompts than are available.");
+        }
+        int randomIndex = rand.nextInt(allPromptsOfType.size());
+        Prompt randomPrompt = allPromptsOfType.get(randomIndex);
+        selectedPrompts.add(randomPrompt);
+        allPromptsOfType.remove(randomIndex);
+      }
+
+      return selectedPrompts;
+    }
 }

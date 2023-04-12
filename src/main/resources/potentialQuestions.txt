@@ -1,16 +1,19 @@
 \\
 \\Document to gather potential questions
-\\associatedPromptNR: questionType: questionText
+\\associatedPromptNR: questionType: questionText: %s present in question?
 \\rules: one question per line, no empty lines, split information with ": ", promptTypes: PLAYER/PROMPTANSWER/BOOLEAN
 \\comments can be made with "\\"
 \\please do not change promptNr again! potential questions are based on that
 \\
-1: USER: Which player told the following true story about their last holiday?
-1: BOOLEAN: Is the following story by %s about their last holiday true or false?
-2: USER: Which player drew this rat?
-2: PROMPTANSWER: Which rat was drawn by %s?
-3: USER: Whose favourite food is the following:
-3: PROMPTANSWER: What is the favourite food of %s?
+1: USER: Which player told this true story about their last holiday?: false
+1: BOOLEAN: Is the following story by %s about their last holiday true or false?: true
+2: USER: Which player drew this rat?: false
+2: PROMPTANSWER: Which rat was drawn by %s?: true
+3: USER: Whose favourite food is %s?: true
+3: PROMPTANSWER: What is the favourite food of %s?: true
+4: USER: Which player told this true story about their best friend?: false
+4: BOOLEAN: Is this story about %s's best friend true or false?: true
+5:
 //unfinished, just so we don't get errors
 3: USER: Whose favourite food is the following:
 4: USER: Whose favourite food is the following:
