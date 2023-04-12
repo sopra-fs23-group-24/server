@@ -6,12 +6,15 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository("drawingPromptAnswerRepository")
 public interface DrawingPromptAnswerRepository extends JpaRepository<DrawingPromptAnswer, Long> {
     DrawingPromptAnswer findByDrawingPromptAnswerId(long id);
     void deleteByDrawingPromptAnswerId(long id);
 
-    //list of all ByAssociatedPromptNr
+    List<DrawingPromptAnswer> findAllByAssociatedGamePin(String pin);
 
+    List<DrawingPromptAnswer> findAllByAssociatedPromptNr(int promptNr);
 }

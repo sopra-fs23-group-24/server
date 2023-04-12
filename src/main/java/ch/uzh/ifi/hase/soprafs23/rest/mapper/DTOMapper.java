@@ -1,9 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.TextPromptAnswer;
-import ch.uzh.ifi.hase.soprafs23.entity.TrueFalsePromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -49,15 +46,18 @@ public interface DTOMapper {
 
 
     @Mapping(source = "associatedPromptNr", target = "associatedPromptNr")
-    @Mapping(source = "associatedPlayerId", target = "associatedPlayerId")
     @Mapping(source = "answer", target = "answer")
     TextPromptAnswer convertFromTextPromptAnswerPostDTO(TextPromptAnswerPostDTO textPromptAnswerPostDTO);
 
     @Mapping(source = "associatedPromptNr", target = "associatedPromptNr")
-    @Mapping(source = "associatedPlayerId", target = "associatedPlayerId")
     @Mapping(source = "answerText", target = "answerText")
     @Mapping(source = "answerBoolean", target = "answerBoolean")
     TrueFalsePromptAnswer convertFromTrueFalsePromptAnswerPostDTO(TrueFalsePromptAnswerPostDTO trueFalsePromptAnswerPostDTO);
+
+
+    @Mapping(source = "associatedPromptNr", target = "associatedPromptNr")
+    @Mapping(source = "answerDrawing", target = "answerDrawing")
+    DrawingPromptAnswer convertFromDrawingPromptAnswerDTO(DrawingPromptAnswerPostDTO drawingPromptAnswerPostDTO);
 
 
 }

@@ -23,6 +23,8 @@ public class TrueFalsePromptAnswer implements PromptAnswer, Serializable {
     private long associatedPlayerId;
 
     @Column(nullable = false)
+    private String associatedGamePin;
+    @Column(nullable = false)
     private String answerText;
 
     @Column(nullable = false)
@@ -64,5 +66,14 @@ public class TrueFalsePromptAnswer implements PromptAnswer, Serializable {
 
     public void setAnswerBoolean(Boolean answerBoolean) {
         this.answerBoolean = answerBoolean;
+    }
+
+
+    public String getAssociatedGamePin() {
+        return associatedGamePin;
+    }
+
+    public void setAssociatedGamePin(String associatedGamePin) {
+        this.associatedGamePin = associatedGamePin;
     }
 }

@@ -5,12 +5,16 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository("textPromptAnswerRepository")
 public interface TextPromptAnswerRepository extends JpaRepository<TextPromptAnswer, Long> {
     TextPromptAnswer findByTextPromptAnswerId(long id);
     void deleteByTextPromptAnswerId(long id);
 
-    //list of all TextPromptAnswers findByAssociatedPromptNr, does this even work... or do we need to adjust the repo?
+    List<TextPromptAnswer> findAllByAssociatedGamePin(String pin);
+
+    List<TextPromptAnswer> findAllByAssociatedPromptNr(int promptNr);
 
 }

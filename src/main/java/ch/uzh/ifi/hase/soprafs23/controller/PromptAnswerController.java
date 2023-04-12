@@ -1,8 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.entity.DrawingPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.TextPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.TrueFalsePromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.repository.TextPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.DrawingPromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TextPromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TrueFalsePromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
@@ -35,17 +37,13 @@ public class PromptAnswerController {
     public TextPromptAnswer postTextPromptAnswer(@RequestBody TextPromptAnswerPostDTO clientAnswer,
                                                  @RequestHeader("playerToken") String loggedInToken,
                                                  @PathVariable("pin") String gamePin) {
-
-        // do we need checks before the conversion?
+        // convert
         TextPromptAnswer answer = DTOMapper.INSTANCE.convertFromTextPromptAnswerPostDTO(clientAnswer);
+        // save
+        TextPromptAnswer successfulSave = promptAnswerService.saveTextPromptAnswer(answer, loggedInToken, gamePin);
+        System.out.print("TextPromptAnswer saved");
 
-        // any further checks should probably be in the service
-        // this could be left out, if we change the Service method to return type void...
-        Boolean successfulSave = promptAnswerService.saveTextPromptAnswer(answer);
-        System.out.printf("TextPromptAnswer saved = %s", successfulSave);
-
-        // does it need to return sth...? - at the moment it returns the converted answer itself...
-        return answer;
+        return successfulSave;
     }
 
 
@@ -56,26 +54,36 @@ public class PromptAnswerController {
     public TrueFalsePromptAnswer postTrueFalsePromptAnswer(@RequestBody TrueFalsePromptAnswerPostDTO clientAnswer,
                                                            @RequestHeader("playerToken") String loggedInToken,
                                                            @PathVariable("pin") String gamePin) {
-
-        // do we need checks before the conversion?
+        System.out.println("gamePin: " + gamePin);
+        System.out.println("clientAnswer: " + clientAnswer);
+        // convert
         TrueFalsePromptAnswer answer = DTOMapper.INSTANCE.convertFromTrueFalsePromptAnswerPostDTO(clientAnswer);
+        System.out.println("answer: " + answer);
 
-        // any further checks should probably be in the service
-        // this could be left out, if we change the Service method to return type void...
-        Boolean successfulSave = promptAnswerService.saveTrueFalsePromptAnswer(answer);
-        System.out.printf("TrueFalseAnswer saved = %s", successfulSave);
+        // save
+        TrueFalsePromptAnswer successfulSave = promptAnswerService.saveTrueFalsePromptAnswer(answer, loggedInToken, gamePin);
+        System.out.print("TrueFalseAnswer saved");
 
-        // does it need to return sth...? - at the moment it returns the converted answer itself...
-        return answer;
+        return successfulSave;
     }
 
 
-/*
+
         @PostMapping("/games/{pin}/prompt-answers/drawing")
         @ResponseStatus(HttpStatus.CREATED)
         @ResponseBody
+        public DrawingPromptAnswer postDrawingPromptAnswer(@RequestBody DrawingPromptAnswerPostDTO clientAnswer,
+                                                        @RequestHeader("playerToken") String loggedInToken,
+                                                        @PathVariable("pin") String gamePin) {
+            // convert
+            DrawingPromptAnswer answer = DTOMapper.INSTANCE.convertFromDrawingPromptAnswerDTO(clientAnswer);
+            // save
+            DrawingPromptAnswer successfulSave = promptAnswerService.saveDrawingPromptAnswer(answer, loggedInToken, gamePin);
+            System.out.print("DrawingPromptAnswer saved");
 
- */
+            return successfulSave;
+        }
+
 
 
 }

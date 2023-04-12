@@ -23,10 +23,21 @@ public class TextPromptAnswer implements PromptAnswer, Serializable {
     private long associatedPlayerId;
 
     @Column(nullable = false)
+    private String associatedGamePin;
+
+    @Column(nullable = false)
     private String answer;
 
 
     // getters + setters
+
+    public String getAssociatedGamePin() {
+        return associatedGamePin;
+    }
+
+    public void setAssociatedGamePin(String associatedGamePin) {
+        this.associatedGamePin = associatedGamePin;
+    }
 
     public Long getTextPromptAnswerId() {
         return textPromptAnswerId;

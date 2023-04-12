@@ -70,4 +70,15 @@ public class DTOMapperTest {
         assertEquals(playerPutDTO.getPlayerName(), player.getPlayerName());
     }
 
+    @Test
+    public void convertFromTextPromptAnswerDTO_toTextPromptAnswer_success() {
+        // implement
+    }
+
+    @Test
+    public void convertFromTrueFalsePromptAnswerPostDTO_toTrueFalsePromptAnswer_success() {
+        // implement
+    }
+
+
 }

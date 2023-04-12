@@ -4,8 +4,6 @@ public class TrueFalsePromptAnswerPostDTO {
 
     private int associatedPromptNr;
 
-    private long associatedPlayerId;
-
     private String answerText;
 
     private Boolean answerBoolean;
@@ -20,13 +18,6 @@ public class TrueFalsePromptAnswerPostDTO {
         this.associatedPromptNr = associatedPromptNr;
     }
 
-    public long getAssociatedPlayerId() {
-        return associatedPlayerId;
-    }
-
-    public void setAssociatedPlayerId(long associatedPlayerId) {
-        this.associatedPlayerId = associatedPlayerId;
-    }
 
     public String getAnswerText() {
         return answerText;

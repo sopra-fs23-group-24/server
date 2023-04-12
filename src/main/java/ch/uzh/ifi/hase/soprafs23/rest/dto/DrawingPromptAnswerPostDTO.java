@@ -1,14 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+public class DrawingPromptAnswerPostDTO {
 
-public class TextPromptAnswerPostDTO {
 
     private int associatedPromptNr;
 
-    private String answer;
+    private String answerDrawing;
+
 
     // getters + setters
 
@@ -21,11 +19,11 @@ public class TextPromptAnswerPostDTO {
         this.associatedPromptNr = associatedPromptNr;
     }
 
-    public String getAnswer() {
-        return answer;
+    public String getAnswerDrawing() {
+        return answerDrawing;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setAnswerDrawing(String answer) {
+        this.answerDrawing = answer;
     }
 }
