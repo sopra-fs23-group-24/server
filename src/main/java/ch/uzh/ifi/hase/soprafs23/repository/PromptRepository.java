@@ -12,7 +12,7 @@ import java.util.List;
 public interface PromptRepository extends JpaRepository<Prompt, Long> {
 
   Prompt findByPromptId(Long id);
-  Prompt findByPromptNr(Long id);
+  Prompt findByPromptNr(Integer id);
   List<Prompt> findAllByPromptType(PromptType type);
 
 }

@@ -142,8 +142,8 @@ public class GameService {
         }
 
         gameRepository.deleteByGamePin(gamePin);
+        //TODO: find better solution for this (too many connections)
         playerService.deleteAllPlayersByGamePin(gamePin);
-        //TODO: delete prompts
         //TODO: delete prompt answers
         //TODO: delete questions
         //TODO: delete answers

@@ -1,15 +1,18 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.exceptions.PromptSetupException;
 import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionsRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PromptPostDTO;
+import org.apache.logging.log4j.util.StringBuilderFormattable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +132,10 @@ public class PromptService {
           throw new PromptSetupException("Prompt is missing a potential question!");
         }
       }
+
+      for(PotentialQuestion question: potentialQuestionsRepository.findAll()){
+          testCreateQuestions(question);
+      }
     }
 
     /**
@@ -150,13 +157,14 @@ public class PromptService {
     private PotentialQuestion parsePotentialQuestion(String[] potentialQuestionLine){
       try {
         PotentialQuestion newPotentialQuestion = new PotentialQuestion();
-        newPotentialQuestion.setAssociatedPrompt(promptRepository.findByPromptNr(Long.valueOf(potentialQuestionLine[0])));
+        newPotentialQuestion.setAssociatedPrompt(promptRepository.findByPromptNr(Integer.valueOf(potentialQuestionLine[0])));
         newPotentialQuestion.setQuestionType(QuestionType.transformToType(potentialQuestionLine[1]));
         newPotentialQuestion.setQuestionText(potentialQuestionLine[2]);
         newPotentialQuestion.setRequiresTextInput(Boolean.parseBoolean(potentialQuestionLine[3]));
+        newPotentialQuestion.setDisplayType(AdditionalDisplayType.transformToType(potentialQuestionLine[4]));
 
         return newPotentialQuestion;
-      }catch(Error e){
+      }catch(Throwable e){
         return null;
       }
     }
@@ -176,5 +184,24 @@ public class PromptService {
       }
 
       return selectedPrompts;
+    }
+
+    private void testCreateQuestions(PotentialQuestion pq){
+      StringBuilder outputString = new StringBuilder();
+      if(pq.isRequiresTextInput()){
+        if(pq.getQuestionType() == QuestionType.PLAYER){
+          outputString.append(String.format(pq.getQuestionText(), "PROMPT INPUT"));
+        }else{
+          outputString.append(String.format(pq.getQuestionText(), "USERNAME"));
+        }
+      }else{
+        outputString.append(pq.getQuestionText());
+      }
+      if(pq.getDisplayType() == AdditionalDisplayType.IMAGE){
+        outputString.append(" ---- SHOW IMAGE TO GUESS");
+      }else if(pq.getDisplayType() == AdditionalDisplayType.TEXT){
+        outputString.append(" ---- SHOW A TEXT");
+      }
+      System.out.println(outputString);
     }
 }
