@@ -8,16 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Internal User Representation
- * This class composes the internal representation of the user and defines how
- * the user is stored in the database.
- * Every variable will be mapped into a database field with the @Column
- * annotation
- * - nullable = false -> this cannot be left empty
- * - unique = true -> this value must be unqiue across the database -> composes
- * the primary key
- */
 @Entity
 @Table(name = "GAME")
 public class Game implements Serializable {
@@ -35,8 +25,8 @@ public class Game implements Serializable {
 
 
     @Column
-    @OneToMany(cascade=CascadeType.ALL)
-    private List<Player> playerGroup = new ArrayList<Player>();
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Player> playerGroup = new ArrayList<>();
     //TODO: should we use players or id? - and why does id not work?
 
     @Column(nullable = false)
@@ -46,8 +36,8 @@ public class Game implements Serializable {
     private Long hostId;
 
     @Column
-    @ManyToMany(cascade=CascadeType.ALL)
-    private List<Prompt> promptSet = new ArrayList<Prompt>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Prompt> promptSet = new ArrayList<>();
 
     //@Column @OneToMany
     //private List<GameQuestion> quizQuestionSet = new ArrayList<GameQuestion>();
@@ -116,7 +106,7 @@ public class Game implements Serializable {
     }
 
     public void addPrompts(List<Prompt> newPrompts) {
-      promptSet.addAll(newPrompts);
+        promptSet.addAll(newPrompts);
     }
 
     // public nextQuestion() {

@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
 import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
-import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 
 import javax.persistence.*;
@@ -65,19 +64,19 @@ public class PotentialQuestion implements Serializable {
         this.questionText = questionText;
     }
 
-  public boolean isRequiresTextInput() {
-    return requiresTextInput;
-  }
+    public boolean isRequiresTextInput() {
+        return requiresTextInput;
+    }
 
-  public void setRequiresTextInput(boolean requiresTextInput) {
-    this.requiresTextInput = requiresTextInput;
-  }
+    public void setRequiresTextInput(boolean requiresTextInput) {
+        this.requiresTextInput = requiresTextInput;
+    }
 
-  public AdditionalDisplayType getDisplayType() {
-    return displayType;
-  }
+    public AdditionalDisplayType getDisplayType() {
+        return displayType;
+    }
 
-  public void setDisplayType(AdditionalDisplayType displayType) {
-    this.displayType = displayType;
-  }
+    public void setDisplayType(AdditionalDisplayType displayType) {
+        this.displayType = displayType;
+    }
 }

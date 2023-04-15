@@ -33,7 +33,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromGamePutDTO_toGame_success(){
+    public void convertFromGamePutDTO_toGame_success() {
         GamePutDTO gamePutDTO = new GamePutDTO();
         gamePutDTO.setStatus(GameStatus.SELECTION);
 
@@ -42,7 +42,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromPlayerPostDTO_toPlayer_success(){
+    public void convertFromPlayerPostDTO_toPlayer_success() {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -51,8 +51,9 @@ public class DTOMapperTest {
         assertEquals(playerPostDTO.getPlayerName(), player.getPlayerName());
         assertEquals(playerPostDTO.isHost(), player.isHost());
     }
+
     @Test
-    public void convertToPlayerGetDTO_fromPlayer_success(){
+    public void convertToPlayerGetDTO_fromPlayer_success() {
         Player player = new Player();
         player.setPlayerName("test");
         player.setPlayerId(1L);
@@ -63,8 +64,9 @@ public class DTOMapperTest {
         assertEquals(playerGetDTO.getScore(), player.getScore());
         assertEquals(playerGetDTO.getPlayerId(), player.getPlayerId());
     }
+
     @Test
-    public void convertFromPlayerPutDTO_toPlayer_success(){
+    public void convertFromPlayerPutDTO_toPlayer_success() {
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("test");
 
@@ -73,7 +75,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertToPromptGetDTO_fromPrompt_success(){
+    public void convertToPromptGetDTO_fromPrompt_success() {
         Prompt testPrompt = new Prompt();
         testPrompt.setPromptNr(999);
         testPrompt.setPromptText("Tell a story");

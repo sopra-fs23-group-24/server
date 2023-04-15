@@ -1,22 +1,16 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManagerAutoConfiguration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 public class PlayerRepositoryIntegrationTest {
@@ -29,7 +23,7 @@ public class PlayerRepositoryIntegrationTest {
     private TestEntityManager entityManager;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         testPlayer = new Player();
         testPlayer.setPlayerName("test");
         testPlayer.setAssociatedGamePin("123456");
@@ -42,13 +36,13 @@ public class PlayerRepositoryIntegrationTest {
     }
 
     @AfterEach
-    void emptyRepository(){
+    void emptyRepository() {
         playerRepository.deleteAll();
     }
 
     /*@Test
     public void findByPlayerId_success() {
-        //due to OneToMany relationship Game -> Players, Players are detatched entities
+        //due to OneToMany relationship Game -> Players, Players are detached entities
         //use merge instead of save
 
 
@@ -65,7 +59,7 @@ public class PlayerRepositoryIntegrationTest {
 
     @Test
     public void findByToken_success() {
-        //due to OneToMany relationship Game -> Players, Players are detatched entities
+        //due to OneToMany relationship Game -> Players, Players are detached entities
         //use merge instead of save
         //entityManager.merge(testPlayer);
         //entityManager.flush();
@@ -79,7 +73,7 @@ public class PlayerRepositoryIntegrationTest {
     }
 
     @Test
-    public void findAllByAssociatedGamePin_success(){
+    public void findAllByAssociatedGamePin_success() {
         //entityManager.merge(testPlayer);
         //entityManager.flush();
 
@@ -91,8 +85,6 @@ public class PlayerRepositoryIntegrationTest {
         assertEquals(testPlayer.getToken(), foundPlayers.get(0).getToken());
         assertEquals(testPlayer.getAssociatedGamePin(), foundPlayers.get(0).getAssociatedGamePin());
     }
-
-
 
 
 }

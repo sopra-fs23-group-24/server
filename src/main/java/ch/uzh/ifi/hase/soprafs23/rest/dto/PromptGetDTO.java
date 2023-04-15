@@ -2,10 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 public class PromptGetDTO {
     private Long promptId;
     private Integer promptNr;
@@ -25,15 +21,17 @@ public class PromptGetDTO {
     public PromptType getPromptType() {
         return promptType;
     }
+
+    public void setPromptType(PromptType promptType) {
+        this.promptType = promptType;
+    }
+
     public Integer getPromptNr() {
         return promptNr;
     }
 
     public void setPromptNr(Integer promptNr) {
         this.promptNr = promptNr;
-    }
-    public void setPromptType(PromptType promptType) {
-        this.promptType = promptType;
     }
 
     public String getPromptText() {

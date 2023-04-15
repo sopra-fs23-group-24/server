@@ -4,16 +4,6 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 
-/**
- * Internal User Representation
- * This class composes the internal representation of the user and defines how
- * the user is stored in the database.
- * Every variable will be mapped into a database field with the @Column
- * annotation
- * - nullable = false -> this cannot be left empty
- * - unique = true -> this value must be unqiue across the database -> composes
- * the primary key
- */
 @Entity
 @Table(name = "PLAYER")
 public class Player implements Serializable {
@@ -25,10 +15,10 @@ public class Player implements Serializable {
     @GeneratedValue
     private Long playerId;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String associatedGamePin;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String playerName;
 
     @Column(nullable = false, unique = true)
@@ -57,8 +47,8 @@ public class Player implements Serializable {
     }
 
     public String getPlayerName() {
-          return playerName;
-      }
+        return playerName;
+    }
 
     public void setPlayerName(String name) {
         this.playerName = name;

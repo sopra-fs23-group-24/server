@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.repository;
 import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import org.junit.jupiter.api.AfterEach;
@@ -28,7 +27,7 @@ public class PotentialQuestionsRepositoryIntegrationTest {
     private TestEntityManager entityManager;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         Prompt testPrompt = new Prompt();
         testPrompt.setPromptNr(999);
         testPrompt.setPromptText("Tell a story");
@@ -50,13 +49,13 @@ public class PotentialQuestionsRepositoryIntegrationTest {
     }
 
     @AfterEach
-    void emptyRepository(){
+    void emptyRepository() {
         pqRepository.deleteAll();
     }
 
 
     @Test
-    public void findAllByAssociatedPrompt(){
+    public void findAllByAssociatedPrompt() {
         List<PotentialQuestion> allFound = pqRepository.findAllByAssociatedPrompt(testPQ.getAssociatedPrompt());
         PotentialQuestion found = allFound.get(0);
 
@@ -69,7 +68,7 @@ public class PotentialQuestionsRepositoryIntegrationTest {
     }
 
     @Test
-    public void findAllByQuestionType(){
+    public void findAllByQuestionType() {
         List<PotentialQuestion> allFound = pqRepository.findAllByQuestionType(testPQ.getQuestionType());
         PotentialQuestion found = allFound.get(0);
 

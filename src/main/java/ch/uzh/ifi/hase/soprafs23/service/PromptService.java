@@ -1,18 +1,14 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
-import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.exceptions.PromptSetupException;
 import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionsRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PromptPostDTO;
-import org.apache.logging.log4j.util.StringBuilderFormattable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -121,6 +114,7 @@ public class PromptService {
             }
             promptRepository.save(newPrompt);
             promptRepository.flush();
+            log.debug("created prompt: {}", newPrompt);
         }
     }
 
@@ -141,11 +135,12 @@ public class PromptService {
             }
             potentialQuestionsRepository.save(newPotentialQuestion);
             potentialQuestionsRepository.flush();
+            log.debug("created potential question: {}", newPotentialQuestion);
         }
 
         for (Prompt prompt : promptRepository.findAll()) {
             if (potentialQuestionsRepository.findAllByAssociatedPrompt(prompt) == null) {
-                throw new PromptSetupException("Prompt is missing a potential question!");
+                throw new PromptSetupException("Prompt is missing a potential question!: " + prompt.getPromptNr().toString());
             }
         }
 
@@ -166,9 +161,11 @@ public class PromptService {
             newPrompt.setPromptType(PromptType.transformToType(promptLine[1]));
             newPrompt.setPromptText(promptLine[2]);
 
+            log.debug("Prompt parsed as: {}", newPrompt);
             return newPrompt;
         }
         catch (Exception e) {
+            log.debug("Error Thrown: {}", e.getClass());
             return null;
         }
     }
@@ -184,9 +181,11 @@ public class PromptService {
             newPotentialQuestion.setRequiresTextInput(Boolean.parseBoolean(potentialQuestionLine[3]));
             newPotentialQuestion.setDisplayType(AdditionalDisplayType.transformToType(potentialQuestionLine[4]));
 
+            log.debug("Potential question parsed as: {}", newPotentialQuestion);
             return newPotentialQuestion;
         }
         catch (Throwable e) {
+            log.debug("Error Thrown: {}", e.getClass());
             return null;
         }
     }

@@ -10,13 +10,14 @@ public enum QuestionType {
     BOOLEAN("BOOLEAN");
 
     private final String questionTypeAsString;
-    QuestionType(String questionTypeAsString){
+
+    QuestionType(String questionTypeAsString) {
         this.questionTypeAsString = questionTypeAsString;
     }
 
-    public static QuestionType transformToType(String questionType){
-        for(QuestionType s : QuestionType.values()){
-            if(questionType.equals(s.questionTypeAsString)){
+    public static QuestionType transformToType(String questionType) {
+        for (QuestionType s : QuestionType.values()) {
+            if (questionType.equals(s.questionTypeAsString)) {
                 return s;
             }
         }

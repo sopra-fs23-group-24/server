@@ -10,13 +10,14 @@ public enum PromptType {
     DRAWING("DRAWING");
 
     private final String prompttypeAsString;
-    PromptType(String prompttypeAsString){
+
+    PromptType(String prompttypeAsString) {
         this.prompttypeAsString = prompttypeAsString;
     }
 
-    public static PromptType transformToType(String promptType){
-        for(PromptType s : PromptType.values()){
-            if(promptType.equals(s.prompttypeAsString)){
+    public static PromptType transformToType(String promptType) {
+        for (PromptType s : PromptType.values()) {
+            if (promptType.equals(s.prompttypeAsString)) {
                 return s;
             }
         }

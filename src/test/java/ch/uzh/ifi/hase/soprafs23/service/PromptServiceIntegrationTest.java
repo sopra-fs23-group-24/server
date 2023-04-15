@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionsRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;

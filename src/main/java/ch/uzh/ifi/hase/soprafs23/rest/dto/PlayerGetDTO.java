@@ -8,27 +8,27 @@ public class PlayerGetDTO {
     private int score = 0;
 
     public Long getPlayerId() {
-      return playerId;
+        return playerId;
     }
 
     public void setPlayerId(Long playerId) {
-      this.playerId = playerId;
+        this.playerId = playerId;
     }
 
     public String getPlayerName() {
-      return playerName;
+        return playerName;
     }
 
     public void setPlayerName(String playerName) {
-      this.playerName = playerName;
+        this.playerName = playerName;
     }
 
     public int getScore() {
-      return score;
+        return score;
     }
 
     public void setScore(int score) {
-      this.score = score;
+        this.score = score;
     }
 
 }

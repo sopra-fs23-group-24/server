@@ -4,21 +4,16 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 /**
  * Test class for the UserResource REST resource.

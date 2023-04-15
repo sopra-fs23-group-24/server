@@ -22,7 +22,7 @@ public class Prompt implements Serializable {
     @Column(nullable = false)
     private PromptType promptType;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String promptText;
 
     public Long getPromptId() {

@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,14 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.management.MBeanServerConnection;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,19 +21,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PlayerServiceTest {
     private Player testPlayer;
 
-    private Game testGame;
-
     @Mock
     private PlayerRepository playerRepository;
 
     @InjectMocks
     private PlayerService playerService;
 
-    @Mock
+    /*@Mock
     private GameRepository gameRepository;
 
     @InjectMocks
-    private GameService gameService;
+    private GameService gameService;*/
 
     @BeforeEach
     public void setup() {
@@ -60,7 +51,7 @@ public class PlayerServiceTest {
         Mockito.when(playerRepository.findAllByAssociatedGamePin(Mockito.any())).thenReturn(List.of(testPlayer));
         Mockito.when(playerRepository.findAll()).thenReturn(List.of(testPlayer));
 
-        testGame = new Game();
+        Game testGame = new Game();
         testGame.setGameId(1L);
         testGame.setGamePin("123456");
 
@@ -74,24 +65,23 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void getPlayers_success(){
+    public void getPlayers_success() {
         List<Player> allPlayers = playerService.getPlayers();
         assertEquals(allPlayers, List.of(testPlayer));
     }
 
     @Test
-    public void getPlayersWithPin_success(){
+    public void getPlayersWithPin_success() {
         List<Player> allPlayers = playerService.getPlayersWithPin(testPlayer.getAssociatedGamePin());
         assertEquals(allPlayers, List.of(testPlayer));
     }
 
     @Test
-    public void getPlayersWithPin_failure(){
+    public void getPlayersWithPin_failure() {
         Mockito.when(playerRepository.findAllByAssociatedGamePin("invalidPin")).thenReturn(List.of());
 
         assertThrows(ResponseStatusException.class, () -> playerService.getPlayersWithPin("invalidPin"));
     }
-
 
 
     //TODO: figure out what to do because cannot properly stub gameService
@@ -113,7 +103,7 @@ public class PlayerServiceTest {
     }*/
 
     @Test
-    public void changePlayerUsername_success(){
+    public void changePlayerUsername_success() {
         String loggedInPlayerToken = "1";
 
         Mockito.when(playerRepository.findByPlayerId(testPlayer.getPlayerId())).thenReturn(testPlayer);
@@ -129,7 +119,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void changePlayerUsername_invalidPlayerId(){
+    public void changePlayerUsername_invalidPlayerId() {
         Player tokenPlayer = new Player();
         tokenPlayer.setPlayerId(2L);
         tokenPlayer.setAssociatedGamePin("123456");
@@ -145,8 +135,9 @@ public class PlayerServiceTest {
 
         assertThrows(ResponseStatusException.class, () -> playerService.changePlayerUsername(testPlayer, loggedInPlayerToken));
     }
+
     @Test
-    public void changePlayerUsername_idAndTokenDoNotMatch(){
+    public void changePlayerUsername_idAndTokenDoNotMatch() {
         String loggedInPlayerToken = "1";
 
         Mockito.when(playerRepository.findByPlayerId(testPlayer.getPlayerId())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -155,7 +146,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void changePlayerUsername_emptyUsername(){
+    public void changePlayerUsername_emptyUsername() {
         String loggedInPlayerToken = "1";
         testPlayer.setPlayerName("");
 
@@ -175,8 +166,8 @@ public class PlayerServiceTest {
      * Helper functions tests
      */
     @Test
-    public void getPlayerById_success(){
-        try{
+    public void getPlayerById_success() {
+        try {
             Mockito.when(playerRepository.findById(testPlayer.getPlayerId())).thenReturn(Optional.ofNullable(testPlayer));
 
             Player foundPlayer = playerService.getById(testPlayer.getPlayerId());
@@ -186,21 +177,23 @@ public class PlayerServiceTest {
             assertEquals(testPlayer.getAssociatedGamePin(), foundPlayer.getAssociatedGamePin());
             assertEquals(testPlayer.getToken(), foundPlayer.getToken());
             assertEquals(0, foundPlayer.getScore());
-        }catch(ResponseStatusException e){
+        }
+        catch (ResponseStatusException e) {
             Assertions.fail();
         }
 
     }
+
     @Test
-    public void getPlayerById_failure(){
+    public void getPlayerById_failure() {
         Mockito.when(playerRepository.findById(testPlayer.getPlayerId())).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> playerService.getById(testPlayer.getPlayerId()));
     }
 
     @Test
-    public void getPlayerByToken_success(){
-        try{
+    public void getPlayerByToken_success() {
+        try {
             Mockito.when(playerRepository.findByToken(testPlayer.getToken())).thenReturn(testPlayer);
 
             Player foundPlayer = playerService.getByToken(testPlayer.getToken());
@@ -210,13 +203,15 @@ public class PlayerServiceTest {
             assertEquals(testPlayer.getAssociatedGamePin(), foundPlayer.getAssociatedGamePin());
             assertEquals(testPlayer.getToken(), foundPlayer.getToken());
             assertEquals(0, foundPlayer.getScore());
-        }catch(ResponseStatusException e){
+        }
+        catch (ResponseStatusException e) {
             Assertions.fail();
         }
 
     }
+
     @Test
-    public void getPlayerByToken_failure(){
+    public void getPlayerByToken_failure() {
         Mockito.when(playerRepository.findByToken(testPlayer.getToken())).thenReturn(null);
 
         assertThrows(ResponseStatusException.class, () -> playerService.getById(testPlayer.getPlayerId()));

@@ -1,8 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +24,7 @@ public class PromptRepositoryIntegrationTest {
     private TestEntityManager entityManager;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         testPrompt = new Prompt();
         testPrompt.setPromptNr(999);
         testPrompt.setPromptText("Tell a story");
@@ -37,7 +35,7 @@ public class PromptRepositoryIntegrationTest {
     }
 
     @AfterEach
-    void emptyRepository(){
+    void emptyRepository() {
         promptRepository.deleteAll();
     }
 
@@ -53,7 +51,7 @@ public class PromptRepositoryIntegrationTest {
     }
 
     @Test
-    public void findAllByPromptType(){
+    public void findAllByPromptType() {
         List<Prompt> allFound = promptRepository.findAllByPromptType(testPrompt.getPromptType());
         Prompt found = allFound.get(0);
 

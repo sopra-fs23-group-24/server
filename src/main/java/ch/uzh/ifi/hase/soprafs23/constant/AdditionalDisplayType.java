@@ -10,13 +10,14 @@ public enum AdditionalDisplayType {
     NONE("NONE");
 
     private final String displayTypeAsString;
-    AdditionalDisplayType(String displayTypeAsString){
+
+    AdditionalDisplayType(String displayTypeAsString) {
         this.displayTypeAsString = displayTypeAsString;
     }
 
-    public static AdditionalDisplayType transformToType(String displayType){
-        for(AdditionalDisplayType s : AdditionalDisplayType.values()){
-            if(displayType.equals(s.displayTypeAsString)){
+    public static AdditionalDisplayType transformToType(String displayType) {
+        for (AdditionalDisplayType s : AdditionalDisplayType.values()) {
+            if (displayType.equals(s.displayTypeAsString)) {
                 return s;
             }
         }
