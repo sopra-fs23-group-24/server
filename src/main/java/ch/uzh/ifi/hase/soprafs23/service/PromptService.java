@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -49,8 +48,10 @@ public class PromptService {
 
     private final Random rand = SecureRandom.getInstanceStrong();
 
+    private BufferedReader input;
+
     @Autowired
-    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException {
+    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException, IOException {
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
         initialisePromptRepository();
@@ -104,11 +105,11 @@ public class PromptService {
 
     //TODO: test Integration?
     //TODO: test service?
-    private void initialisePromptRepository() throws PromptSetupException {
+    private void initialisePromptRepository() throws PromptSetupException, IOException {
         try{
-            BufferedReader promptsInput = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
+            input = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
             String line;
-            while ((line = promptsInput.readLine()) != null) {
+            while ((line = input.readLine()) != null) {
                 if (line.startsWith("\\")) {
                     continue;
                 }
@@ -122,19 +123,22 @@ public class PromptService {
                 promptRepository.flush();
                 log.debug("created prompt: {}", newPrompt);
             }
-        }catch(IOException e){
+        }
+        catch (IOException e) {
             throw new PromptSetupException("Could not find file for prompts.");
+        }finally {
+            input.close();
         }
 
     }
 
     //TODO: test Integration?
     //TODO: test service?
-    private void initialisePotentialQuestionRepository() throws PromptSetupException {
+    private void initialisePotentialQuestionRepository() throws PromptSetupException, IOException {
         try {
             String line;
-            BufferedReader potentialQuestionsInput = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
-            while ((line = potentialQuestionsInput.readLine()) != null) {
+            input = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
+            while ((line = input.readLine()) != null) {
                 if (line.startsWith("\\")) {
                     continue;
                 }
@@ -160,6 +164,8 @@ public class PromptService {
             }*/
         }catch(IOException e){
             throw new PromptSetupException("Could not find file for potential questions.");
+        }finally {
+            input.close();
         }
     }
 
