@@ -50,7 +50,7 @@ public class PromptService {
     private final Random rand = SecureRandom.getInstanceStrong();
 
     @Autowired
-    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, IOException, NoSuchAlgorithmException {
+    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException {
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
         initialisePromptRepository();
