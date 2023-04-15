@@ -6,11 +6,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 public enum GameStatus {
 
-    LOBBY("LOBBY", "1"),
-    SELECTION("SELECTION", "2"),
-    PROMPT("PROMPT", "3"),
-    QUIZ("QUIZ", "4"),
-    END("END", "5");
+    LOBBY("LOBBY", "0"),
+    SELECTION("SELECTION", "1"),
+    PROMPT("PROMPT", "2"),
+    QUIZ("QUIZ", "3"),
+    END("END", "4");
 
     private final String statusAsString;
     private final String statusAsStringNr;

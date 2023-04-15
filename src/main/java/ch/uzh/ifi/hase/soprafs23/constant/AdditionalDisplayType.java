@@ -5,20 +5,18 @@ import org.springframework.web.server.ResponseStatusException;
 
 public enum AdditionalDisplayType {
 
-    IMAGE("IMAGE", "1"),
-    TEXT("TEXT", "2"),
-    NONE("NONE", "3");
+    IMAGE("IMAGE"),
+    TEXT("TEXT"),
+    NONE("NONE");
 
     private final String displayTypeAsString;
-    private final String displayTypeAsNr;
-    AdditionalDisplayType(String displayTypeAsString, String displayTypeAsNr){
+    AdditionalDisplayType(String displayTypeAsString){
         this.displayTypeAsString = displayTypeAsString;
-        this.displayTypeAsNr = displayTypeAsNr;
     }
 
     public static AdditionalDisplayType transformToType(String displayType){
         for(AdditionalDisplayType s : AdditionalDisplayType.values()){
-            if(displayType.equals(s.displayTypeAsString) || displayType.equals(s.displayTypeAsNr)){
+            if(displayType.equals(s.displayTypeAsString)){
                 return s;
             }
         }

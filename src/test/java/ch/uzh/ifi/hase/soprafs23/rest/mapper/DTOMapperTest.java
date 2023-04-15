@@ -1,8 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import org.junit.jupiter.api.Test;
 
@@ -70,4 +72,16 @@ public class DTOMapperTest {
         assertEquals(playerPutDTO.getPlayerName(), player.getPlayerName());
     }
 
+    @Test
+    public void convertToPromptGetDTO_fromPrompt_success(){
+        Prompt testPrompt = new Prompt();
+        testPrompt.setPromptNr(999);
+        testPrompt.setPromptText("Tell a story");
+        testPrompt.setPromptType(PromptType.TRUEFALSE);
+
+        PromptGetDTO getDTO = DTOMapper.INSTANCE.convertToPromptGetDTO(testPrompt);
+        assertEquals(testPrompt.getPromptNr(), getDTO.getPromptNr());
+        assertEquals(testPrompt.getPromptType(), getDTO.getPromptType());
+        assertEquals(testPrompt.getPromptText(), getDTO.getPromptText());
+    }
 }

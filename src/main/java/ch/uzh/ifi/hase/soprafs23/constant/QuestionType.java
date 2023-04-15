@@ -5,20 +5,18 @@ import org.springframework.web.server.ResponseStatusException;
 
 public enum QuestionType {
 
-    PLAYER("PLAYER", "1"),
-    PROMPTANSWER("PROMPTANSWER", "2"),
-    BOOLEAN("BOOLEAN", "3");
+    PLAYER("PLAYER"),
+    PROMPTANSWER("PROMPTANSWER"),
+    BOOLEAN("BOOLEAN");
 
     private final String questionTypeAsString;
-    private final String questionTypeAsNr;
-    QuestionType(String questionTypeAsString, String questionTypeAsNr){
+    QuestionType(String questionTypeAsString){
         this.questionTypeAsString = questionTypeAsString;
-        this.questionTypeAsNr = questionTypeAsNr;
     }
 
     public static QuestionType transformToType(String questionType){
         for(QuestionType s : QuestionType.values()){
-            if(questionType.equals(s.questionTypeAsString) || questionType.equals(s.questionTypeAsNr)){
+            if(questionType.equals(s.questionTypeAsString)){
                 return s;
             }
         }

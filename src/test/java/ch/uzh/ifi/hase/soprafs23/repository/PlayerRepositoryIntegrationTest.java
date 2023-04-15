@@ -36,6 +36,9 @@ public class PlayerRepositoryIntegrationTest {
         testPlayer.setHost(true);
         testPlayer.setToken("1");
         testPlayer.setPlayerId(1L);
+
+        entityManager.merge(testPlayer);
+        entityManager.flush();
     }
 
     @AfterEach
@@ -43,13 +46,11 @@ public class PlayerRepositoryIntegrationTest {
         playerRepository.deleteAll();
     }
 
-    //TODO: doesn't work because the generated id depends on previous tests for some reason
     /*@Test
     public void findByPlayerId_success() {
         //due to OneToMany relationship Game -> Players, Players are detatched entities
         //use merge instead of save
-        entityManager.merge(testPlayer);
-        entityManager.flush();
+
 
         // when
         Player found = playerRepository.findByPlayerId(testPlayer.getPlayerId());
@@ -66,8 +67,8 @@ public class PlayerRepositoryIntegrationTest {
     public void findByToken_success() {
         //due to OneToMany relationship Game -> Players, Players are detatched entities
         //use merge instead of save
-        entityManager.merge(testPlayer);
-        entityManager.flush();
+        //entityManager.merge(testPlayer);
+        //entityManager.flush();
 
         // when
         Player found = playerRepository.findByToken(testPlayer.getToken());
@@ -79,8 +80,8 @@ public class PlayerRepositoryIntegrationTest {
 
     @Test
     public void findAllByAssociatedGamePin_success(){
-        entityManager.merge(testPlayer);
-        entityManager.flush();
+        //entityManager.merge(testPlayer);
+        //entityManager.flush();
 
         // when
         List<Player> foundPlayers = playerRepository.findAllByAssociatedGamePin(testPlayer.getAssociatedGamePin());

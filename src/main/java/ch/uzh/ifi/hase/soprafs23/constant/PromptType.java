@@ -5,20 +5,18 @@ import org.springframework.web.server.ResponseStatusException;
 
 public enum PromptType {
 
-    TEXT("TEXT", "1"),
-    TRUEFALSE("TRUEFALSE", "2"),
-    DRAWING("DRAWING", "3");
+    TEXT("TEXT"),
+    TRUEFALSE("TRUEFALSE"),
+    DRAWING("DRAWING");
 
     private final String prompttypeAsString;
-    private final String prompttypeAsNr;
-    PromptType(String prompttypeAsString, String prompttypeAsNr){
+    PromptType(String prompttypeAsString){
         this.prompttypeAsString = prompttypeAsString;
-        this.prompttypeAsNr = prompttypeAsNr;
     }
 
     public static PromptType transformToType(String promptType){
         for(PromptType s : PromptType.values()){
-            if(promptType.equals(s.prompttypeAsString) || promptType.equals(s.prompttypeAsNr)){
+            if(promptType.equals(s.prompttypeAsString)){
                 return s;
             }
         }

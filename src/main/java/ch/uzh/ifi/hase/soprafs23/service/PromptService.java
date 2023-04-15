@@ -55,8 +55,8 @@ public class PromptService {
     public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, IOException {
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
-      initialisePromptRepository();
-      initialisePotentialQuestionRepository();
+        initialisePromptRepository();
+        initialisePotentialQuestionRepository();
     }
 
     @Autowired
@@ -64,23 +64,26 @@ public class PromptService {
         this.gameService = gameService;
     }
 
-    public List<Prompt> getPrompts(){
-      return promptRepository.findAll();
+    //TODO: test Integration?
+    public List<Prompt> getPrompts() {
+        return promptRepository.findAll();
     }
 
-    public List<Prompt> pickPrompts(PromptPostDTO userRequest, String gamePin){
+    //TODO: test Integration?
+    //TODO test Service? (issues because needs GameService)
+    public List<Prompt> pickPrompts(PromptPostDTO userRequest, String gamePin) {
         int wantedTextPrompts = 4;
         int wantedTrueFalsePrompts = 2;
         int wantedDrawingPrompts = 3;
 
-        if(userRequest.getTextNr() != null){
-          wantedTextPrompts = userRequest.getTextNr();
+        if (userRequest.getTextNr() != null) {
+            wantedTextPrompts = userRequest.getTextNr();
         }
-        if(userRequest.getTruefalseNr() != null){
-          wantedTrueFalsePrompts = userRequest.getTruefalseNr();
+        if (userRequest.getTruefalseNr() != null) {
+            wantedTrueFalsePrompts = userRequest.getTruefalseNr();
         }
-        if(userRequest.getDrawingNr() != null){
-          wantedDrawingPrompts = userRequest.getDrawingNr();
+        if (userRequest.getDrawingNr() != null) {
+            wantedDrawingPrompts = userRequest.getDrawingNr();
         }
 
         List<Prompt> allTextPrompts = promptRepository.findAllByPromptType(PromptType.TEXT);
@@ -101,116 +104,131 @@ public class PromptService {
      * set up functions
      */
 
+    //TODO: test Integration?
+    //TODO: test service?
     private void initialisePromptRepository() throws IOException {
-      BufferedReader promptsInput = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
-      String line;
-      while ((line = promptsInput.readLine()) != null) {
-        if (line.startsWith("\\")) {
-          continue;
+        BufferedReader promptsInput = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
+        String line;
+        while ((line = promptsInput.readLine()) != null) {
+            if (line.startsWith("\\")) {
+                continue;
+            }
+            String[] promptInfo = line.split(": ");
+            Prompt newPrompt = parsePrompt(promptInfo);
+            if (newPrompt == null) {
+                System.out.println("Could not properly parse prompt input: " + line);
+                continue;
+            }
+            promptRepository.save(newPrompt);
+            promptRepository.flush();
         }
-        String[] promptInfo = line.split(": ");
-        Prompt newPrompt = parsePrompt(promptInfo);
-        if(newPrompt == null){
-          System.out.println("Could not properly parse prompt input: " + line);
-          continue;
-        }
-        promptRepository.save(newPrompt);
-        promptRepository.flush();
-      }
     }
 
+    //TODO: test Integration?
+    //TODO: test service?
     private void initialisePotentialQuestionRepository() throws IOException, PromptSetupException {
-      String line;
-      BufferedReader potentialQuestionsInput = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
-      while((line = potentialQuestionsInput.readLine()) != null){
-        if(line.startsWith("\\")){
-          continue;
+        String line;
+        BufferedReader potentialQuestionsInput = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
+        while ((line = potentialQuestionsInput.readLine()) != null) {
+            if (line.startsWith("\\")) {
+                continue;
+            }
+            String[] questionInfo = line.split(": ");
+            PotentialQuestion newPotentialQuestion = parsePotentialQuestion(questionInfo);
+            if (newPotentialQuestion == null) {
+                System.out.println("Could not properly parse potential question input: " + line);
+                continue;
+            }
+            potentialQuestionsRepository.save(newPotentialQuestion);
+            potentialQuestionsRepository.flush();
         }
-        String[] questionInfo = line.split(": ");
-        PotentialQuestion newPotentialQuestion = parsePotentialQuestion(questionInfo);
-        if(newPotentialQuestion == null){
-          System.out.println("Could not properly parse potential question input: " + line);
-          continue;
-        }
-        potentialQuestionsRepository.save(newPotentialQuestion);
-        potentialQuestionsRepository.flush();
-      }
 
-      for(Prompt prompt : promptRepository.findAll()){
-        if(potentialQuestionsRepository.findAllByAssociatedPrompt(prompt) == null){
-          throw new PromptSetupException("Prompt is missing a potential question!");
+        for (Prompt prompt : promptRepository.findAll()) {
+            if (potentialQuestionsRepository.findAllByAssociatedPrompt(prompt) == null) {
+                throw new PromptSetupException("Prompt is missing a potential question!");
+            }
         }
-      }
 
-      for(PotentialQuestion question: potentialQuestionsRepository.findAll()){
-          testCreateQuestions(question);
-      }
+        for (PotentialQuestion question : potentialQuestionsRepository.findAll()) {
+            testCreateQuestions(question);
+        }
     }
 
     /**
-    * Helper functions
-    */
-    private Prompt parsePrompt(String[] promptLine){
-      try{
-        Prompt newPrompt = new Prompt();
-        newPrompt.setPromptNr(Integer.parseInt(promptLine[0]));
-        newPrompt.setPromptType(PromptType.transformToType(promptLine[1]));
-        newPrompt.setPromptText(promptLine[2]);
+     * Helper functions
+     */
+    //TODO: test Integration?
+    // TODO: test Service?
+    private Prompt parsePrompt(String[] promptLine) {
+        try {
+            Prompt newPrompt = new Prompt();
+            newPrompt.setPromptNr(Integer.parseInt(promptLine[0]));
+            newPrompt.setPromptType(PromptType.transformToType(promptLine[1]));
+            newPrompt.setPromptText(promptLine[2]);
 
-        return newPrompt;
-      }catch(Exception e){
-        return null;
-      }
-    }
-
-    private PotentialQuestion parsePotentialQuestion(String[] potentialQuestionLine){
-      try {
-        PotentialQuestion newPotentialQuestion = new PotentialQuestion();
-        newPotentialQuestion.setAssociatedPrompt(promptRepository.findByPromptNr(Integer.valueOf(potentialQuestionLine[0])));
-        newPotentialQuestion.setQuestionType(QuestionType.transformToType(potentialQuestionLine[1]));
-        newPotentialQuestion.setQuestionText(potentialQuestionLine[2]);
-        newPotentialQuestion.setRequiresTextInput(Boolean.parseBoolean(potentialQuestionLine[3]));
-        newPotentialQuestion.setDisplayType(AdditionalDisplayType.transformToType(potentialQuestionLine[4]));
-
-        return newPotentialQuestion;
-      }catch(Throwable e){
-        return null;
-      }
-    }
-
-    private List<Prompt> selectNrOfPromptsFromList(List<Prompt> allPromptsOfType, int wantedNumber){
-      List<Prompt> selectedPrompts = new ArrayList<>();
-      Random rand = new Random();
-
-      for (int i = 0; i < wantedNumber; i++) {
-        if(allPromptsOfType.size() < 1){
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more text prompts than are available.");
+            return newPrompt;
         }
-        int randomIndex = rand.nextInt(allPromptsOfType.size());
-        Prompt randomPrompt = allPromptsOfType.get(randomIndex);
-        selectedPrompts.add(randomPrompt);
-        allPromptsOfType.remove(randomIndex);
-      }
-
-      return selectedPrompts;
+        catch (Exception e) {
+            return null;
+        }
     }
 
-    private void testCreateQuestions(PotentialQuestion pq){
-      StringBuilder outputString = new StringBuilder();
-      if(pq.isRequiresTextInput()){
-        if(pq.getQuestionType() == QuestionType.PLAYER){
-          outputString.append(String.format(pq.getQuestionText(), "PROMPT INPUT"));
-        }else{
-          outputString.append(String.format(pq.getQuestionText(), "USERNAME"));
+    //TODO: test Integration?
+    // TODO: test Service?
+    private PotentialQuestion parsePotentialQuestion(String[] potentialQuestionLine) {
+        try {
+            PotentialQuestion newPotentialQuestion = new PotentialQuestion();
+            newPotentialQuestion.setAssociatedPrompt(promptRepository.findByPromptNr(Integer.valueOf(potentialQuestionLine[0])));
+            newPotentialQuestion.setQuestionType(QuestionType.transformToType(potentialQuestionLine[1]));
+            newPotentialQuestion.setQuestionText(potentialQuestionLine[2]);
+            newPotentialQuestion.setRequiresTextInput(Boolean.parseBoolean(potentialQuestionLine[3]));
+            newPotentialQuestion.setDisplayType(AdditionalDisplayType.transformToType(potentialQuestionLine[4]));
+
+            return newPotentialQuestion;
         }
-      }else{
-        outputString.append(pq.getQuestionText());
-      }
-      if(pq.getDisplayType() == AdditionalDisplayType.IMAGE){
-        outputString.append(" ---- SHOW IMAGE TO GUESS");
-      }else if(pq.getDisplayType() == AdditionalDisplayType.TEXT){
-        outputString.append(" ---- SHOW A TEXT");
-      }
-      System.out.println(outputString);
+        catch (Throwable e) {
+            return null;
+        }
+    }
+
+    //TODO: test Integration?
+    // TODO: test Service?
+    private List<Prompt> selectNrOfPromptsFromList(List<Prompt> allPromptsOfType, int wantedNumber) {
+        List<Prompt> selectedPrompts = new ArrayList<>();
+        Random rand = new Random();
+
+        for (int i = 0; i < wantedNumber; i++) {
+            if (allPromptsOfType.size() < 1) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more text prompts than are available.");
+            }
+            int randomIndex = rand.nextInt(allPromptsOfType.size());
+            Prompt randomPrompt = allPromptsOfType.get(randomIndex);
+            selectedPrompts.add(randomPrompt);
+            allPromptsOfType.remove(randomIndex);
+        }
+
+        return selectedPrompts;
+    }
+
+    private void testCreateQuestions(PotentialQuestion pq) {
+        StringBuilder outputString = new StringBuilder();
+        if (pq.isRequiresTextInput()) {
+            if (pq.getQuestionType() == QuestionType.PLAYER) {
+                outputString.append(String.format(pq.getQuestionText(), "PROMPT INPUT"));
+            }
+            else {
+                outputString.append(String.format(pq.getQuestionText(), "USERNAME"));
+            }
+        }
+        else {
+            outputString.append(pq.getQuestionText());
+        }
+        if (pq.getDisplayType() == AdditionalDisplayType.IMAGE) {
+            outputString.append(" ---- SHOW IMAGE TO GUESS");
+        }
+        else if (pq.getDisplayType() == AdditionalDisplayType.TEXT) {
+            outputString.append(" ---- SHOW A TEXT");
+        }
+        System.out.println(outputString);
     }
 }

@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository("potentialQuestionRepository")
 public interface PotentialQuestionsRepository extends JpaRepository<PotentialQuestion, Long> {
-    PotentialQuestion getBypotentialQuestionId(Long id);
     List<PotentialQuestion> findAllByAssociatedPrompt(Prompt prompt);
     List<PotentialQuestion> findAllByQuestionType(QuestionType type);
 }

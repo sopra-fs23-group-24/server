@@ -10,8 +10,6 @@ import java.util.List;
 
 @Repository("promptRepository")
 public interface PromptRepository extends JpaRepository<Prompt, Long> {
-
-  Prompt findByPromptId(Long id);
   Prompt findByPromptNr(Integer id);
   List<Prompt> findAllByPromptType(PromptType type);
 

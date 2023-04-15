@@ -43,7 +43,7 @@ public class GameServiceIntegrationTest {
     @Test
     public void createGame_success() {
         // given
-        assertEquals(new ArrayList<Game>(),gameRepository.findAll());
+        assertEquals(new ArrayList<Game>(), gameRepository.findAll());
 
         // when
         Game createdGame = gameService.createGame();

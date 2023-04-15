@@ -152,11 +152,13 @@ public class GameService {
         return gameByPin;
     }
 
+    //TODO: test Integration?
     public List<Prompt> getPromptsOfGame(String gamePin){
         Game gameByPin = getGameByPin(gamePin);
         return gameByPin.getPromptSet();
     }
 
+    //TODO: test Integration?
     public Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin){
 
         Game gameByPin = getGameByPin(gamePin);
