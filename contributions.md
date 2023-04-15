@@ -63,12 +63,91 @@ Each entry should consist of:
 
 ---
 Week 2 (3. - 7. april)
-
+- Tim:
+	- work on: 
+	- description:
+- Lara:
+	- work on: 
+	- description:
+- Jan:
+	- work on: 
+	- description:
+- Mike:
+	- work on: 
+	- description:
+- Linda:
+	- work on:
+	    - https://github.com/sopra-fs23-group-24/server/issues/38
+	    - https://github.com/sopra-fs23-group-24/server/issues/34
+	    - https://github.com/sopra-fs23-group-24/server/issues/41
+	    - https://github.com/sopra-fs23-group-24/server/issues/45
+	    - https://github.com/sopra-fs23-group-24/server/issues/46
+	    - https://github.com/sopra-fs23-group-24/server/issues/42
+	    - https://github.com/sopra-fs23-group-24/server/issues/44
+	    - https://github.com/sopra-fs23-group-24/server/issues/47
+	    - https://github.com/sopra-fs23-group-24/server/issues/20
+	    - https://github.com/sopra-fs23-group-24/server/issues/50
+	- description:
+        - (not bound to issue): reworked user interface based on feedback
+        - test cases for 34/38/41/42/44/45/46
+        - define prompts in backend, creation based on file, GET (not tested)
+        - promptSet defined based on Nrs from frontend, returned (not tested)
+        - started on potentialQuestions
 ---
 *Vacation Week 3 (10. - 14. april)*
+- Tim:
+	- work on: 
+	- description:
+- Lara:
+	- work on: 
+	- description:
+- Jan:
+	- work on: 
+	- description:
+- Mike:
+	- work on: 
+	- description:
+- Linda:
+	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/47
+	    - https://github.com/sopra-fs23-group-24/server/issues/20
+	    - https://github.com/sopra-fs23-group-24/server/issues/50
+	- description:
+	    - full implementation of potentialQuestions
+	    - test cases 20/47/50
 
 ---
 Week 4 (17. -21. april)
+- Tim:
+	- work on: 
+	- description:
+- Lara:
+	- work on: 
+	- description:
+- Jan:
+	- work on: 
+	- description:
+- Mike:
+	- work on: 
+	- description:
+- Linda:
+	- work on: 
+	- description:
 
 ---
 Week 5 (24. - 28. april)
+- Tim:
+	- work on: 
+	- description:
+- Lara:
+	- work on: 
+	- description:
+- Jan:
+	- work on: 
+	- description:
+- Mike:
+	- work on: 
+	- description:
+- Linda:
+	- work on: 
+	- description:
