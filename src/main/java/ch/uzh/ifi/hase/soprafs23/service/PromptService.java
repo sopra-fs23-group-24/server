@@ -19,8 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,8 +47,10 @@ public class PromptService {
 
     private GameService gameService;
 
+    private final Random rand = SecureRandom.getInstanceStrong();
+
     @Autowired
-    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, IOException {
+    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, IOException, NoSuchAlgorithmException {
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
         initialisePromptRepository();
@@ -99,53 +104,62 @@ public class PromptService {
 
     //TODO: test Integration?
     //TODO: test service?
-    private void initialisePromptRepository() throws IOException {
-        BufferedReader promptsInput = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
-        String line;
-        while ((line = promptsInput.readLine()) != null) {
-            if (line.startsWith("\\")) {
-                continue;
+    private void initialisePromptRepository() throws PromptSetupException {
+        try{
+            BufferedReader promptsInput = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
+            String line;
+            while ((line = promptsInput.readLine()) != null) {
+                if (line.startsWith("\\")) {
+                    continue;
+                }
+                String[] promptInfo = line.split(": ");
+                Prompt newPrompt = parsePrompt(promptInfo);
+                if (newPrompt == null) {
+                    System.out.println("Could not properly parse prompt input: " + line);
+                    continue;
+                }
+                promptRepository.save(newPrompt);
+                promptRepository.flush();
+                log.debug("created prompt: {}", newPrompt);
             }
-            String[] promptInfo = line.split(": ");
-            Prompt newPrompt = parsePrompt(promptInfo);
-            if (newPrompt == null) {
-                System.out.println("Could not properly parse prompt input: " + line);
-                continue;
-            }
-            promptRepository.save(newPrompt);
-            promptRepository.flush();
-            log.debug("created prompt: {}", newPrompt);
+        }catch(IOException e){
+            throw new PromptSetupException("Could not find file for prompts.");
         }
+
     }
 
     //TODO: test Integration?
     //TODO: test service?
-    private void initialisePotentialQuestionRepository() throws IOException, PromptSetupException {
-        String line;
-        BufferedReader potentialQuestionsInput = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
-        while ((line = potentialQuestionsInput.readLine()) != null) {
-            if (line.startsWith("\\")) {
-                continue;
+    private void initialisePotentialQuestionRepository() throws PromptSetupException {
+        try {
+            String line;
+            BufferedReader potentialQuestionsInput = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
+            while ((line = potentialQuestionsInput.readLine()) != null) {
+                if (line.startsWith("\\")) {
+                    continue;
+                }
+                String[] questionInfo = line.split(": ");
+                PotentialQuestion newPotentialQuestion = parsePotentialQuestion(questionInfo);
+                if (newPotentialQuestion == null) {
+                    System.out.println("Could not properly parse potential question input: " + line);
+                    continue;
+                }
+                potentialQuestionsRepository.save(newPotentialQuestion);
+                potentialQuestionsRepository.flush();
+                log.debug("created potential question: {}", newPotentialQuestion);
             }
-            String[] questionInfo = line.split(": ");
-            PotentialQuestion newPotentialQuestion = parsePotentialQuestion(questionInfo);
-            if (newPotentialQuestion == null) {
-                System.out.println("Could not properly parse potential question input: " + line);
-                continue;
-            }
-            potentialQuestionsRepository.save(newPotentialQuestion);
-            potentialQuestionsRepository.flush();
-            log.debug("created potential question: {}", newPotentialQuestion);
-        }
 
-        for (Prompt prompt : promptRepository.findAll()) {
-            if (potentialQuestionsRepository.findAllByAssociatedPrompt(prompt) == null) {
-                throw new PromptSetupException("Prompt is missing a potential question!: " + prompt.getPromptNr().toString());
+            for (Prompt prompt : promptRepository.findAll()) {
+                if (potentialQuestionsRepository.findAllByAssociatedPrompt(prompt) == null) {
+                    throw new PromptSetupException("Prompt is missing a potential question!: " + prompt.getPromptNr().toString());
+                }
             }
-        }
 
-        for (PotentialQuestion question : potentialQuestionsRepository.findAll()) {
+            /*for (PotentialQuestion question : potentialQuestionsRepository.findAll()) {
             testCreateQuestions(question);
+            }*/
+        }catch(IOException e){
+            throw new PromptSetupException("Could not find file for potential questions.");
         }
     }
 
@@ -194,7 +208,6 @@ public class PromptService {
     // TODO: test Service?
     private List<Prompt> selectNrOfPromptsFromList(List<Prompt> allPromptsOfType, int wantedNumber) {
         List<Prompt> selectedPrompts = new ArrayList<>();
-        Random rand = new Random();
 
         for (int i = 0; i < wantedNumber; i++) {
             if (allPromptsOfType.size() < 1) {

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
@@ -34,8 +36,10 @@ public class GameService {
 
     private PlayerService playerService;
 
+    private final Random rand = SecureRandom.getInstanceStrong();
+
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository) {
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository) throws NoSuchAlgorithmException {
         this.gameRepository = gameRepository;
         //this.playerService = playerService;
     }
@@ -66,8 +70,7 @@ public class GameService {
         Game newGame = new Game();
         newGame.setStatus(GameStatus.LOBBY);
 
-        Random rand = new Random();
-        String pin = generateUniqueGamePin(rand);
+        String pin = generateUniqueGamePin();
         newGame.setGamePin(pin);
 
         newGame = gameRepository.save(newGame);
@@ -179,7 +182,7 @@ public class GameService {
     }
 
     //TODO: test?
-    private String generateUniqueGamePin(Random rand) {
+    private String generateUniqueGamePin() {
 
         StringBuilder pin = new StringBuilder();
         for (int i = 0; i < 6; i++) {
@@ -191,7 +194,7 @@ public class GameService {
             return pinString;
         }
         else {
-            return generateUniqueGamePin(rand);
+            return generateUniqueGamePin();
         }
     }
 
