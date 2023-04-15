@@ -72,9 +72,15 @@ Week 2 (3. - 7. april)
 - Jan:
 	- work on: 
 	- description:
-- Mike:
-	- work on: 
+- Mike
+	- work on:
+	    - https://github.com/sopra-fs23-group-24/client/issues/14
+	    - https://github.com/sopra-fs23-group-24/client/issues/15
+	    - https://github.com/sopra-fs23-group-24/client/issues/16
+
 	- description:
+	    - Answer Fields for Text Prompts and T/F Prompts
+	    - Anser View where players answers the (fixed) amount of prompts
 - Linda:
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/server/issues/38
@@ -104,9 +110,15 @@ Week 2 (3. - 7. april)
 - Jan:
 	- work on: 
 	- description:
-- Mike:
-	- work on: 
+- Mike
+	- work on:
+	    - https://github.com/sopra-fs23-group-24/client/issues/14
+	    - https://github.com/sopra-fs23-group-24/client/issues/15
+	    - https://github.com/sopra-fs23-group-24/client/issues/16
+
 	- description:
+	    - Answer Fields for Text Prompts and T/F Promts
+	    - Anser View where Users answers the (fixed) amount of prompts
 - Linda:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/server/issues/47
