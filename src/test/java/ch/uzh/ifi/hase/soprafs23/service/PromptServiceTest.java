@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
+import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionsRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,9 @@ public class PromptServiceTest {
 
     @Mock
     private PromptRepository promptRepository;
+
+    @Mock
+    private PotentialQuestionsRepository pqRepository;
 
     @InjectMocks
     private PromptService promptService;
