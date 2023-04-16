@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerPutDTO;
@@ -27,10 +25,10 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PlayerController.class)
 public class PlayerControllerTest {
@@ -43,7 +41,7 @@ public class PlayerControllerTest {
     private Player testPlayer;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         testPlayer = new Player();
         testPlayer.setPlayerName("test");
         testPlayer.setAssociatedGamePin("123456");
@@ -75,7 +73,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void newPlayerInGame_invalidPin() throws Exception{
+    public void newPlayerInGame_invalidPin() throws Exception {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -93,7 +91,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void newPlayerInGame_gameRunning() throws Exception{
+    public void newPlayerInGame_gameRunning() throws Exception {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -111,7 +109,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void newPlayerInGame_gameAlreadyHasHost() throws Exception{
+    public void newPlayerInGame_gameAlreadyHasHost() throws Exception {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -242,7 +240,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void deletePlayer_success() throws Exception{
+    public void deletePlayer_success() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willReturn(testPlayer);
 
         // when
@@ -258,7 +256,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void deletePlayer_playerIsHost() throws Exception{
+    public void deletePlayer_playerIsHost() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         // when
@@ -272,7 +270,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void deletePlayer_notLoggedInAsHostOrPlayer() throws Exception{
+    public void deletePlayer_notLoggedInAsHostOrPlayer() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
         // when
@@ -288,9 +286,10 @@ public class PlayerControllerTest {
     private String asJsonString(final Object object) {
         try {
             return new ObjectMapper().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
+        }
+        catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("The request body could not be created.%s", e.toString()));
+                    String.format("The request body could not be created.%s", e));
         }
     }
 }

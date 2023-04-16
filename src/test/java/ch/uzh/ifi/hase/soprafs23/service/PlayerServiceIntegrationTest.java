@@ -1,22 +1,11 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 /**
  * Test class for the UserResource REST resource.
@@ -30,18 +19,18 @@ public class PlayerServiceIntegrationTest {
     @Autowired
     private PlayerRepository playerRepository;
 
-    @Autowired
+    /*@Autowired
     private PlayerService playerService;
 
     @Autowired
-    private GameService gameService;
+    private GameService gameService;*/
 
     @BeforeEach
     public void setup() {
         playerRepository.deleteAll();
     }
 
-    //TODO: canno test because again relies on gameService
+    //TODO: cannot test because again relies on gameService
     /*@Test
     public void createPlayerAndAddToGame_success() {
         Game testGame = new Game();

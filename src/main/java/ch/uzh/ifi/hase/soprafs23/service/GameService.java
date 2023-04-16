@@ -3,24 +3,21 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * User Service
@@ -39,8 +36,10 @@ public class GameService {
 
     private PlayerService playerService;
 
+    private final Random rand = SecureRandom.getInstanceStrong();
+
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository) {
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository) throws NoSuchAlgorithmException {
         this.gameRepository = gameRepository;
         //this.playerService = playerService;
     }
@@ -50,10 +49,6 @@ public class GameService {
         this.playerService = playerService;
     }
 
-    /*public PlayerService getPlayerService(){
-        return this.playerService;
-    }*/
-
 
     //TODO: test Integration?
     public List<Game> getGames() {
@@ -61,11 +56,12 @@ public class GameService {
     }
 
     //TODO: test Integration?
-    public Game getGameByPin(String pin){
+    public Game getGameByPin(String pin) {
         Game gameByPin = gameRepository.findByGamePin(pin);
-        if(gameByPin == null){
+        if (gameByPin == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
-        }else{
+        }
+        else {
             return gameByPin;
         }
     }
@@ -88,16 +84,16 @@ public class GameService {
     public Game addPlayerToGame(Player newPlayer) {
 
         Game joinedGame = getGameByPin(newPlayer.getAssociatedGamePin());
-        if(joinedGame == null){
+        if (joinedGame == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
         }
-        if(joinedGame.getStatus() != GameStatus.LOBBY){
+        if (joinedGame.getStatus() != GameStatus.LOBBY) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is already running. Try again with a different pin or join later.");
         }
 
         joinedGame.addPlayer(newPlayer);
-        if(newPlayer.isHost()){
-            if(joinedGame.getHostId() != null){
+        if (newPlayer.isHost()) {
+            if (joinedGame.getHostId() != null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game already has a host. Please try to join instead.");
             }
             joinedGame.setHostId(newPlayer.getPlayerId());
@@ -112,14 +108,14 @@ public class GameService {
 
     //TODO: test Integration?
     //TODO: test Service
-    public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken){
+    public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken) {
         System.out.println(requestedStatus);
         //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
 
         Player loggedInPlayer = playerService.getByToken(loggedInToken);
 
         Game gameByPin = getGameByPin(gamePin);
-        if(!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())){
+        if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
@@ -132,47 +128,72 @@ public class GameService {
 
     //TODO: test Integration?
     //TODO: test Service
-    public Game deleteGameByPin(String gamePin, String loggedInToken){
+    public Game deleteGameByPin(String gamePin, String loggedInToken) {
         Game gameByPin = getGameByPin(gamePin);
         Player loggedInPlayer = playerService.getByToken(loggedInToken);
 
-        if(!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())){
+        if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
         gameRepository.deleteByGamePin(gamePin);
+        //TODO: find better solution for this (too many connections)
         playerService.deleteAllPlayersByGamePin(gamePin);
+        //TODO: delete prompt answers
         //TODO: delete questions
         //TODO: delete answers
 
         return gameByPin;
     }
 
+    //TODO: test Integration?
+    public List<Prompt> getPromptsOfGame(String gamePin) {
+        Game gameByPin = getGameByPin(gamePin);
+        return gameByPin.getPromptSet();
+    }
+
+    //TODO: test Integration?
+    public Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {
+
+        Game gameByPin = getGameByPin(gamePin);
+        if (gameByPin.getStatus() != GameStatus.SELECTION) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is in the wrong state to take prompts.");
+        }
+        if (!gameByPin.getPromptSet().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has prompts selected.");
+        }
+
+        gameByPin.addPrompts(promptsForGame);
+
+        gameByPin.setStatus(GameStatus.PROMPT);
+
+        gameRepository.save(gameByPin);
+        gameRepository.flush();
+
+        return gameByPin;
+    }
 
     /**
      * Helper functions
      */
 
-    public boolean checkIfHost(Game game, long userId){
-        if(game.getHostId() != userId){
-            return false;
-        }
-        return true;
+    public boolean checkIfHost(Game game, long userId) {
+        return game.getHostId() == userId;
     }
 
     //TODO: test?
-    private String generateUniqueGamePin(){
-        Random random = new Random();
+    private String generateUniqueGamePin() {
 
         StringBuilder pin = new StringBuilder();
-        for(int i=0; i<6; i++) {
-            pin.append(random.nextInt(10));
+        for (int i = 0; i < 6; i++) {
+            pin.append(rand.nextInt(10));
         }
         String pinString = pin.toString();
 
         if (gameRepository.findByGamePin(pinString) == null) {
             return pinString;
-        }else{
+        }
+        else {
             return generateUniqueGamePin();
         }
     }

@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,16 +36,13 @@ public class PlayerService {
     @Autowired
     public PlayerService(@Qualifier("playerRepository") PlayerRepository userRepository) {
         this.playerRepository = userRepository;
-        //this.gameService = gameService;
     }
+
     @Autowired
     private void setGameService(GameService gameService) {
         this.gameService = gameService;
     }
 
-    /*public GameService getGameService(){
-        return this.gameService;
-    }*/
 
     //TODO: test Integration?
     public List<Player> getPlayers() {
@@ -84,10 +80,10 @@ public class PlayerService {
         Player playerById = playerRepository.findByPlayerId(newPlayerInfo.getPlayerId());
         Player loggedInPlayer = playerRepository.findByToken(loggedInPlayerToken);
 
-        if(playerById == null) {
+        if (playerById == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this id found.");
         }
-        if(playerById != loggedInPlayer){
+        if (playerById != loggedInPlayer) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
         if (newPlayerInfo.getPlayerName().isBlank()) {
@@ -107,11 +103,11 @@ public class PlayerService {
         Player loggedInPlayer = getByToken(loggedInPlayerToken);
         Player playerToDelete = getById(playerToBeDeletedId);
 
-        if(gameService.checkIfHost(gameService.getGameByPin(gamePin), playerToDelete.getPlayerId())){
+        if (gameService.checkIfHost(gameService.getGameByPin(gamePin), playerToDelete.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "May not delete host.");
         }
 
-        if(playerToBeDeletedId != loggedInPlayer.getPlayerId() && !gameService.checkIfHost(gameService.getGameByPin(gamePin), loggedInPlayer.getPlayerId())){
+        if (playerToBeDeletedId != loggedInPlayer.getPlayerId() && !gameService.checkIfHost(gameService.getGameByPin(gamePin), loggedInPlayer.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
@@ -127,9 +123,9 @@ public class PlayerService {
 
     //TODO: test Integration?
     //TODO: test Service
-    public List<Player> deleteAllPlayersByGamePin(String gamePin){
+    public List<Player> deleteAllPlayersByGamePin(String gamePin) {
         List<Player> allPlayersToDelete = playerRepository.findAllByAssociatedGamePin(gamePin);
-        for(Player player : allPlayersToDelete){
+        for (Player player : allPlayersToDelete) {
             Game gameByPin = gameService.getGameByPin(gamePin);
             gameByPin.removePlayer(player);
 

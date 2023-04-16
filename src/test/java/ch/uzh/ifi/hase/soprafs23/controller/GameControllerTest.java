@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +24,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -161,6 +162,7 @@ public class GameControllerTest {
         mockMvc.perform(getRequest)
                 .andExpect(status().isUnauthorized());
     }
+
     @Test
     public void deleteGame_success() throws Exception {
         // given
@@ -199,13 +201,52 @@ public class GameControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    public void getAllPrompts_returnsPromptsOfGame() throws Exception {
+        // given
+        Prompt prompt = new Prompt();
+        prompt.setPromptNr(999);
+        prompt.setPromptType(PromptType.TEXT);
+        prompt.setPromptText("example prompt");
+        prompt.setPromptId(999L);
+
+
+        List<Prompt> allPrompts = Collections.singletonList(prompt);
+
+        given(gameService.getPromptsOfGame(Mockito.anyString())).willReturn(allPrompts);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/games/123456/prompts").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].promptNr", is(prompt.getPromptNr())))
+                .andExpect(jsonPath("$[0].promptType", is(prompt.getPromptType().toString())))
+                .andExpect(jsonPath("$[0].promptText", is(prompt.getPromptText())));
+    }
+
+    @Test
+    public void getAllPrompts_invalidGamePin() throws Exception {
+
+        given(gameService.getPromptsOfGame(Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/games/123456/prompts").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
 
     private String asJsonString(final Object object) {
         try {
             return new ObjectMapper().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
+        }
+        catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("The request body could not be created.%s", e.toString()));
+                    String.format("The request body could not be created.%s", e));
         }
     }
 
