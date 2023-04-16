@@ -69,20 +69,20 @@ public class PromptAnswerController {
 
 
 
-        @PostMapping("/games/{pin}/prompt-answers/drawing")
-        @ResponseStatus(HttpStatus.CREATED)
-        @ResponseBody
-        public DrawingPromptAnswer postDrawingPromptAnswer(@RequestBody DrawingPromptAnswerPostDTO clientAnswer,
-                                                        @RequestHeader("playerToken") String loggedInToken,
-                                                        @PathVariable("pin") String gamePin) {
-            // convert
-            DrawingPromptAnswer answer = DTOMapper.INSTANCE.convertFromDrawingPromptAnswerDTO(clientAnswer);
-            // save
-            DrawingPromptAnswer successfulSave = promptAnswerService.saveDrawingPromptAnswer(answer, loggedInToken, gamePin);
-            System.out.print("DrawingPromptAnswer saved");
+    @PostMapping("/games/{pin}/prompt-answers/drawing")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public DrawingPromptAnswer postDrawingPromptAnswer(@RequestBody DrawingPromptAnswerPostDTO clientAnswer,
+                                                    @RequestHeader("playerToken") String loggedInToken,
+                                                    @PathVariable("pin") String gamePin) {
+        // convert
+        DrawingPromptAnswer answer = DTOMapper.INSTANCE.convertFromDrawingPromptAnswerDTO(clientAnswer);
+        // save
+        DrawingPromptAnswer successfulSave = promptAnswerService.saveDrawingPromptAnswer(answer, loggedInToken, gamePin);
+        System.out.print("DrawingPromptAnswer saved");
 
-            return successfulSave;
-        }
+        return successfulSave;
+    }
 
 
 
