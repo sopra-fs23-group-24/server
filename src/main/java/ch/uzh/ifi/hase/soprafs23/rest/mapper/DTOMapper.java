@@ -31,6 +31,7 @@ public interface DTOMapper {
     @Mapping(source = "status", target = "status")
     GameGetDTO convertToGameGetDTO(Game game);
 
+
     @Mapping(source = "status", target = "status")
     Game convertFromGamePutDTO(GamePutDTO game);
 
