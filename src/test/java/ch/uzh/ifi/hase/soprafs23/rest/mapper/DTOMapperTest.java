@@ -75,6 +75,17 @@ public class DTOMapperTest {
     }
 
     @Test
+    public void convertFromTextPromptAnswerDTO_toTextPromptAnswer_success() {
+        // implement
+    }
+
+    @Test
+    public void convertFromTrueFalsePromptAnswerPostDTO_toTrueFalsePromptAnswer_success() {
+        // implement
+    }
+
+
+    @Test
     public void convertToPromptGetDTO_fromPrompt_success() {
         Prompt testPrompt = new Prompt();
         testPrompt.setPromptNr(999);
