@@ -109,7 +109,7 @@ Week 2 (3. - 7. april)
 	- description:
 - Jan:
 	- work on: 
-	    - https://github.com/sopra-fs23-group-24/client/issues/13
+	    - https://github.com/sopra-fs23-group-24/client/issues/2
 	- description:
 	    - Implemented Drawing Prompt and submit drawing funvtion
 - Mike
@@ -126,9 +126,12 @@ Week 2 (3. - 7. april)
 	    - https://github.com/sopra-fs23-group-24/server/issues/47
 	    - https://github.com/sopra-fs23-group-24/server/issues/20
 	    - https://github.com/sopra-fs23-group-24/server/issues/50
+	    - https://github.com/sopra-fs23-group-24/server/issues/17
+	    - https://github.com/sopra-fs23-group-24/server/issues/18
 	- description:
 	    - full implementation of potentialQuestions
 	    - test cases 20/47/50
+	    - start work on QuizQuestion and quiz question generation
 
 ---
 Week 4 (17. -21. april)
