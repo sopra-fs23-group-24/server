@@ -109,7 +109,9 @@ Week 2 (3. - 7. april)
 	- description:
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/2
 	- description:
+	    - Implemented Drawing Prompt and submit drawing funvtion
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
