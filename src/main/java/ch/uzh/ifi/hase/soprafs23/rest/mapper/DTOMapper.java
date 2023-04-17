@@ -67,7 +67,10 @@ public interface DTOMapper {
     PromptGetDTO convertToPromptGetDTO(Prompt prompt);
 
     @Mapping(source = "questionId", target = "questionId")
-    @Mapping(source = "associatedGame", target = "associatedGame")
+    @Mapping(source = "associatedGamePin", target = "associatedGamePin")
+    @Mapping(source = "quizQuestionText", target = "quizQuestionText")
+    @Mapping(source = "imageToDisplay", target = "imageToDisplay")
+    @Mapping(source = "storyToDisplay", target = "storyToDisplay")
     @Mapping(source = "associatedPrompt", target = "associatedPrompt")
     @Mapping(source = "answerOptions", target = "answerOptions")
     @Mapping(source = "correctAnswer", target = "correctAnswer")

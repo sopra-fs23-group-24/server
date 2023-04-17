@@ -78,11 +78,6 @@ public class QuizQuestionService {
             createdQuestions.addAll(quizQuestionGenerator.generateQuizQuestions(prompt, gameByPin));
         }
 
-        for(QuizQuestion q : createdQuestions){
-            qqRepository.save(q);
-            qqRepository.flush();
-        }
-
         gameService.addQuizQuestionsToGame(createdQuestions, gamePin);
 
         return createdQuestions;

@@ -30,10 +30,8 @@ public class QuizQuestion implements Serializable {
     @Column
     private String storyToDisplay = null;
 
-
-    @ManyToOne
-    @JoinColumn(name = "gamePin")
-    private Game associatedGame;
+    @Column
+    private String associatedGamePin;
 
 
     @ManyToOne
@@ -48,7 +46,6 @@ public class QuizQuestion implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizAnswer> receivedAnswers = new ArrayList<>();
-
 
 
 
@@ -92,12 +89,12 @@ public class QuizQuestion implements Serializable {
         this.storyToDisplay = storyToDisplay;
     }
 
-    public Game getAssociatedGame() {
-        return associatedGame;
+    public String getAssociatedGamePin() {
+        return associatedGamePin;
     }
 
-    public void setAssociatedGame(Game associatedGame) {
-        this.associatedGame = associatedGame;
+    public void setAssociatedGamePin(String associatedGamePin) {
+        this.associatedGamePin = associatedGamePin;
     }
 
     public Prompt getAssociatedPrompt() {
@@ -144,17 +141,18 @@ public class QuizQuestion implements Serializable {
         return allAnswerOptionTexts;
     }
 
-    public CompletionStatus addReceivedAnswer(QuizAnswer answer){
+    public void addReceivedAnswer(QuizAnswer answer){
         receivedAnswers.add(answer);
-        List<Player> playersThatAnswered = new ArrayList<>();
+
+        /*List<Player> playersThatAnswered = new ArrayList<>();
         for(QuizAnswer receivedAnswer : receivedAnswers){
             playersThatAnswered.add(receivedAnswer.getAssociatedPlayer());
         }
-        for(Player player : associatedGame.getPlayerGroup()){
+        for(Player player : associatedPlayerGroup){
             if(!playersThatAnswered.contains(player)){
                 return CompletionStatus.NOT_FINISHED;
             }
         }
-        return CompletionStatus.FINISHED;
+        return CompletionStatus.FINISHED;*/
     }
 }
