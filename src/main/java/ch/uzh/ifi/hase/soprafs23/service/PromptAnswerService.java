@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.entity.*;
-import ch.uzh.ifi.hase.soprafs23.helpers.ZipDataURL;
 import ch.uzh.ifi.hase.soprafs23.repository.DrawingPromptAnswerRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.TrueFalsePromptAnswerRepository;
 import org.slf4j.Logger;
@@ -13,9 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.swing.text.BadLocationException;
-import java.io.IOException;
 
 @Service
 
@@ -100,13 +95,17 @@ public class PromptAnswerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No answer provided");
         }
 
+        // try to do it without this.
         // zip the answer to be smaller:
+        /*
         try{
             String shortAnswer = ZipDataURL.zip(answer.getAnswerDrawing());
             answer.setAnswerDrawing(shortAnswer);
         }catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "image could not be zipped.");
         }
+
+         */
 
 
         drawingPromptAnswerRepository.save(answer);
@@ -115,4 +114,11 @@ public class PromptAnswerService {
         log.debug("created  new: {}", answer);
         return answer;
     }
+
+    // check if all users have answered all prompts
+    // change game status
+
+
 }
+
+
