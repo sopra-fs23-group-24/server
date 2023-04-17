@@ -106,7 +106,12 @@ Week 2 (3. - 7. april)
 	- description:
 - Lara:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/49  
+	    - https://github.com/sopra-fs23-group-24/client/issues/21 
+	    - https://github.com/sopra-fs23-group-24/client/issues/22
 	- description:
+	    - a qr code is displayed in the lobby
+	    - if it is scanned it leads to the entername view for a specific game (only half finished)
 - Jan:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/13
