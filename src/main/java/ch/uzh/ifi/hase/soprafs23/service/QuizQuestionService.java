@@ -32,6 +32,8 @@ public class QuizQuestionService {
     private final QuizQuestionRepository qqRepository;
 
     private GameService gameService;
+
+    private PromptAnswerService promptAnswerService ;
     private QuizQuestionGenerator quizQuestionGenerator;
 
     private final Random rand = SecureRandom.getInstanceStrong();
@@ -50,6 +52,11 @@ public class QuizQuestionService {
         this.quizQuestionGenerator = quizQuestionGenerator;
     }
 
+    @Autowired
+    private void setPromptAnswerService(PromptAnswerService promptAnswerService) {
+        this.promptAnswerService = promptAnswerService;
+    }
+
     public List<QuizQuestion> getQuizQuestions() {
         return qqRepository.findAll();
     }
@@ -61,12 +68,19 @@ public class QuizQuestionService {
 
 
     public List<QuizQuestion> createQuizQuestions(String gamePin) {
+        promptAnswerService.mockPromptAnswersForGame(gamePin);
+
         Game gameByPin = gameService.getGameByPin(gamePin);
 
         List<QuizQuestion> createdQuestions = new ArrayList<>();
 
         for (Prompt prompt : gameByPin.getPromptSet()) {
             createdQuestions.addAll(quizQuestionGenerator.generateQuizQuestions(prompt, gameByPin));
+        }
+
+        for(QuizQuestion q : createdQuestions){
+            qqRepository.save(q);
+            qqRepository.flush();
         }
 
         gameService.addQuizQuestionsToGame(createdQuestions, gamePin);

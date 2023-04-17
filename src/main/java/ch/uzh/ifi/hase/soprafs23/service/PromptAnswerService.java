@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.helpers.ZipDataURL;
 import ch.uzh.ifi.hase.soprafs23.repository.DrawingPromptAnswerRepository;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.text.BadLocationException;
 import java.io.IOException;
+import java.sql.SQLOutput;
 
 @Service
 
@@ -100,19 +102,42 @@ public class PromptAnswerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No answer provided");
         }
 
-        // zip the answer to be smaller:
-        try{
-            String shortAnswer = ZipDataURL.zip(answer.getAnswerDrawing());
-            answer.setAnswerDrawing(shortAnswer);
-        }catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "image could not be zipped.");
-        }
-
-
         drawingPromptAnswerRepository.save(answer);
         drawingPromptAnswerRepository.flush();
 
         log.debug("created  new: {}", answer);
         return answer;
+    }
+
+    public void mockPromptAnswersForGame(String gamePin){
+        Game currentGame = gameService.getGameByPin(gamePin);
+        for(Player player : currentGame.getPlayerGroup()){
+            for(Prompt prompt : currentGame.getPromptSet()){
+                if(prompt.getPromptType() == PromptType.DRAWING){
+                    DrawingPromptAnswer drawAnswer = new DrawingPromptAnswer();
+                    drawAnswer.setAnswerDrawing("some drawing for " + player.getPlayerName());
+                    drawAnswer.setAssociatedPromptNr(prompt.getPromptNr());
+                    DrawingPromptAnswer saved = saveDrawingPromptAnswer(drawAnswer, player.getToken(), gamePin);
+                    System.out.println("Saved PromptAnswer '" + saved.getDrawingPromptAnswerId() + "' for player '" + saved.getAssociatedPlayerId() + "' with content '" + saved.getAnswerDrawing() + "'");
+                }else if(prompt.getPromptType() == PromptType.TEXT){
+                    TextPromptAnswer textAnswer = new TextPromptAnswer();
+                    textAnswer.setAnswer("some answer from " + player.getPlayerName());
+                    textAnswer.setAssociatedPromptNr(prompt.getPromptNr());
+                    TextPromptAnswer saved = saveTextPromptAnswer(textAnswer, player.getToken(), gamePin);
+                    System.out.println("Saved PromptAnswer '" + saved.getTextPromptAnswerId() + "' for player '" + saved.getAssociatedPlayerId() + "' with content '" + saved.getAnswer() + "'");
+                }else{
+                    TrueFalsePromptAnswer tfAnswer = new TrueFalsePromptAnswer();
+                    tfAnswer.setAnswerText("some story from " + player.getPlayerName());
+                    if(Math.random() > 0.5){
+                        tfAnswer.setAnswerBoolean(true);
+                    }else{
+                        tfAnswer.setAnswerBoolean(false);
+                    }
+                    tfAnswer.setAssociatedPromptNr(prompt.getPromptNr());
+                    TrueFalsePromptAnswer saved = saveTrueFalsePromptAnswer(tfAnswer, player.getToken(), gamePin);
+                    System.out.println("Saved PromptAnswer '" + saved.getTrueFalsePromptAnswerId() + "' for player '" + saved.getAssociatedPlayerId() + "' with content '" + saved.getAnswerText() + "' which is set to '" + saved.getAnswerBoolean() + "'");
+                }
+            }
+        }
     }
 }

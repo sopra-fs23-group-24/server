@@ -5,12 +5,16 @@
 \\comments can be made with "\\"
 \\please do not change promptNr again! potential questions are based on that
 \\
+\\                  TF EXAMPLE
 1: PLAYER: Which player told this true story about their last holiday?: false: TEXT
 1: BOOLEAN: Is the following story by %s about their last holiday true or false?: true: TEXT
+\\                  DRAW EXAMPLE
 2: PLAYER: Which player drew this rat?: false: IMAGE
 2: PROMPTANSWER: Which rat was drawn by %s?: true: NONE
+\\                  TEXT EXAMPLE
 3: PLAYER: Whose favourite food is %s?: true: NONE
 3: PROMPTANSWER: What is the favourite food of %s?: true: NONE
+\\
 4: PLAYER: Which player told this true story about their best friend?: false: TEXT
 4: BOOLEAN: Is this story about %s's best friend true or false?: true: TEXT
 5: PLAYER: Which player drew this toilet?: false: IMAGE

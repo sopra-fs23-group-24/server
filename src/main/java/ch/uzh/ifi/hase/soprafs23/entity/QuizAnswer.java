@@ -14,11 +14,10 @@ public class QuizAnswer implements Serializable {
     @GeneratedValue
     private Long quizAnswerId;
 
-    @Column(nullable = false)
+
     @OneToOne
     private AnswerOption pickedAnswer;
 
-    @Column(nullable = false)
     @ManyToOne
     private Player associatedPlayer;
 

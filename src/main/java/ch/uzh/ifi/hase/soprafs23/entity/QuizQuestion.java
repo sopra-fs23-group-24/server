@@ -22,26 +22,35 @@ public class QuizQuestion implements Serializable {
     private CompletionStatus questionStatus = CompletionStatus.NOT_FINISHED;
 
     @Column(nullable = false)
+    private String quizQuestionText;
+
+    @Column
+    private String imageToDisplay = null;
+
+    @Column
+    private String storyToDisplay = null;
+
+
     @ManyToOne
     @JoinColumn(name = "gamePin")
     private Game associatedGame;
 
-    @Column(nullable = false)
+
     @ManyToOne
     @JoinColumn(name = "promptNr")
     private Prompt associatedPrompt;
 
-    @Column(nullable = false)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AnswerOption> answerOptions;
+    private List<AnswerOption> answerOptions = new ArrayList<>();
 
-    @Column(nullable = false)
     @OneToOne
     private AnswerOption correctAnswer;
 
-    @Column
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizAnswer> receivedAnswers = new ArrayList<>();
+
+
+
 
     public Long getQuestionId() {
         return questionId;
@@ -57,6 +66,30 @@ public class QuizQuestion implements Serializable {
 
     public void setQuestionStatus(CompletionStatus questionStatus) {
         this.questionStatus = questionStatus;
+    }
+
+    public String getQuizQuestionText() {
+        return quizQuestionText;
+    }
+
+    public void setQuizQuestionText(String quizQuestionText) {
+        this.quizQuestionText = quizQuestionText;
+    }
+
+    public String getImageToDisplay() {
+        return imageToDisplay;
+    }
+
+    public void setImageToDisplay(String imageToDisplay) {
+        this.imageToDisplay = imageToDisplay;
+    }
+
+    public String getStoryToDisplay() {
+        return storyToDisplay;
+    }
+
+    public void setStoryToDisplay(String storyToDisplay) {
+        this.storyToDisplay = storyToDisplay;
     }
 
     public Game getAssociatedGame() {
@@ -101,6 +134,14 @@ public class QuizQuestion implements Serializable {
 
     public void addAnswerOption(AnswerOption option){
         this.answerOptions.add(option);
+    }
+
+    public List<String> getAnswerOptionStrings(){
+        List<String> allAnswerOptionTexts = new ArrayList<>();
+        for(AnswerOption answerOption : answerOptions){
+            allAnswerOptionTexts.add(answerOption.getAnswerOptionText());
+        }
+        return allAnswerOptionTexts;
     }
 
     public CompletionStatus addReceivedAnswer(QuizAnswer answer){

@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
@@ -118,8 +119,13 @@ public class QuizQuestionGenerator {
 
         //picked pq will ask which player drawing is from
         if(pq.getQuestionType() == QuestionType.PLAYER){
+            newQuestion.setQuizQuestionText(pq.getQuestionText());
+
             DrawingPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
             Player correctAnswerPlayer = playerService.getById(selectedCorrectPromptAnswer.getAssociatedPlayerId());
+            if(pq.getDisplayType() == AdditionalDisplayType.IMAGE){
+                newQuestion.setImageToDisplay(selectedCorrectPromptAnswer.getAnswerDrawing());
+            }
 
             AnswerOption correctAnswer = new AnswerOption();
             correctAnswer.setAnswerOptionText(correctAnswerPlayer.getPlayerName());
@@ -129,22 +135,200 @@ public class QuizQuestionGenerator {
             answerOptionRepository.flush();
 
             while(newQuestion.getAnswerOptions().size() < 4){
+                DrawingPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+                Player selectedPromptPlayer = playerService.getById(selectedPromptAnswer.getAssociatedPlayerId());
 
+                AnswerOption newAnswerOption = new AnswerOption();
+                newAnswerOption.setAnswerOptionText(selectedPromptPlayer.getPlayerName());
+                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
+                    newQuestion.addAnswerOption(correctAnswer);
+                    answerOptionRepository.save(correctAnswer);
+                    answerOptionRepository.flush();
+                }
             }
         }
 
         //picked pq will ask which drawing is from a specific player
-        else if(pq.getQuestionType() == QuestionType.PROMPTANSWER){}
+        else if(pq.getQuestionType() == QuestionType.PROMPTANSWER){
+            DrawingPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+            Player correctAnswerPlayer = playerService.getById(selectedCorrectPromptAnswer.getAssociatedPlayerId());
 
-        return null;
+            if(pq.isRequiresTextInput()){
+                newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), correctAnswerPlayer.getPlayerName()));
+            }else{
+                newQuestion.setQuizQuestionText(pq.getQuestionText());
+            }
+
+            AnswerOption correctAnswer = new AnswerOption();
+            correctAnswer.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswerDrawing());
+            newQuestion.setCorrectAnswer(correctAnswer);
+            newQuestion.addAnswerOption(correctAnswer);
+            answerOptionRepository.save(correctAnswer);
+            answerOptionRepository.flush();
+
+            while(newQuestion.getAnswerOptions().size() < 4){
+                DrawingPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+                Player selectedPromptPlayer = playerService.getById(selectedPromptAnswer.getAssociatedPlayerId());
+
+                AnswerOption newAnswerOption = new AnswerOption();
+                newAnswerOption.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswerDrawing());
+                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
+                    newQuestion.addAnswerOption(correctAnswer);
+                    answerOptionRepository.save(correctAnswer);
+                    answerOptionRepository.flush();
+                }
+            }
+        }
+
+        return newQuestion;
     }
 
     private QuizQuestion transformPotentialQuestionText(PotentialQuestion pq, List<TextPromptAnswer> allAnswers) {
-        return null;
+        QuizQuestion newQuestion = new QuizQuestion();
+
+        //picked pq will ask which player answer is from
+        if(pq.getQuestionType() == QuestionType.PLAYER){
+            TextPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+            Player correctAnswerPlayer = playerService.getById(selectedCorrectPromptAnswer.getAssociatedPlayerId());
+
+            if(pq.isRequiresTextInput()){
+                newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), selectedCorrectPromptAnswer.getAnswer()));
+            }else{
+                newQuestion.setQuizQuestionText(pq.getQuestionText());
+            }
+
+            AnswerOption correctAnswer = new AnswerOption();
+            correctAnswer.setAnswerOptionText(correctAnswerPlayer.getPlayerName());
+            newQuestion.setCorrectAnswer(correctAnswer);
+            newQuestion.addAnswerOption(correctAnswer);
+            answerOptionRepository.save(correctAnswer);
+            answerOptionRepository.flush();
+
+            while(newQuestion.getAnswerOptions().size() < 4){
+                TextPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+                Player selectedPromptPlayer = playerService.getById(selectedPromptAnswer.getAssociatedPlayerId());
+
+                AnswerOption newAnswerOption = new AnswerOption();
+                newAnswerOption.setAnswerOptionText(selectedPromptPlayer.getPlayerName());
+                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
+                    newQuestion.addAnswerOption(correctAnswer);
+                    answerOptionRepository.save(correctAnswer);
+                    answerOptionRepository.flush();
+                }
+            }
+        }
+
+        //picked pq will ask which answer is from a specific player
+        else if(pq.getQuestionType() == QuestionType.PROMPTANSWER){
+            TextPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+            Player correctAnswerPlayer = playerService.getById(selectedCorrectPromptAnswer.getAssociatedPlayerId());
+
+            if(pq.isRequiresTextInput()){
+                newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), correctAnswerPlayer.getPlayerName()));
+            }else{
+                newQuestion.setQuizQuestionText(pq.getQuestionText());
+            }
+
+            AnswerOption correctAnswer = new AnswerOption();
+            correctAnswer.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswer());
+            newQuestion.setCorrectAnswer(correctAnswer);
+            newQuestion.addAnswerOption(correctAnswer);
+            answerOptionRepository.save(correctAnswer);
+            answerOptionRepository.flush();
+
+            while(newQuestion.getAnswerOptions().size() < 4){
+                TextPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+
+                AnswerOption newAnswerOption = new AnswerOption();
+                newAnswerOption.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswer());
+                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
+                    newQuestion.addAnswerOption(correctAnswer);
+                    answerOptionRepository.save(correctAnswer);
+                    answerOptionRepository.flush();
+                }
+            }
+        }
+
+        return newQuestion;
     }
 
     private QuizQuestion transformPotentialQuestionTF(PotentialQuestion pq, List<TrueFalsePromptAnswer> allAnswers) {
-        return null;
+        QuizQuestion newQuestion = new QuizQuestion();
+
+        //picked pq will ask which player story is from
+        if(pq.getQuestionType() == QuestionType.PLAYER){
+            newQuestion.setQuizQuestionText(pq.getQuestionText());
+
+            TrueFalsePromptAnswer selectedCorrectPromptAnswer = null;
+            while(selectedCorrectPromptAnswer == null){
+                selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+                if(!selectedCorrectPromptAnswer.getAnswerBoolean()){
+                    selectedCorrectPromptAnswer = null;
+                }
+            }
+
+
+            Player correctAnswerPlayer = playerService.getById(selectedCorrectPromptAnswer.getAssociatedPlayerId());
+
+            if(pq.getDisplayType() == AdditionalDisplayType.TEXT){
+                newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
+            }
+
+            AnswerOption correctAnswer = new AnswerOption();
+            correctAnswer.setAnswerOptionText(correctAnswerPlayer.getPlayerName());
+            newQuestion.setCorrectAnswer(correctAnswer);
+            newQuestion.addAnswerOption(correctAnswer);
+            answerOptionRepository.save(correctAnswer);
+            answerOptionRepository.flush();
+
+            while(newQuestion.getAnswerOptions().size() < 4){
+                TrueFalsePromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+                Player selectedPromptPlayer = playerService.getById(selectedPromptAnswer.getAssociatedPlayerId());
+
+                AnswerOption newAnswerOption = new AnswerOption();
+                newAnswerOption.setAnswerOptionText(selectedPromptPlayer.getPlayerName());
+                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
+                    newQuestion.addAnswerOption(correctAnswer);
+                    answerOptionRepository.save(correctAnswer);
+                    answerOptionRepository.flush();
+                }
+            }
+        }
+
+        //picked pq will ask whether story by specific user is true
+        else if(pq.getQuestionType() == QuestionType.PROMPTANSWER){
+            TrueFalsePromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
+            Player correctAnswerPlayer = playerService.getById(selectedCorrectPromptAnswer.getAssociatedPlayerId());
+
+            if(pq.isRequiresTextInput()){
+                newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), correctAnswerPlayer.getPlayerName()));
+            }else{
+                newQuestion.setQuizQuestionText(pq.getQuestionText());
+            }
+
+            if(pq.getDisplayType() == AdditionalDisplayType.TEXT){
+                newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
+            }
+
+            AnswerOption correctAnswer = new AnswerOption();
+            correctAnswer.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswerBoolean().toString());
+            newQuestion.setCorrectAnswer(correctAnswer);
+            newQuestion.addAnswerOption(correctAnswer);
+            answerOptionRepository.save(correctAnswer);
+            answerOptionRepository.flush();
+
+            AnswerOption newAnswerOption = new AnswerOption();
+            if(selectedCorrectPromptAnswer.getAnswerBoolean()){
+                newAnswerOption.setAnswerOptionText("false");
+            }else{
+                newAnswerOption.setAnswerOptionText("true");
+            }
+
+            answerOptionRepository.save(correctAnswer);
+            answerOptionRepository.flush();
+        }
+
+        return newQuestion;
     }
 
     /*

@@ -29,17 +29,14 @@ public class Game implements Serializable {
     @Column
     private Long hostId;
 
-    @Column
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Player> playerGroup = new ArrayList<>();
     //TODO: should we use players or id? - and why does id not work?
 
-    @Column
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Prompt> promptSet = new ArrayList<>();
 
-    @Column
-    @OneToMany(mappedBy = "GAME", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizQuestion> quizQuestionSet = new ArrayList<>();
 
     //@Column

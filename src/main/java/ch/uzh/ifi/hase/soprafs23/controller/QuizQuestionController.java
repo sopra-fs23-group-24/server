@@ -42,7 +42,7 @@ public class QuizQuestionController {
         return quizQuestionGetDTOS;
     }
 
-    @GetMapping("/games/{pin}/gameQuestions")
+    @GetMapping("/games/{pin}/quizQuestions")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<QuizQuestionGetDTO> getAllQuizQuestions(@PathVariable("pin") String gamePin){
@@ -57,7 +57,7 @@ public class QuizQuestionController {
         return quizQuestionGetDTOS;
     }
 
-    @PostMapping("/games/{pin}/gameQuestions")
+    @PostMapping("/games/{pin}/quizQuestions")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<QuizQuestionGetDTO> createQuizQuestions(@PathVariable("pin") String gamePin){
