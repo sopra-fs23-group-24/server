@@ -17,4 +17,6 @@ public interface DrawingPromptAnswerRepository extends JpaRepository<DrawingProm
     List<DrawingPromptAnswer> findAllByAssociatedGamePin(String pin);
 
     List<DrawingPromptAnswer> findAllByAssociatedPromptNr(int promptNr);
+
+    DrawingPromptAnswer findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Long playerId, int promptNr);
 }

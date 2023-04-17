@@ -17,4 +17,6 @@ public interface TrueFalsePromptAnswerRepository extends JpaRepository<TrueFalse
     List<TrueFalsePromptAnswer> findAllByAssociatedGamePin(String pin);
 
     List<TrueFalsePromptAnswer> findAllByAssociatedPromptNr(int promptNr);
+
+    TrueFalsePromptAnswer findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Long playerId, int promptNr);
 }

@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.repository.DrawingPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.TextPromptAnswerRepository;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 
@@ -86,27 +90,14 @@ public class PromptAnswerService {
 
     public DrawingPromptAnswer saveDrawingPromptAnswer(DrawingPromptAnswer answer, String playerToken, String gamePin) {
 
-        gameService.getGameByPin(gamePin); // throws if not correct
+        gameService.getGameByPin(gamePin); // throws if game doesn't exist
         answer.setAssociatedGamePin(gamePin);
-        Player player = playerService.getByToken(playerToken); //throws if not correct
+        Player player = playerService.getByToken(playerToken); // throws if player doesn't exist
         answer.setAssociatedPlayerId(player.getPlayerId());
 
-        if (answer.getAnswerDrawing().equals("")) {
+        if (answer.getAnswerDrawing().equals("")) { // throws if the content is empty
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No answer provided");
         }
-
-        // try to do it without this.
-        // zip the answer to be smaller:
-        /*
-        try{
-            String shortAnswer = ZipDataURL.zip(answer.getAnswerDrawing());
-            answer.setAnswerDrawing(shortAnswer);
-        }catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "image could not be zipped.");
-        }
-
-         */
-
 
         drawingPromptAnswerRepository.save(answer);
         drawingPromptAnswerRepository.flush();
@@ -116,7 +107,46 @@ public class PromptAnswerService {
     }
 
     // check if all users have answered all prompts
-    // change game status
+    // change game status below in a separate method
+    public Boolean haveAllPlayersAnsweredAllPrompts(String gamePin) {
+
+        List<Player> players = gameService.getGameByPin(gamePin).getPlayerGroup();
+        List<Prompt> prompts = gameService.getPromptsOfGame(gamePin);
+
+        for (Player player : players) {
+            Long playerId = player.getPlayerId();
+            for(Prompt prompt : prompts) {
+                PromptType type = prompt.getPromptType();
+                int promptNr = prompt.getPromptNr();
+                PromptAnswer found = null;
+                switch (type) {
+                    case TEXT -> {
+                         found = textPromptAnswerRepository
+                                .findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
+                    }
+                    case DRAWING -> {
+                         found = drawingPromptAnswerRepository
+                                .findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
+                    }
+                    case TRUEFALSE -> {
+                         found = trueFalsePromptAnswerRepository
+                                .findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
+                    }
+
+                }
+                if (found == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void changeGameStatusToQuiz(String gamePin) {
+        if(haveAllPlayersAnsweredAllPrompts(gamePin)) {
+            gameService.getGameByPin(gamePin).setStatus(GameStatus.QUIZ);
+        }
+    }
 
 
 }
