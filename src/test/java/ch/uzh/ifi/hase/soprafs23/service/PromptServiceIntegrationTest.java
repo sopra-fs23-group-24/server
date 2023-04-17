@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionsRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,7 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class PromptServiceIntegrationTest {
     @Qualifier("potentialQuestionRepository")
     @Autowired
-    private PotentialQuestionsRepository pqRepository;
+    private PotentialQuestionRepository pqRepository;
 
     @Qualifier("promptRepository")
     @Autowired

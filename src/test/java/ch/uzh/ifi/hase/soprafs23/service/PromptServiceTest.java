@@ -3,9 +3,11 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
-import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionsRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,17 +20,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PromptServiceTest {
     private Prompt tfTestPrompt;
     private Prompt textTestPrompt;
     private Prompt drawTestPrompt;
 
+    private Game testGame;
+
     @Mock
     private PromptRepository promptRepository;
 
     @Mock
-    private PotentialQuestionsRepository pqRepository;
+    private GameRepository gameRepository;
+
+    @Mock
+    private PotentialQuestionRepository pqRepository;
 
     @InjectMocks
     private PromptService promptService;
@@ -64,6 +72,10 @@ public class PromptServiceTest {
         Mockito.when(promptRepository.findAllByPromptType(PromptType.TRUEFALSE)).thenReturn(new ArrayList<>(List.of(tfTestPrompt)));
         Mockito.when(promptRepository.findAllByPromptType(PromptType.TEXT)).thenReturn(new ArrayList<>(List.of(textTestPrompt)));
         Mockito.when(promptRepository.findAllByPromptType(PromptType.DRAWING)).thenReturn(new ArrayList<>(List.of(drawTestPrompt)));
+
+        testGame = new Game();
+        testGame.setGameId(1L);
+        testGame.setGamePin("123456");
     }
 
     @Test
@@ -75,6 +87,37 @@ public class PromptServiceTest {
         assertEquals(allFound, allTestPrompts);
     }
 
+    /*@Test
+    public void getPromptsOfGame_success() {
+        Prompt testPrompt = new Prompt();
+        testPrompt.setPromptNr(999);
+        testPrompt.setPromptText("Tell a story");
+        testPrompt.setPromptType(PromptType.TRUEFALSE);
+
+        List<Prompt> listOfPrompts = List.of(testPrompt);
+        testGame.setPromptSet(listOfPrompts);
+
+        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
+
+        List<Prompt> foundPrompts = promptService.getPromptsOfGame(testGame.getGamePin());
+
+        assertEquals(foundPrompts, listOfPrompts);
+    }
+
+    @Test
+    public void getPromptsOfGame_invalidPin() {
+        Prompt testPrompt = new Prompt();
+        testPrompt.setPromptNr(999);
+        testPrompt.setPromptText("Tell a story");
+        testPrompt.setPromptType(PromptType.TRUEFALSE);
+
+        List<Prompt> listOfPrompts = List.of(testPrompt);
+        testGame.setPromptSet(listOfPrompts);
+
+        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        assertThrows(ResponseStatusException.class, () -> promptService.getPromptsOfGame(testGame.getGamePin()));
+    }*/
 
     /**
      * Setup functions tests

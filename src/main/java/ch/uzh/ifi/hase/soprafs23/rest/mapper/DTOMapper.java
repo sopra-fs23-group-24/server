@@ -22,29 +22,28 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface DTOMapper {
-
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
 
-  @Mapping(source = "gameId", target = "gameId")
-  @Mapping(source = "gamePin", target = "gamePin")
-  @Mapping(source = "status", target = "status")
-  GameGetDTO convertToGameGetDTO(Game game);
-  @Mapping(source = "status", target = "status")
-  Game convertFromGamePutDTO(GamePutDTO game);
+    @Mapping(source = "gameId", target = "gameId")
+    @Mapping(source = "gamePin", target = "gamePin")
+    @Mapping(source = "status", target = "status")
+    GameGetDTO convertToGameGetDTO(Game game);
+    @Mapping(source = "status", target = "status")
+    Game convertFromGamePutDTO(GamePutDTO game);
 
 
-  @Mapping(source = "playerId", target = "playerId")
-  @Mapping(source = "playerName", target = "playerName")
-  @Mapping(source = "score", target = "score")
-  PlayerGetDTO convertToPlayerGetDTO(Player player);
+    @Mapping(source = "playerId", target = "playerId")
+    @Mapping(source = "playerName", target = "playerName")
+    @Mapping(source = "score", target = "score")
+    PlayerGetDTO convertToPlayerGetDTO(Player player);
 
-  @Mapping(source = "playerName", target = "playerName")
-  @Mapping(source = "host", target = "host")
-  Player convertFromPlayerPostDTO(PlayerPostDTO game);
+    @Mapping(source = "playerName", target = "playerName")
+    @Mapping(source = "host", target = "host")
+    Player convertFromPlayerPostDTO(PlayerPostDTO game);
 
-  @Mapping(source = "playerName", target = "playerName")
-  Player convertFromPlayerPutDTO(PlayerPutDTO player);
+    @Mapping(source = "playerName", target = "playerName")
+    Player convertFromPlayerPutDTO(PlayerPutDTO player);
 
 
     @Mapping(source = "associatedPromptNr", target = "associatedPromptNr")
@@ -66,5 +65,14 @@ public interface DTOMapper {
     @Mapping(source = "promptType", target = "promptType")
     @Mapping(source = "promptText", target = "promptText")
     PromptGetDTO convertToPromptGetDTO(Prompt prompt);
+
+    @Mapping(source = "questionId", target = "questionId")
+    @Mapping(source = "associatedGame", target = "associatedGame")
+    @Mapping(source = "associatedPrompt", target = "associatedPrompt")
+    @Mapping(source = "answerOptions", target = "answerOptions")
+    @Mapping(source = "correctAnswer", target = "correctAnswer")
+    @Mapping(source = "receivedAnswers", target = "receivedAnswers")
+    @Mapping(source = "questionStatus", target = "questionStatus")
+    QuizQuestionGetDTO convertToQuizQuestionGetDTO(QuizQuestion question);
 
 }

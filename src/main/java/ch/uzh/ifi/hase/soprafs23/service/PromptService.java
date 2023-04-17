@@ -3,10 +3,11 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
 import ch.uzh.ifi.hase.soprafs23.exceptions.PromptSetupException;
-import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionsRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.PromptPostDTO;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class PromptService {
 
     private final PromptRepository promptRepository;
 
-    private final PotentialQuestionsRepository potentialQuestionsRepository;
+    private final PotentialQuestionRepository potentialQuestionsRepository;
 
     private GameService gameService;
 
@@ -51,7 +52,7 @@ public class PromptService {
     private BufferedReader input;
 
     @Autowired
-    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionsRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException, IOException {
+    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException, IOException {
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
         initialisePromptRepository();
@@ -66,6 +67,13 @@ public class PromptService {
     //TODO: test Integration?
     public List<Prompt> getPrompts() {
         return promptRepository.findAll();
+    }
+
+
+    //TODO: test Integration?
+    public List<Prompt> getPromptsOfGame(String gamePin) {
+        Game gameByPin = gameService.getGameByPin(gamePin);
+        return gameByPin.getPromptSet();
     }
 
     //TODO: test Integration?
@@ -228,25 +236,5 @@ public class PromptService {
         return selectedPrompts;
     }
 
-    private void testCreateQuestions(PotentialQuestion pq) {
-        StringBuilder outputString = new StringBuilder();
-        if (pq.isRequiresTextInput()) {
-            if (pq.getQuestionType() == QuestionType.PLAYER) {
-                outputString.append(String.format(pq.getQuestionText(), "PROMPT INPUT"));
-            }
-            else {
-                outputString.append(String.format(pq.getQuestionText(), "USERNAME"));
-            }
-        }
-        else {
-            outputString.append(pq.getQuestionText());
-        }
-        if (pq.getDisplayType() == AdditionalDisplayType.IMAGE) {
-            outputString.append(" ---- SHOW IMAGE TO GUESS");
-        }
-        else if (pq.getDisplayType() == AdditionalDisplayType.TEXT) {
-            outputString.append(" ---- SHOW A TEXT");
-        }
-        System.out.println(outputString);
-    }
+
 }

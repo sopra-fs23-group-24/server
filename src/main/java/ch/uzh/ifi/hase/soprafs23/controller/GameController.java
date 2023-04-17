@@ -68,21 +68,6 @@ public class GameController {
         return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
     }
 
-    @GetMapping("/games/{pin}/prompts")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public List<PromptGetDTO> getAllPrompts(@PathVariable("pin") String gamePin) {
-        List<Prompt> allPromptsOfGame = gameService.getPromptsOfGame(gamePin);
-
-        List<PromptGetDTO> promptsGetDTOs = new ArrayList<>();
-
-        for (Prompt prompt : allPromptsOfGame) {
-            promptsGetDTOs.add(DTOMapper.INSTANCE.convertToPromptGetDTO(prompt));
-        }
-
-        return promptsGetDTOs;
-    }
-
     @DeleteMapping("/games/{pin}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody

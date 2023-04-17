@@ -21,7 +21,7 @@ public class PotentialQuestionsRepositoryIntegrationTest {
     PotentialQuestion testPQ;
 
     @Autowired
-    private PotentialQuestionsRepository pqRepository;
+    private PotentialQuestionRepository pqRepository;
 
     @Autowired
     private TestEntityManager entityManager;

@@ -143,38 +143,6 @@ public class GameServiceTest {
     }
 
     @Test
-    public void getPromptsOfGame_success() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-        testGame.setPromptSet(listOfPrompts);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
-
-        List<Prompt> foundPrompts = gameService.getPromptsOfGame(testGame.getGamePin());
-
-        assertEquals(foundPrompts, listOfPrompts);
-    }
-
-    @Test
-    public void getPromptsOfGame_invalidPin() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-        testGame.setPromptSet(listOfPrompts);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        assertThrows(ResponseStatusException.class, () -> gameService.getPromptsOfGame(testGame.getGamePin()));
-    }
-
-    @Test
     public void addPromptsToGame_success() {
         Prompt testPrompt = new Prompt();
         testPrompt.setPromptNr(999);

@@ -35,8 +35,8 @@ public class PromptAnswerService {
     // there are no arguments passed... just a blank call.
     @Autowired
     public PromptAnswerService(@Qualifier("textPromptAnswerRepository") TextPromptAnswerRepository textPromptAnswerRepository,
-                               @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository
-            , @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository) {
+                               @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
+                               @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository) {
         this.textPromptAnswerRepository = textPromptAnswerRepository;
         this.trueFalsePromptAnswerRepository = trueFalsePromptAnswerRepository;
         this.drawingPromptAnswerRepository = drawingPromptAnswerRepository;

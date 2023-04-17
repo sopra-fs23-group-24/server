@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository("potentialQuestionRepository")
-public interface PotentialQuestionsRepository extends JpaRepository<PotentialQuestion, Long> {
+public interface PotentialQuestionRepository extends JpaRepository<PotentialQuestion, Long> {
     List<PotentialQuestion> findAllByAssociatedPrompt(Prompt prompt);
 
     List<PotentialQuestion> findAllByQuestionType(QuestionType type);

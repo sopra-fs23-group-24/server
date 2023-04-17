@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
+import ch.uzh.ifi.hase.soprafs23.entity.DrawingPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.TextPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.TrueFalsePromptAnswer;
 import org.springframework.data.annotation.Id;
@@ -17,4 +18,6 @@ public interface TrueFalsePromptAnswerRepository extends JpaRepository<TrueFalse
     List<TrueFalsePromptAnswer> findAllByAssociatedGamePin(String pin);
 
     List<TrueFalsePromptAnswer> findAllByAssociatedPromptNr(int promptNr);
+
+    List<TrueFalsePromptAnswer> findAllByAssociatedGamePinAndAssociatedPromptNr(String pin, int promptNr);
 }

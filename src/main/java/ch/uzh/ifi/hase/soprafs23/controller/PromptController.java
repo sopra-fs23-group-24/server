@@ -38,6 +38,21 @@ public class PromptController {
         return promptsGetDTOs;
     }
 
+    @GetMapping("/games/{pin}/prompts")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<PromptGetDTO> getPromptsOfGame(@PathVariable("pin") String gamePin) {
+        List<Prompt> allPromptsOfGame = promptService.getPromptsOfGame(gamePin);
+
+        List<PromptGetDTO> promptsGetDTOs = new ArrayList<>();
+
+        for (Prompt prompt : allPromptsOfGame) {
+            promptsGetDTOs.add(DTOMapper.INSTANCE.convertToPromptGetDTO(prompt));
+        }
+
+        return promptsGetDTOs;
+    }
+
     @PostMapping("/games/{pin}/prompts")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody

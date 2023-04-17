@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
+import ch.uzh.ifi.hase.soprafs23.entity.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,12 +148,6 @@ public class GameService {
     }
 
     //TODO: test Integration?
-    public List<Prompt> getPromptsOfGame(String gamePin) {
-        Game gameByPin = getGameByPin(gamePin);
-        return gameByPin.getPromptSet();
-    }
-
-    //TODO: test Integration?
     public Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {
 
         Game gameByPin = getGameByPin(gamePin);
@@ -163,7 +158,7 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has prompts selected.");
         }
 
-        gameByPin.addPrompts(promptsForGame);
+        gameByPin.setPromptSet(promptsForGame);
 
         gameByPin.setStatus(GameStatus.PROMPT);
 
@@ -172,6 +167,22 @@ public class GameService {
 
         return gameByPin;
     }
+    public Game addQuizQuestionsToGame(List<QuizQuestion> questionsForGame, String gamePin) {
+        Game gameByPin = getGameByPin(gamePin);
+        if (!gameByPin.getQuizQuestionSet().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has quiz questions created for it.");
+        }
+
+        gameByPin.setQuizQuestionSet(questionsForGame);
+
+        gameByPin.setStatus(GameStatus.QUIZ);
+
+        gameRepository.save(gameByPin);
+        gameRepository.flush();
+
+        return gameByPin;
+    }
+
 
     /**
      * Helper functions

@@ -23,12 +23,6 @@ public class Game implements Serializable {
     @Column(nullable = false, unique = true)
     private String gamePin;
 
-
-    @Column
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Player> playerGroup = new ArrayList<>();
-    //TODO: should we use players or id? - and why does id not work?
-
     @Column(nullable = false)
     private GameStatus status = GameStatus.LOBBY;
 
@@ -36,12 +30,17 @@ public class Game implements Serializable {
     private Long hostId;
 
     @Column
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Player> playerGroup = new ArrayList<>();
+    //TODO: should we use players or id? - and why does id not work?
+
+    @Column
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Prompt> promptSet = new ArrayList<>();
 
     @Column
     @OneToMany(mappedBy = "GAME", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuizQuestion> quizQuestionSet = new ArrayList<QuizQuestion>();
+    private List<QuizQuestion> quizQuestionSet = new ArrayList<>();
 
     //@Column
     //private QuizQuestion currentQuestion;
@@ -108,6 +107,14 @@ public class Game implements Serializable {
 
     public void addPrompts(List<Prompt> newPrompts) {
         promptSet.addAll(newPrompts);
+    }
+
+    public List<QuizQuestion> getQuizQuestionSet() {
+        return quizQuestionSet;
+    }
+
+    public void setQuizQuestionSet(List<QuizQuestion> quizQuestionSet) {
+        this.quizQuestionSet = quizQuestionSet;
     }
 
     // public nextQuestion() {
