@@ -65,7 +65,12 @@ Each entry should consist of:
 Week 2 (3. - 7. april)
 - Tim:
 	- work on: 
+        - https://github.com/sopra-fs23-group-24/server/issues/21
+        - https://github.com/sopra-fs23-group-24/server/issues/27
+        - https://github.com/sopra-fs23-group-24/server/issues/48
 	- description:
+        - created and implemented Text-, T/F-, Drawing-PromptAnswers
+        - including a repository and DTO for each, and a shared controller + service for the 3 of them
 - Lara:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/server/issues/49  
@@ -110,7 +115,12 @@ Week 2 (3. - 7. april)
 *Vacation Week 3 (10. - 14. april)*
 - Tim:
 	- work on: 
+        - https://github.com/sopra-fs23-group-24/server/issues/21
+        - https://github.com/sopra-fs23-group-24/server/issues/27
+        - https://github.com/sopra-fs23-group-24/server/issues/48
 	- description:
+        - created and implemented Text-, T/F-, Drawing-PromptAnswers
+        - including a repository and DTO for each, and a shared controller + service for the 3 of them 
 - Lara:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/server/issues/49  
