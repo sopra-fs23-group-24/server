@@ -76,7 +76,9 @@ Week 2 (3. - 7. april)
 	    - if it is scanned it leads to the entername view for a specific game 
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/13
 	- description:
+	    - Implemented Drawing Prompt and submit drawing function
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
@@ -121,7 +123,7 @@ Week 2 (3. - 7. april)
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/13
 	- description:
-	    - Implemented Drawing Prompt and submit drawing funvtion
+	    - Improved Drawing Prompt and submit drawing function
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
