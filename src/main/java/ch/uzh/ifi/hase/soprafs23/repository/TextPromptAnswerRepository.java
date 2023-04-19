@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
-import ch.uzh.ifi.hase.soprafs23.entity.DrawingPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.TextPromptAnswer;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +16,8 @@ public interface TextPromptAnswerRepository extends JpaRepository<TextPromptAnsw
     List<TextPromptAnswer> findAllByAssociatedGamePin(String pin);
 
     List<TextPromptAnswer> findAllByAssociatedPromptNr(int promptNr);
+
+    TextPromptAnswer findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(long id, int promptNr);
 
     List<TextPromptAnswer> findAllByAssociatedGamePinAndAssociatedPromptNr(String pin, int promptNr);
 

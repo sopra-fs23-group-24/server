@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
+
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -22,6 +23,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface DTOMapper {
+
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
 
@@ -29,6 +31,7 @@ public interface DTOMapper {
     @Mapping(source = "gamePin", target = "gamePin")
     @Mapping(source = "status", target = "status")
     GameGetDTO convertToGameGetDTO(Game game);
+
     @Mapping(source = "status", target = "status")
     Game convertFromGamePutDTO(GamePutDTO game);
 

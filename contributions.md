@@ -65,13 +65,25 @@ Each entry should consist of:
 Week 2 (3. - 7. april)
 - Tim:
 	- work on: 
+        - https://github.com/sopra-fs23-group-24/server/issues/21
+        - https://github.com/sopra-fs23-group-24/server/issues/27
+        - https://github.com/sopra-fs23-group-24/server/issues/48
 	- description:
+        - created and implemented Text-, T/F-, Drawing-PromptAnswers
+        - including a repository and DTO for each, and a shared controller + service for the 3 of them
 - Lara:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/49  
+	    - https://github.com/sopra-fs23-group-24/client/issues/21 
+	    - https://github.com/sopra-fs23-group-24/client/issues/22
 	- description:
+	    - a qr code is displayed in the lobby
+	    - if it is scanned it leads to the entername view for a specific game 
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/13
 	- description:
+	    - Implemented Drawing Prompt and submit drawing function
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
@@ -103,13 +115,25 @@ Week 2 (3. - 7. april)
 *Vacation Week 3 (10. - 14. april)*
 - Tim:
 	- work on: 
+        - https://github.com/sopra-fs23-group-24/server/issues/21
+        - https://github.com/sopra-fs23-group-24/server/issues/27
+        - https://github.com/sopra-fs23-group-24/server/issues/48
 	- description:
+        - created and implemented Text-, T/F-, Drawing-PromptAnswers
+        - including a repository and DTO for each, and a shared controller + service for the 3 of them 
 - Lara:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/49  
+	    - https://github.com/sopra-fs23-group-24/client/issues/21 
+	    - https://github.com/sopra-fs23-group-24/client/issues/22
 	- description:
+	    - a qr code is displayed in the lobby
+	    - if it is scanned it leads to the entername view for a specific game (only half finished)
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/13
 	- description:
+	    - Improved Drawing Prompt and submit drawing function
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
@@ -124,9 +148,12 @@ Week 2 (3. - 7. april)
 	    - https://github.com/sopra-fs23-group-24/server/issues/47
 	    - https://github.com/sopra-fs23-group-24/server/issues/20
 	    - https://github.com/sopra-fs23-group-24/server/issues/50
+	    - https://github.com/sopra-fs23-group-24/server/issues/17
+	    - https://github.com/sopra-fs23-group-24/server/issues/18
 	- description:
 	    - full implementation of potentialQuestions
 	    - test cases 20/47/50
+	    - start work on QuizQuestion and quiz question generation
 
 ---
 Week 4 (17. -21. april)
