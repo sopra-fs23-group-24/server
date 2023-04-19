@@ -1,19 +1,15 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.entity.DrawingPromptAnswer;
-import ch.uzh.ifi.hase.soprafs23.entity.TextPromptAnswer;
-import ch.uzh.ifi.hase.soprafs23.entity.TrueFalsePromptAnswer;
-import ch.uzh.ifi.hase.soprafs23.repository.TextPromptAnswerRepository;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.DrawingPromptAnswerPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.TextPromptAnswerPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.TrueFalsePromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.DrawingPromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.TextPromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.TrueFalsePromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.DrawingPromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TextPromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TrueFalsePromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
-import ch.uzh.ifi.hase.soprafs23.service.GameService;
-import ch.uzh.ifi.hase.soprafs23.service.PromptAnswerService;
+import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptAnswerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 
 
 @RestController

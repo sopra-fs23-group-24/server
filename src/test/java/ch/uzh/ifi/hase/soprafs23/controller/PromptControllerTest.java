@@ -1,9 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
-import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.PromptPostDTO;
-import ch.uzh.ifi.hase.soprafs23.service.PromptService;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptPostDTO;
+import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

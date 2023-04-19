@@ -1,9 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
-import ch.uzh.ifi.hase.soprafs23.service.PromptService;
+import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

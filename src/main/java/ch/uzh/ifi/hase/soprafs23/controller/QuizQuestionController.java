@@ -1,13 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
-import ch.uzh.ifi.hase.soprafs23.entity.QuizQuestion;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.PromptGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.PromptPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.QuizQuestionGetDTO;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
-import ch.uzh.ifi.hase.soprafs23.service.PromptService;
-import ch.uzh.ifi.hase.soprafs23.service.QuizQuestionService;
+import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

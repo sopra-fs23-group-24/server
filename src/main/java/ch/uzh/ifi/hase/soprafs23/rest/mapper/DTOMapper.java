@@ -1,11 +1,19 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.Prompt;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.DrawingPromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.TextPromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.TrueFalsePromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.DrawingPromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TextPromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TrueFalsePromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
