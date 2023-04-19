@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
-import ch.uzh.ifi.hase.soprafs23.helpers.ZipDataURL;
 import ch.uzh.ifi.hase.soprafs23.repository.DrawingPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.TextPromptAnswerRepository;
@@ -26,6 +25,8 @@ public class PromptAnswerService {
     private final Logger log = LoggerFactory.getLogger(PromptAnswerService.class);
 
     private GameService gameService;
+    private PromptService promptService;
+
     private PlayerService playerService;
     private final TextPromptAnswerRepository textPromptAnswerRepository;
     private final TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
@@ -55,6 +56,10 @@ public class PromptAnswerService {
         this.playerService = playerService;
     }
 
+    @Autowired
+    public void setPromptService(PromptService promptService) {
+        this.promptService = promptService;
+    }
 
     public TextPromptAnswer saveTextPromptAnswer(TextPromptAnswer answer, String playerToken, String gamePin) {
 
@@ -141,14 +146,14 @@ public class PromptAnswerService {
             }
         }
     }
-}
+
 
     // check if all users have answered all prompts
     // change game status below in a separate method
     public Boolean haveAllPlayersAnsweredAllPrompts(String gamePin) {
 
         List<Player> players = gameService.getGameByPin(gamePin).getPlayerGroup();
-        List<Prompt> prompts = gameService.getPromptsOfGame(gamePin);
+        List<Prompt> prompts = promptService.getPromptsOfGame(gamePin);
 
         for (Player player : players) {
             Long playerId = player.getPlayerId();
@@ -156,17 +161,18 @@ public class PromptAnswerService {
                 PromptType type = prompt.getPromptType();
                 int promptNr = prompt.getPromptNr();
                 PromptAnswer found = null;
+                // TODO: maybe refactor to use overloading instead of switch statement
                 switch (type) {
                     case TEXT -> {
-                         found = textPromptAnswerRepository
+                        found = textPromptAnswerRepository
                                 .findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
                     }
                     case DRAWING -> {
-                         found = drawingPromptAnswerRepository
+                        found = drawingPromptAnswerRepository
                                 .findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
                     }
                     case TRUEFALSE -> {
-                         found = trueFalsePromptAnswerRepository
+                        found = trueFalsePromptAnswerRepository
                                 .findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
                     }
 
