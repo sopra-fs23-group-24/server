@@ -28,8 +28,10 @@ public class QuizAnswerController {
 
         //convert from DTO to QuizAnswer
         QuizAnswer quizAnswer = DTOMapper.INSTANCE.convertFromQuizAnswerPostDTO(clientAnswer);
+
         int score = quizQuestionService.calculateAndAddScore(quizAnswer, id);
 
+        quizQuestionService.addQuizAnswerToQuizQuestion(quizAnswer, id, gamePin);
         // what should it return?
         return score;
     }
