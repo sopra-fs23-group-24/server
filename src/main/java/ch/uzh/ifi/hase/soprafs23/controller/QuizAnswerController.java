@@ -24,11 +24,11 @@ public class QuizAnswerController {
     public int postQuizAnswer(@RequestBody QuizAnswerPostDTO clientAnswer,
                                             @PathVariable("pin") String gamePin,
                                             @PathVariable("id") long id) {
-        // what do I need the gamePin for?
+        // what do I need the gamePin for? maybe to get the player...
 
         //convert from DTO to QuizAnswer
         QuizAnswer quizAnswer = DTOMapper.INSTANCE.convertFromQuizAnswerPostDTO(clientAnswer);
-        int score = quizQuestionService.calculateScore(quizAnswer, id);
+        int score = quizQuestionService.calculateAndAddScore(quizAnswer, id);
 
         // what should it return?
         return score;

@@ -73,6 +73,7 @@ public class QuizQuestionService {
 
     public List<QuizQuestion> createQuizQuestions(String gamePin) {
         // to make testing in postman possible
+        // sets an answer for every prompt for every player
         promptAnswerService.mockPromptAnswersForGame(gamePin);
 
         Game gameByPin = gameService.getGameByPin(gamePin);
@@ -88,22 +89,20 @@ public class QuizQuestionService {
         return createdQuestions;
     }
 
-    public int calculateScore(QuizAnswer quizAnswer, long id) {
+    // the notion of speed is not yet accounted for
+    public int calculateAndAddScore(QuizAnswer quizAnswer, long id) {
         AnswerOption chosenAnswer = quizAnswer.getPickedAnswer();
-
         AnswerOption correctAnswer = qqRepository.getOne(id).getCorrectAnswer();
 
+        int score = 0;
         if (chosenAnswer.equals(correctAnswer)) {
-            return 10;
+            score = 10;
+            // add points to player
+            quizAnswer.getAssociatedPlayer().addPoints(score);
         }
-        else {
-            return 0;
-        }
+        return score; // either 0 or 10
 
     }
-
-
-
 
 
         // TODO: a method to check if a QuizQuestion is finished. (right?)

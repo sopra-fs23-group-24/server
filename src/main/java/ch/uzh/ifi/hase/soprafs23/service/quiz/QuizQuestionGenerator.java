@@ -97,15 +97,18 @@ public class QuizQuestionGenerator {
             }else if(prompt.getPromptType() == PromptType.TEXT){
                 List<TextPromptAnswer> answersToPrompt = textPromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(game.getGamePin(), prompt.getPromptNr());
                 createdQuestion = transformPotentialQuestionText(selectedPotentialQuestion, answersToPrompt);
-                System.out.println("Created a questions: " + createdQuestion.getQuestionId());
+                // duplicate: System.out.println("Created a questions: " + createdQuestion.getQuestionId());
             }else{
                 List<TrueFalsePromptAnswer> answersToPrompt = trueFalsePromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(game.getGamePin(), prompt.getPromptNr());
                 createdQuestion = transformPotentialQuestionTF(selectedPotentialQuestion, answersToPrompt);
             }
+
+            assert createdQuestion != null;
             createdQuestion.setAssociatedGamePin(game.getGamePin());
             createdQuestion.setAssociatedPrompt(prompt);
             createdQuestions.add(createdQuestion);
-            System.out.println("Created a questions: " + createdQuestion.getQuestionId());
+            // does not reach this point
+            System.out.println("Created a question: " + createdQuestion.getQuestionId());
         }
 
         System.out.println("returning generated questions");
@@ -123,25 +126,33 @@ public class QuizQuestionGenerator {
 
             DrawingPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
             Player correctAnswerPlayer = playerService.getById(selectedCorrectPromptAnswer.getAssociatedPlayerId());
+
             if(pq.getDisplayType() == AdditionalDisplayType.IMAGE){
                 newQuestion.setImageToDisplay(selectedCorrectPromptAnswer.getAnswerDrawing());
             }
             System.out.println("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getImageToDisplay());
 
+            // set and save the correct answer option, and add this option to the question
             AnswerOption correctAnswer = new AnswerOption();
-            correctAnswer.setAnswerOptionText(correctAnswerPlayer.getPlayerName());
+            correctAnswer.setAnswerOptionText(correctAnswerPlayer.getPlayerName()); // bc the answer is a player
             newQuestion.setCorrectAnswer(correctAnswer);
             newQuestion.addAnswerOption(correctAnswer);
             answerOptionRepository.save(correctAnswer);
             answerOptionRepository.flush();
+            // remove used answer
             allAnswers.remove(selectedCorrectPromptAnswer);
 
             while(newQuestion.getAnswerOptions().size() < 4){
+                // get a random answer and its according player from allAnswers
                 DrawingPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
                 Player selectedPromptPlayer = playerService.getById(selectedPromptAnswer.getAssociatedPlayerId());
 
+                // creat and set a new answer option with that according player
                 AnswerOption newAnswerOption = new AnswerOption();
                 newAnswerOption.setAnswerOptionText(selectedPromptPlayer.getPlayerName());
+
+                // "if the players name is already used - choose another one" - I think that is the mistake,
+                // because I sometimes create players with the same name...
                 if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
                     newQuestion.addAnswerOption(newAnswerOption);
                     answerOptionRepository.save(newAnswerOption);

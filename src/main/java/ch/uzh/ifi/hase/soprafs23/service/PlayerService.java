@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * User Service
@@ -135,6 +133,13 @@ public class PlayerService {
 
         return allPlayersToDelete;
     }
+
+    // sorts the list of players, and returns it
+    public List<Player> sortPlayersByScore (List<Player> players) {
+        players.sort(Comparator.comparingInt(Player::getScore).reversed()); // e.g. 20, 10, 0.
+        return players;
+    }
+
 
     /**
      * Helper functions
