@@ -2,6 +2,8 @@ package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -70,6 +72,7 @@ public class QuizQuestionService {
 
 
     public List<QuizQuestion> createQuizQuestions(String gamePin) {
+        // to make testing in postman possible
         promptAnswerService.mockPromptAnswersForGame(gamePin);
 
         Game gameByPin = gameService.getGameByPin(gamePin);
@@ -84,4 +87,25 @@ public class QuizQuestionService {
 
         return createdQuestions;
     }
+
+    public int calculateScore(QuizAnswer quizAnswer, long id) {
+        AnswerOption chosenAnswer = quizAnswer.getPickedAnswer();
+
+        AnswerOption correctAnswer = qqRepository.getOne(id).getCorrectAnswer();
+
+        if (chosenAnswer.equals(correctAnswer)) {
+            return 10;
+        }
+        else {
+            return 0;
+        }
+
+    }
+
+
+
+
+
+        // TODO: a method to check if a QuizQuestion is finished. (right?)
+
 }

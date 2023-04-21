@@ -72,7 +72,7 @@ public class PromptAnswerController {
                                                     @RequestHeader("playerToken") String loggedInToken,
                                                     @PathVariable("pin") String gamePin) {
         // convert
-        DrawingPromptAnswer answer = DTOMapper.INSTANCE.convertFromDrawingPromptAnswerDTO(clientAnswer);
+        DrawingPromptAnswer answer = DTOMapper.INSTANCE.convertFromDrawingPromptAnswerPostDTO(clientAnswer);
         // save
         DrawingPromptAnswer successfulSave = promptAnswerService.saveDrawingPromptAnswer(answer, loggedInToken, gamePin);
         System.out.print("DrawingPromptAnswer saved");

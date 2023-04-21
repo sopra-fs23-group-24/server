@@ -7,12 +7,14 @@ import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.TextPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.TrueFalsePromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.DrawingPromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TextPromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TrueFalsePromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -69,7 +71,7 @@ public interface DTOMapper {
 
     @Mapping(source = "associatedPromptNr", target = "associatedPromptNr")
     @Mapping(source = "answerDrawing", target = "answerDrawing")
-    DrawingPromptAnswer convertFromDrawingPromptAnswerDTO(DrawingPromptAnswerPostDTO drawingPromptAnswerPostDTO);
+    DrawingPromptAnswer convertFromDrawingPromptAnswerPostDTO(DrawingPromptAnswerPostDTO drawingPromptAnswerPostDTO);
 
     @Mapping(source = "promptId", target = "promptId")
     @Mapping(source = "promptNr", target = "promptNr")
@@ -88,5 +90,11 @@ public interface DTOMapper {
     @Mapping(source = "receivedAnswers", target = "receivedAnswers")
     @Mapping(source = "questionStatus", target = "questionStatus")
     QuizQuestionGetDTO convertToQuizQuestionGetDTO(QuizQuestion question);
+
+
+    @Mapping(source = "pickedAnswer", target = "pickedAnswer")
+    @Mapping(source = "associatedPlayer", target = "associatedPlayer")
+    QuizAnswer convertFromQuizAnswerPostDTO(QuizAnswerPostDTO quizAnswerPostDTO);
+
 
 }
