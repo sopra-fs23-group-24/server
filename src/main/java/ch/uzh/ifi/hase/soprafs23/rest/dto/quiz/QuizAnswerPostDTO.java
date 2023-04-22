@@ -6,24 +6,14 @@ import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 
 public class QuizAnswerPostDTO {
 
-    private AnswerOption pickedAnswer;
-
-    private Player associatedPlayer;
+    private long pickedAnswerOptionId;
 
 
-    public AnswerOption getPickedAnswer() {
-        return pickedAnswer;
+    public long getPickedAnswerOptionId() {
+        return pickedAnswerOptionId;
     }
 
-    public void setPickedAnswer(AnswerOption pickedAnswer) {
-        this.pickedAnswer = pickedAnswer;
-    }
-
-    public Player getAssociatedPlayer() {
-        return associatedPlayer;
-    }
-
-    public void setAssociatedPlayer(Player associatedPlayer) {
-        this.associatedPlayer = associatedPlayer;
+    public void setPickedAnswerOptionId(long pickedAnswerOptionId) {
+        this.pickedAnswerOptionId = pickedAnswerOptionId;
     }
 }

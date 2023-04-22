@@ -89,20 +89,10 @@ public class QuizQuestionService {
         return createdQuestions;
     }
 
-    // the notion of speed is not yet accounted for
-    public int calculateAndAddScore(QuizAnswer quizAnswer, long id) {
-        AnswerOption chosenAnswer = quizAnswer.getPickedAnswer();
-        AnswerOption correctAnswer = qqRepository.getOne(id).getCorrectAnswer();
 
-        int score = 0;
-        if (chosenAnswer.equals(correctAnswer)) {
-            score = 10;
-            // add points to player
-            quizAnswer.getAssociatedPlayer().addPoints(score);
-        }
-        return score; // either 0 or 10
 
-    }
+
+
 
 
         // TODO: a method to check if a QuizQuestion is finished. (right?)

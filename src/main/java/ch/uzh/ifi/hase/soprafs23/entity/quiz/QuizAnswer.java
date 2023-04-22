@@ -19,11 +19,20 @@ public class QuizAnswer implements Serializable {
     private Long quizAnswerId;
 
 
-    @OneToOne
-    private AnswerOption pickedAnswer;
-
+    // @OneToOne
+    private long pickedAnswerOptionId;
     @ManyToOne
     private Player associatedPlayer;
+
+
+    public long getPickedAnswerOptionId() {
+        return pickedAnswerOptionId;
+    }
+
+    public void setPickedAnswerOptionId(long pickedAnswerOptionId) {
+        this.pickedAnswerOptionId = pickedAnswerOptionId;
+    }
+
 
     public Long getQuizAnswerId() {
         return quizAnswerId;
@@ -33,13 +42,7 @@ public class QuizAnswer implements Serializable {
         this.quizAnswerId = quizAnswerId;
     }
 
-    public AnswerOption getPickedAnswer() {
-        return pickedAnswer;
-    }
 
-    public void setPickedAnswer(AnswerOption pickedAnswer) {
-        this.pickedAnswer = pickedAnswer;
-    }
 
     public Player getAssociatedPlayer() {
         return associatedPlayer;

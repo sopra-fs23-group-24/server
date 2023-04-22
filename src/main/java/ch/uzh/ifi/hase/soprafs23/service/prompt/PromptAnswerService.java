@@ -9,6 +9,7 @@ import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
+import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,9 @@ public class PromptAnswerService {
 
     private GameService gameService;
     private PromptService promptService;
-
     private PlayerService playerService;
+    private QuizQuestionService quizQuestionService;
+
     private final TextPromptAnswerRepository textPromptAnswerRepository;
     private final TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
     private final DrawingPromptAnswerRepository drawingPromptAnswerRepository;
@@ -186,10 +188,19 @@ public class PromptAnswerService {
         return true;
     }
 
-    public void changeGameStatusToQuiz(String gamePin) {
+    // game controller method
+    public Boolean changeFromPromptAnsweringToQuizStage(String gamePin) {
+
         if(haveAllPlayersAnsweredAllPrompts(gamePin)) {
+            // change Status to Quiz
             gameService.getGameByPin(gamePin).setStatus(GameStatus.QUIZ);
+
+            // initialize change to Quiz stage
+            quizQuestionService.createQuizQuestions(gamePin);
+            return true;
         }
+       //return gameService.getGameByPin(gamePin);
+        return false;
     }
 
 

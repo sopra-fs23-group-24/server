@@ -92,8 +92,7 @@ public interface DTOMapper {
     QuizQuestionGetDTO convertToQuizQuestionGetDTO(QuizQuestion question);
 
 
-    @Mapping(source = "pickedAnswer", target = "pickedAnswer")
-    @Mapping(source = "associatedPlayer", target = "associatedPlayer")
+    @Mapping(source = "pickedAnswerOptionId", target = "pickedAnswerOptionId")
     QuizAnswer convertFromQuizAnswerPostDTO(QuizAnswerPostDTO quizAnswerPostDTO);
 
 
