@@ -91,23 +91,6 @@ public class QuizQuestionService {
         return createdQuestions;
     }
 
-    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer quizAnswer, long quizQuestionId, String gamePin){
-        QuizQuestion questionById = qqRepository.getOne(quizQuestionId);
-        questionById.addReceivedAnswer(quizAnswer);
-
-        Game gameByPin = gameService.getGameByPin(gamePin);
-        //TODO: check if all players answered question, change question status
-
-        return questionById;
-    }
-
-    /*
-    // the notion of speed is not yet accounted for
-    public int calculateAndAddScore(QuizAnswer quizAnswer, long id) {
-        AnswerOption chosenAnswer = quizAnswer.getPickedAnswer();
-        AnswerOption correctAnswer = qqRepository.getOne(id).getCorrectAnswer();
-    }
-     */
 
         // TODO: a method to check if a QuizQuestion is finished. (right?)
 
