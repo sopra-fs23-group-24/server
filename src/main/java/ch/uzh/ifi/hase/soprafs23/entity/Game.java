@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -41,8 +42,8 @@ public class Game implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     private List<QuizQuestion> quizQuestionSet = new ArrayList<>();
 
-    //@Column
-    //private QuizQuestion currentQuestion;
+    @OneToOne
+    private QuizQuestion currentQuestion = null;
 
     // add getters and setters
 
@@ -116,9 +117,27 @@ public class Game implements Serializable {
         this.quizQuestionSet = quizQuestionSet;
     }
 
-    // public nextQuestion() {
-    // TODO: implement
-    // }
+    public QuizQuestion getCurrentQuestion() {
+        return currentQuestion;
+    }
 
+    public void setCurrentQuestion(QuizQuestion currentQuestion) {
+        this.currentQuestion = currentQuestion;
+    }
+
+    public QuizQuestion nextQuestion(){
+        if(currentQuestion == null){
+            currentQuestion = quizQuestionSet.get(0);
+            return currentQuestion;
+        }
+
+        int currentIndex = quizQuestionSet.indexOf(currentQuestion);
+        if(currentIndex + 1 < quizQuestionSet.size()){
+            currentQuestion = quizQuestionSet.get(currentIndex + 1);
+        }else{
+            currentQuestion = null;
+        }
+        return currentQuestion;
+    }
 
 }

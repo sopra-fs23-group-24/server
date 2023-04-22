@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
@@ -17,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * User Service
@@ -74,7 +73,7 @@ public class QuizQuestionService {
     public List<QuizQuestion> createQuizQuestions(String gamePin) {
         // to make testing in postman possible
         // sets an answer for every prompt for every player
-        promptAnswerService.mockPromptAnswersForGame(gamePin);
+        promptAnswerService.mockPromptAnswersForGame(gamePin); //TODO: remove
 
         Game gameByPin = gameService.getGameByPin(gamePin);
 
@@ -83,17 +82,32 @@ public class QuizQuestionService {
         for (Prompt prompt : gameByPin.getPromptSet()) {
             createdQuestions.addAll(quizQuestionGenerator.generateQuizQuestions(prompt, gameByPin));
         }
+        Collections.shuffle(createdQuestions);
 
         gameService.addQuizQuestionsToGame(createdQuestions, gamePin);
+        gameByPin.nextQuestion();
+        gameByPin.setStatus(GameStatus.QUIZ);
 
         return createdQuestions;
     }
 
+    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer quizAnswer, long quizQuestionId, String gamePin){
+        QuizQuestion questionById = qqRepository.getOne(quizQuestionId);
+        questionById.addReceivedAnswer(quizAnswer);
 
+        Game gameByPin = gameService.getGameByPin(gamePin);
+        //TODO: check if all players answered question, change question status
 
+        return questionById;
+    }
 
-
-
+    /*
+    // the notion of speed is not yet accounted for
+    public int calculateAndAddScore(QuizAnswer quizAnswer, long id) {
+        AnswerOption chosenAnswer = quizAnswer.getPickedAnswer();
+        AnswerOption correctAnswer = qqRepository.getOne(id).getCorrectAnswer();
+    }
+     */
 
         // TODO: a method to check if a QuizQuestion is finished. (right?)
 

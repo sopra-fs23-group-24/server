@@ -1,11 +1,14 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 
 public class GameGetDTO {
     private Long gameId;
     private String gamePin;
     private GameStatus status;
+    private QuizQuestionGetDTO currentQuestion;
 
     public Long getGameId() {
         return gameId;
@@ -32,4 +35,11 @@ public class GameGetDTO {
         this.status = status;
     }
 
+    public QuizQuestionGetDTO getCurrentQuestion() {
+        return currentQuestion;
+    }
+
+    public void setCurrentQuestion(QuizQuestionGetDTO currentQuestion) {
+        this.currentQuestion = currentQuestion;
+    }
 }

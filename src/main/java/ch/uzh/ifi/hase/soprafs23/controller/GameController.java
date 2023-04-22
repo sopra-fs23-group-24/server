@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
@@ -42,7 +43,13 @@ public class GameController {
         List<GameGetDTO> gamesGetDTOs = new ArrayList<>();
 
         for (Game game : allGames) {
-            gamesGetDTOs.add(DTOMapper.INSTANCE.convertToGameGetDTO(game));
+            GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertToGameGetDTO(game);
+            gameGetDTO.setCurrentQuestion(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(game.getCurrentQuestion()));
+            if(game.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
+                gameGetDTO.getCurrentQuestion().setCorrectAnswer(null);
+            }
+            gamesGetDTOs.add(gameGetDTO);
+
         }
 
         return gamesGetDTOs;
@@ -53,7 +60,12 @@ public class GameController {
     @ResponseBody
     public GameGetDTO getGameByPin(@PathVariable("pin") String gamePin) {
         Game currentGame = gameService.getGameByPin(gamePin);
-        return DTOMapper.INSTANCE.convertToGameGetDTO(currentGame);
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertToGameGetDTO(currentGame);
+        gameGetDTO.setCurrentQuestion(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(currentGame.getCurrentQuestion()));
+        if(currentGame.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
+            gameGetDTO.getCurrentQuestion().setCorrectAnswer(null);
+        }
+        return gameGetDTO;
     }
 
     @PutMapping("/games/{pin}")

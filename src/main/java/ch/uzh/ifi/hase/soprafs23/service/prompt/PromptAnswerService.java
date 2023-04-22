@@ -117,7 +117,7 @@ public class PromptAnswerService {
         return answer;
     }
 
-    // just so that we can test it in postman
+    // just so that we can test generating quizQuestions in postman
     public void mockPromptAnswersForGame(String gamePin){
         Game currentGame = gameService.getGameByPin(gamePin);
         for(Player player : currentGame.getPlayerGroup()){

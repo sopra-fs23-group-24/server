@@ -33,6 +33,7 @@ public class QuizAnswerController {
 
         int score = quizAnswerService.calculateAndAddScore(loggedInToken, quizAnswer, questionId);
 
+        quizQuestionService.addQuizAnswerToQuizQuestion(quizAnswer, id, gamePin);
         // what should it return?
         return score;
     }

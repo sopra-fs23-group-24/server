@@ -12,22 +12,15 @@ public class QuizQuestionGetDTO {
 
     private Long questionId;
 
-    private String associatedGamePin;
-
-
     private String quizQuestionText;
 
     private String imageToDisplay;
 
     private String storyToDisplay;
 
-    private Prompt associatedPrompt;
-
     private List<AnswerOption> answerOptions;
 
     private AnswerOption correctAnswer;
-
-    private List<QuizAnswer> receivedAnswers;
 
     private CompletionStatus questionStatus = CompletionStatus.NOT_FINISHED;
 
@@ -39,13 +32,6 @@ public class QuizQuestionGetDTO {
         this.questionId = questionId;
     }
 
-    public String getAssociatedGamePin() {
-        return associatedGamePin;
-    }
-
-    public void setAssociatedGamePin(String associatedGamePin) {
-        this.associatedGamePin = associatedGamePin;
-    }
 
     public String getQuizQuestionText() {
         return quizQuestionText;
@@ -71,14 +57,6 @@ public class QuizQuestionGetDTO {
         this.storyToDisplay = storyToDisplay;
     }
 
-    public Prompt getAssociatedPrompt() {
-        return associatedPrompt;
-    }
-
-    public void setAssociatedPrompt(Prompt associatedPrompt) {
-        this.associatedPrompt = associatedPrompt;
-    }
-
     public List<AnswerOption> getAnswerOptions() {
         return answerOptions;
     }
@@ -93,14 +71,6 @@ public class QuizQuestionGetDTO {
 
     public void setCorrectAnswer(AnswerOption correctAnswer) {
         this.correctAnswer = correctAnswer;
-    }
-
-    public List<QuizAnswer> getReceivedAnswers() {
-        return receivedAnswers;
-    }
-
-    public void setReceivedAnswers(List<QuizAnswer> receivedAnswers) {
-        this.receivedAnswers = receivedAnswers;
     }
 
     public CompletionStatus getQuestionStatus() {
