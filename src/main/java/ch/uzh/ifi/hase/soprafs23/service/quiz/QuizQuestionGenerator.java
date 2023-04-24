@@ -152,12 +152,10 @@ public class QuizQuestionGenerator {
 
                 // "if the players name is already used - choose another one" - I think that is the mistake,
                 // because I sometimes create players with the same name...
-                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
-                    newQuestion.addAnswerOption(newAnswerOption);
-                    answerOptionRepository.save(newAnswerOption);
-                    answerOptionRepository.flush();
-                    allAnswers.remove(selectedPromptAnswer);
-                }
+                newQuestion.addAnswerOption(newAnswerOption);
+                answerOptionRepository.save(newAnswerOption);
+                answerOptionRepository.flush();
+                allAnswers.remove(selectedPromptAnswer);
             }
         }
 
@@ -187,12 +185,10 @@ public class QuizQuestionGenerator {
 
                 AnswerOption newAnswerOption = new AnswerOption();
                 newAnswerOption.setAnswerOptionText(selectedPromptAnswer.getAnswerDrawing());
-                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
-                    newQuestion.addAnswerOption(newAnswerOption);
-                    answerOptionRepository.save(newAnswerOption);
-                    answerOptionRepository.flush();
-                    allAnswers.remove(selectedPromptAnswer);
-                }
+                newQuestion.addAnswerOption(newAnswerOption);
+                answerOptionRepository.save(newAnswerOption);
+                answerOptionRepository.flush();
+                allAnswers.remove(selectedPromptAnswer);
             }
         }
 
@@ -233,12 +229,10 @@ public class QuizQuestionGenerator {
 
                 AnswerOption newAnswerOption = new AnswerOption();
                 newAnswerOption.setAnswerOptionText(selectedPromptPlayer.getPlayerName());
-                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
-                    newQuestion.addAnswerOption(newAnswerOption);
-                    answerOptionRepository.save(newAnswerOption);
-                    answerOptionRepository.flush();
-                    allAnswers.remove(selectedPromptAnswer);
-                }
+                newQuestion.addAnswerOption(newAnswerOption);
+                answerOptionRepository.save(newAnswerOption);
+                answerOptionRepository.flush();
+                allAnswers.remove(selectedPromptAnswer);
             }
         }
 
@@ -268,12 +262,10 @@ public class QuizQuestionGenerator {
 
                 AnswerOption newAnswerOption = new AnswerOption();
                 newAnswerOption.setAnswerOptionText(selectedPromptAnswer.getAnswer());
-                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
-                    newQuestion.addAnswerOption(newAnswerOption);
-                    answerOptionRepository.save(newAnswerOption);
-                    answerOptionRepository.flush();
-                    allAnswers.remove(selectedPromptAnswer);
-                }
+                newQuestion.addAnswerOption(newAnswerOption);
+                answerOptionRepository.save(newAnswerOption);
+                answerOptionRepository.flush();
+                allAnswers.remove(selectedPromptAnswer);
             }
         }
 
@@ -326,12 +318,10 @@ public class QuizQuestionGenerator {
 
                 AnswerOption newAnswerOption = new AnswerOption();
                 newAnswerOption.setAnswerOptionText(selectedPromptPlayer.getPlayerName());
-                if(!newQuestion.getAnswerOptionStrings().contains(newAnswerOption.getAnswerOptionText())){
-                    newQuestion.addAnswerOption(newAnswerOption);
-                    answerOptionRepository.save(newAnswerOption);
-                    answerOptionRepository.flush();
-                    allAnswers.remove(selectedPromptAnswer);
-                }
+                newQuestion.addAnswerOption(newAnswerOption);
+                answerOptionRepository.save(newAnswerOption);
+                answerOptionRepository.flush();
+                allAnswers.remove(selectedPromptAnswer);
             }
         }
 
