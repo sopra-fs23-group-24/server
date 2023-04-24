@@ -159,12 +159,12 @@ Week 2 (3. - 7. april)
 Week 4 (17. -21. april)
 - Tim:
 	- work on: 
-        - https://github.com/sopra-fs23-group-24/client/issues/12
-        - https://github.com/sopra-fs23-group-24/client/issues/13
+        - https://github.com/sopra-fs23-group-24/server/issues/12
+        - https://github.com/sopra-fs23-group-24/server/issues/13
 	- description:
         - Quiz answers implemented
         - basic score calculation implemented 
-        - refactoring server files into more subpackages 
+        - refactoring server files into subpackages 
 - Lara:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/12
