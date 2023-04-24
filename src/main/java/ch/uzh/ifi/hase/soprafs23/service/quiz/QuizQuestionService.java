@@ -34,13 +34,13 @@ public class QuizQuestionService {
 
     private final Logger log = LoggerFactory.getLogger(QuizQuestionService.class);
     private final QuizQuestionRepository qqRepository;
-    private final Random rand = SecureRandom.getInstanceStrong();
     private GameService gameService;
+
     private PromptAnswerService promptAnswerService;
     private QuizQuestionGenerator quizQuestionGenerator;
 
     @Autowired
-    public QuizQuestionService(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository) throws NoSuchAlgorithmException {
+    public QuizQuestionService(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository){
         this.qqRepository = qqRepository;
     }
 
@@ -53,7 +53,6 @@ public class QuizQuestionService {
     private void setQuizQuestionGenerator(QuizQuestionGenerator quizQuestionGenerator) {
         this.quizQuestionGenerator = quizQuestionGenerator;
     }
-
     @Autowired
     private void setPromptAnswerService(PromptAnswerService promptAnswerService) {
         this.promptAnswerService = promptAnswerService;
@@ -72,7 +71,7 @@ public class QuizQuestionService {
     public List<QuizQuestion> createQuizQuestions(String gamePin) {
         // to make testing in postman possible
         // sets an answer for every prompt for every player
-        // promptAnswerService.mockPromptAnswersForGame(gamePin); //TODO: remove
+        promptAnswerService.mockPromptAnswersForGame(gamePin); //TODO: remove
 
         Game gameByPin = gameService.getGameByPin(gamePin);
 

@@ -19,5 +19,5 @@ public interface TextPromptAnswerRepository extends JpaRepository<TextPromptAnsw
     TextPromptAnswer findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(long id, int promptNr);
 
     List<TextPromptAnswer> findAllByAssociatedGamePinAndAssociatedPromptNr(String pin, int promptNr);
-
+    void deleteAllByAssociatedGamePin(String gamePin);
 }

@@ -209,6 +209,19 @@ public class PromptAnswerService {
     }
 
 
+    public void deleteAllPromptAnswersByGamePin(String gamePin) {
+        drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+        textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+        trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+    }
+
+    public List<TextPromptAnswer> getAllTextPromptAnswers() {
+        return textPromptAnswerRepository.findAll();
+    }
+
+    public List<TextPromptAnswer> getAllTextPromptAnswersByGamePin(String gamePin) {
+        return textPromptAnswerRepository.findAllByAssociatedGamePin(gamePin);
+    }
 }
 
 

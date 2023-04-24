@@ -34,7 +34,6 @@ public class QuizQuestion implements Serializable {
     @Column
     private String associatedGamePin;
 
-
     @ManyToOne
     @JoinColumn(name = "promptNr")
     private Prompt associatedPrompt;
@@ -47,7 +46,6 @@ public class QuizQuestion implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizAnswer> receivedAnswers = new ArrayList<>();
-
 
 
     public Long getQuestionId() {

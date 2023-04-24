@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptAnswerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class GameService {
 
     private PlayerService playerService;
 
+    private PromptAnswerService promptAnswerService;
+
     private final Random rand = SecureRandom.getInstanceStrong();
 
     @Autowired
@@ -48,6 +51,10 @@ public class GameService {
     @Autowired
     private void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
+    }
+    @Autowired
+    private void setPromptAnswerService(PromptAnswerService promptAnswerService) {
+        this.promptAnswerService = promptAnswerService;
     }
 
 
@@ -138,11 +145,7 @@ public class GameService {
         }
 
         gameRepository.deleteByGamePin(gamePin);
-        //TODO: find better solution for this (too many connections)
-        playerService.deleteAllPlayersByGamePin(gamePin);
-        //TODO: delete prompt answers
-        //TODO: delete questions
-        //TODO: delete answers
+        promptAnswerService.deleteAllPromptAnswersByGamePin(gamePin);
 
         return gameByPin;
     }
@@ -173,7 +176,7 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has quiz questions created for it.");
         }
 
-        gameByPin.setQuizQuestionSet(questionsForGame);
+        gameByPin.addQuizQuestions(questionsForGame);
 
         gameByPin.setStatus(GameStatus.QUIZ);
 

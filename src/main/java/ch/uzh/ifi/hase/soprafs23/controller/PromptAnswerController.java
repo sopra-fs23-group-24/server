@@ -11,6 +11,8 @@ import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptAnswerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 public class PromptAnswerController {
@@ -19,6 +21,26 @@ public class PromptAnswerController {
 
     PromptAnswerController(PromptAnswerService promptAnswerService) {
         this.promptAnswerService = promptAnswerService;
+    }
+
+
+    @GetMapping("prompt-answers/text")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<TextPromptAnswer> getAllTextPromptAnswers(){
+
+        List<TextPromptAnswer> allTextPromptAnswers = promptAnswerService.getAllTextPromptAnswers();
+
+        return allTextPromptAnswers;
+    }
+
+    @GetMapping("/games/{pin}/prompt-answers/text")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<TextPromptAnswer> getAllTextPromptAnswersOfGame(@PathVariable("pin") String gamePin){
+        List<TextPromptAnswer> allTextPromptAnswers = promptAnswerService.getAllTextPromptAnswersByGamePin(gamePin);
+
+        return allTextPromptAnswers;
     }
 
 
@@ -42,7 +64,6 @@ public class PromptAnswerController {
 
         return successfulSave;
     }
-
 
     @PostMapping("/games/{pin}/prompt-answers/tf")
     @ResponseStatus(HttpStatus.CREATED)

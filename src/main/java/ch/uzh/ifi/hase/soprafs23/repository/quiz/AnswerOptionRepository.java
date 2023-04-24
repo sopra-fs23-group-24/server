@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface AnswerOptionRepository extends JpaRepository<AnswerOption, Long> {
 
     AnswerOption getAnswerOptionByAnswerOptionId(long id);
+
+
 }
