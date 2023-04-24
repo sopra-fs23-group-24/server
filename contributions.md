@@ -163,11 +163,14 @@ Week 4 (17. -21. april)
 - Lara:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/12
+	    - https://github.com/sopra-fs23-group-24/client/issues/10
 	- description:
 	    - host can delete user by clicking an x next to a players name
 	    - changed scss for lobby screen
 	    - distinguish between host view and user view
 	    - adjusted buttons (end game, start game, leave game)
+
+        - issue 10: button works but redirected to placeholder page
 - Jan:
 	- work on: 
 	  - https://github.com/sopra-fs23-group-24/client/issues/23
