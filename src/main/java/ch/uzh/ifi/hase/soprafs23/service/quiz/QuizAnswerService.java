@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
+import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
@@ -10,7 +12,11 @@ import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 public class QuizAnswerService {
@@ -33,11 +39,29 @@ public class QuizAnswerService {
 
 
     // return value is never used
-    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer quizAnswer, long quizQuestionId, String gamePin){
+    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin){
         QuizQuestion questionById = qqRepository.getOne(quizQuestionId);
-        questionById.addReceivedAnswer(quizAnswer);
+        for(QuizAnswer answer : questionById.getReceivedAnswers()){
+           if(answer.getAssociatedPlayer() == newQuizAnswer.getAssociatedPlayer()){
+               throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This player already answered this question.");
+           }
+        }
 
-        Game gameByPin = gameService.getGameByPin(gamePin);
+        questionById.addReceivedAnswer(newQuizAnswer);
+        qqRepository.save(questionById);
+        qqRepository.flush();
+
+        List<Player> allPlayersOfGame = gameService.getGameByPin(gamePin).getPlayerGroup();
+        for(QuizAnswer answer : questionById.getReceivedAnswers()){
+            allPlayersOfGame.remove(answer.getAssociatedPlayer());
+        }
+        if(allPlayersOfGame.isEmpty()){
+            questionById.setQuestionStatus(CompletionStatus.FINISHED);
+            qqRepository.save(questionById);
+            qqRepository.flush();
+        }
+
+
         //TODO: check if all players answered question, change question status - Do this in the QuizQuestionService
 
         return questionById;
