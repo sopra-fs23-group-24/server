@@ -19,7 +19,8 @@ public class QuizAnswer implements Serializable {
     private Long quizAnswerId;
 
 
-    // @OneToOne
+    // @OneToOne // maybe change the database column to be bigInt or sth like that.
+    @Column
     private long pickedAnswerOptionId;
     @ManyToOne
     private Player associatedPlayer;
