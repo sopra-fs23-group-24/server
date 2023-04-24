@@ -165,7 +165,13 @@ Week 4 (17. -21. april)
 	- description:
 - Jan:
 	- work on: 
+	  - https://github.com/sopra-fs23-group-24/client/issues/23
+	  - https://github.com/sopra-fs23-group-24/client/issues/27
+	  - https://github.com/sopra-fs23-group-24/client/issues/28
 	- description:
+	  - waiting room screen implemented
+	  - Final Screen with Podium designed / implemented
+	  - Minor changes on scss files
 - Mike:
 	- work on: 
 	- description:
