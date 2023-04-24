@@ -29,15 +29,11 @@ public class QuizAnswerController {
         //convert from DTO to QuizAnswer
         QuizAnswer quizAnswer = DTOMapper.INSTANCE.convertFromQuizAnswerPostDTO(clientAnswer);
 
+        // adds answer to question and checks if Question is answered by everyone
+        quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin, loggedInToken);
+
         // checks if the answer is correct and if so (calculates) and adds the points to the player
         int score = quizAnswerService.calculateAndAddScore(loggedInToken, quizAnswer, questionId);
-
-        // TODO: move it out to different methods in the service.
-        //  not calling all of them here - but one call to e.g. processQuizAnswer
-        //  e.g. with calls to: calculateScore, addQuizAnswerToQuizQuestion, isAnswered?
-
-        // adds answer to question and check if Question is answered by everyone.
-        quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin);
 
         // what should it return?
         return score;
