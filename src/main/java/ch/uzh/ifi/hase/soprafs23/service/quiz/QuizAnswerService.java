@@ -39,7 +39,10 @@ public class QuizAnswerService {
 
 
     // return value is never used
-    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin){
+    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin, String loggedInToken){
+        // set the player
+        newQuizAnswer.setAssociatedPlayer(playerRepository.findByToken(loggedInToken));
+
         QuizQuestion questionById = qqRepository.getOne(quizQuestionId);
         for(QuizAnswer answer : questionById.getReceivedAnswers()){
            if(answer.getAssociatedPlayer() == newQuizAnswer.getAssociatedPlayer()){
@@ -61,9 +64,6 @@ public class QuizAnswerService {
             qqRepository.flush();
         }
 
-
-        //TODO: check if all players answered question, change question status - Do this in the QuizQuestionService
-
         return questionById;
     }
 
@@ -75,7 +75,8 @@ public class QuizAnswerService {
         long pickedId = quizAnswer.getPickedAnswerOptionId();
         AnswerOption chosenAnswer = answerOptionRepository.getAnswerOptionByAnswerOptionId(pickedId);
         AnswerOption correctAnswer = qqRepository.getOne(questionId).getCorrectAnswer();
-        // set the pl
+
+        // set the player
         quizAnswer.setAssociatedPlayer(playerRepository.findByToken(loggedInToken));
 
         int score = 0;

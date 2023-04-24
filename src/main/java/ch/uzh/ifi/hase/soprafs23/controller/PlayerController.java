@@ -60,9 +60,12 @@ public class PlayerController {
     @ResponseBody
     public List<PlayerGetDTO> getAllPlayersOfGame(@PathVariable("pin") String gamePin) {
         List<Player> players = playerService.getPlayersWithPin(gamePin);
-        List<PlayerGetDTO> playerGetDTOs = new ArrayList<>();
+        // sort players
+        List<Player> sortedPlayers = playerService.sortPlayersByScore(players);
 
-        for (Player player : players) {
+        // convert to DTO
+        List<PlayerGetDTO> playerGetDTOs = new ArrayList<>();
+        for (Player player : sortedPlayers) {
             playerGetDTOs.add(DTOMapper.INSTANCE.convertToPlayerGetDTO(player));
         }
         return playerGetDTOs;
