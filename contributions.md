@@ -174,15 +174,28 @@ Week 4 (17. -21. april)
 - Jan:
 	- work on: 
 	  - https://github.com/sopra-fs23-group-24/client/issues/23
+	  - https://github.com/sopra-fs23-group-24/client/issues/25
+	  - https://github.com/sopra-fs23-group-24/client/issues/26
 	  - https://github.com/sopra-fs23-group-24/client/issues/27
 	  - https://github.com/sopra-fs23-group-24/client/issues/28
 	- description:
 	  - waiting room screen implemented
 	  - Final Screen with Podium designed / implemented
 	  - Minor changes on scss files
+	  - View for answering quiz questions designed / almost implemented
+
 - Mike:
 	- work on: 
+	  - https://github.com/sopra-fs23-group-24/client/issues/23
+	  - https://github.com/sopra-fs23-group-24/client/issues/25
+	  - https://github.com/sopra-fs23-group-24/client/issues/26
+	  - https://github.com/sopra-fs23-group-24/client/issues/27
+	  - https://github.com/sopra-fs23-group-24/client/issues/28
 	- description:
+	  - waiting room screen implemented
+	  - Final Screen with Podium designed / implemented
+	  - Minor changes on scss files
+	  - View for answering quiz questions designed / almost implemented
 - Linda:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/server/issues/16
