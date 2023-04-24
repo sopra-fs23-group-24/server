@@ -62,7 +62,7 @@ public class GameController {
         Game currentGame = gameService.getGameByPin(gamePin);
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertToGameGetDTO(currentGame);
         gameGetDTO.setCurrentQuestion(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(currentGame.getCurrentQuestion()));
-        if(currentGame.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
+        if(currentGame.getCurrentQuestion() != null && currentGame.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
             gameGetDTO.getCurrentQuestion().setCorrectAnswer(null);
         }
         return gameGetDTO;

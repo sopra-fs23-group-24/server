@@ -25,7 +25,7 @@ public class QuizQuestion implements Serializable {
     @Column(nullable = false)
     private String quizQuestionText;
 
-    @Column
+    @Column (columnDefinition = "LONGTEXT")
     private String imageToDisplay = null;
 
     @Column
