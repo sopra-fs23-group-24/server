@@ -73,7 +73,7 @@ public class QuizQuestionService {
     public List<QuizQuestion> createQuizQuestions(String gamePin) {
         // to make testing in postman possible
         // sets an answer for every prompt for every player
-        promptAnswerService.mockPromptAnswersForGame(gamePin); //TODO: remove
+        // promptAnswerService.mockPromptAnswersForGame(gamePin); //TODO: remove
 
         Game gameByPin = gameService.getGameByPin(gamePin);
 
@@ -86,7 +86,7 @@ public class QuizQuestionService {
 
         gameService.addQuizQuestionsToGame(createdQuestions, gamePin);
         gameByPin.nextQuestion();
-        gameByPin.setStatus(GameStatus.QUIZ);
+        // gameByPin.setStatus(GameStatus.QUIZ);
 
         return createdQuestions;
     }

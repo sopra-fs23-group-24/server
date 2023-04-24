@@ -63,6 +63,11 @@ public class PromptAnswerService {
         this.promptService = promptService;
     }
 
+    @Autowired
+    public void setQuizQuestionService(QuizQuestionService quizQuestionService) {
+        this.quizQuestionService = quizQuestionService;
+    }
+
     public TextPromptAnswer saveTextPromptAnswer(TextPromptAnswer answer, String playerToken, String gamePin) {
 
         gameService.getGameByPin(gamePin); // throws if not correct
