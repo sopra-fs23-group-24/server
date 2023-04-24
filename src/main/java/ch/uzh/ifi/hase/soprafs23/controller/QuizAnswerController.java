@@ -18,7 +18,7 @@ public class QuizAnswerController {
     }
 
 
-    @PostMapping("/games/{pin}/gameQuestions/{id}/answers")
+    @PostMapping("/games/{pin}/quiz-questions/{id}/answers")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public int postQuizAnswer(@RequestBody QuizAnswerPostDTO clientAnswer,
