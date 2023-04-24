@@ -171,7 +171,17 @@ Week 4 (17. -21. april)
 	- description:
 - Linda:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/16
+	    - https://github.com/sopra-fs23-group-24/server/issues/17
+	    - https://github.com/sopra-fs23-group-24/server/issues/18
+	    - https://github.com/sopra-fs23-group-24/server/issues/19 
 	- description:
+	    - note: no test cases yet! 
+	    - (only started) question marked as complete in backend when
+	    - generate QuizQuestions based on potentialQuestions and promptAnswers
+	    - QuizQuestions implemented with answerOption, receivedAnswers and correct answer
+	    - randomised order of QuizQuestions
+	    - (non-specific issue, only started) currentQuestion as Game attribute
 
 ---
 Week 5 (24. - 28. april)
