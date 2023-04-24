@@ -134,6 +134,19 @@ public class GameService {
         return gameByPin;
     }
 
+    public Game changeGameStatus(GameStatus requestedStatus, String gamePin) {
+        System.out.println(requestedStatus);
+        //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
+
+        Game gameByPin = getGameByPin(gamePin);
+
+        gameByPin.setStatus(requestedStatus);
+        gameByPin = gameRepository.save(gameByPin);
+        gameRepository.flush();
+
+        return gameByPin;
+    }
+
     //TODO: test Integration?
     //TODO: test Service
     public Game deleteGameByPin(String gamePin, String loggedInToken) {

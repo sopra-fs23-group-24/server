@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.service.prompt;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
+import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.*;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
@@ -197,13 +198,15 @@ public class PromptAnswerService {
     public Boolean changeFromPromptAnsweringToQuizStage(String gamePin) {
 
         if(haveAllPlayersAnsweredAllPrompts(gamePin)) {
+            System.out.println("Deemed that all players have answered all prompts - will now change GameStatus");
             // change Status to Quiz
-            gameService.getGameByPin(gamePin).setStatus(GameStatus.QUIZ);
+            gameService.changeGameStatus(GameStatus.QUIZ, gamePin);
 
             // initialize change to Quiz stage
             quizQuestionService.createQuizQuestions(gamePin);
             return true;
         }
+        System.out.println("not all prompts answered by all players, continue");
        //return gameService.getGameByPin(gamePin);
         return false;
     }
