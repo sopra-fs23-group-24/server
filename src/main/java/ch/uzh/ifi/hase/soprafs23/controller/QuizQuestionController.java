@@ -55,7 +55,7 @@ public class QuizQuestionController {
 
     //currently only for testing, should be done automatically when all prompts are filled out
     @PostMapping("/games/{pin}/quizQuestions")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public List<QuizQuestionGetDTO> createQuizQuestions(@PathVariable("pin") String gamePin){
         List<QuizQuestion> allQuizQuestions = quizQuestionService.createQuizQuestions(gamePin);
@@ -68,5 +68,4 @@ public class QuizQuestionController {
 
         return quizQuestionGetDTOS;
     }
-
 }

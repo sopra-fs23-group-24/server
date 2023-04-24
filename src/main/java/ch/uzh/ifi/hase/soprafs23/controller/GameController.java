@@ -78,6 +78,15 @@ public class GameController {
         return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
     }
 
+    @PutMapping("/games/{pin}/quizQuestions")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO requestNextQuizQuestion(@PathVariable("pin") String gamePin){
+        Game updatedGame = gameService.changeToNextQuestion(gamePin);
+
+        return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
+    }
+
     @DeleteMapping("/games/{pin}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody

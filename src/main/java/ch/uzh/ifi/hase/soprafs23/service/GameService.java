@@ -183,6 +183,16 @@ public class GameService {
         return gameByPin;
     }
 
+    public Game changeToNextQuestion(String gamePin){
+        Game gameByPin = getGameByPin(gamePin);
+        gameByPin.nextQuestion();
+        if(gameByPin.nextQuestion() == null && gameByPin.getStatus() == GameStatus.QUIZ){
+            gameByPin.setStatus(GameStatus.END);
+        }
+
+        return gameByPin;
+    }
+
 
     /**
      * Helper functions
