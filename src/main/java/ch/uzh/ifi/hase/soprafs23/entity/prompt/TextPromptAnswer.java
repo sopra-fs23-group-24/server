@@ -25,7 +25,7 @@ public class TextPromptAnswer implements PromptAnswer, Serializable {
     @Column(nullable = false)
     private String associatedGamePin;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String answer;
 
 

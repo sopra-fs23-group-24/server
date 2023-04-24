@@ -93,17 +93,16 @@ public class QuizQuestionGenerator {
             if(prompt.getPromptType() == PromptType.DRAWING){
                 List<DrawingPromptAnswer> answersToPrompt = drawingPromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(game.getGamePin(), prompt.getPromptNr());
                 createdQuestion = transformPotentialQuestionDrawing(selectedPotentialQuestion, answersToPrompt);
-
             }else if(prompt.getPromptType() == PromptType.TEXT){
                 List<TextPromptAnswer> answersToPrompt = textPromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(game.getGamePin(), prompt.getPromptNr());
                 createdQuestion = transformPotentialQuestionText(selectedPotentialQuestion, answersToPrompt);
-                // duplicate: System.out.println("Created a questions: " + createdQuestion.getQuestionId());
             }else{
                 List<TrueFalsePromptAnswer> answersToPrompt = trueFalsePromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(game.getGamePin(), prompt.getPromptNr());
                 createdQuestion = transformPotentialQuestionTF(selectedPotentialQuestion, answersToPrompt);
             }
-
-            assert createdQuestion != null;
+            if(createdQuestion == null){
+                continue;
+            }
             createdQuestion.setAssociatedGamePin(game.getGamePin());
             createdQuestion.setAssociatedPrompt(prompt);
             createdQuestions.add(createdQuestion);
