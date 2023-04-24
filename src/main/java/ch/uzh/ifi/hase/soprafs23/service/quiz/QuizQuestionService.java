@@ -1,10 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
-import ch.uzh.ifi.hase.soprafs23.entity.*;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
-import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
-import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -18,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * User Service
@@ -33,13 +34,10 @@ public class QuizQuestionService {
 
     private final Logger log = LoggerFactory.getLogger(QuizQuestionService.class);
     private final QuizQuestionRepository qqRepository;
-
-    private GameService gameService;
-
-    private PromptAnswerService promptAnswerService ;
-    private QuizQuestionGenerator quizQuestionGenerator;
-
     private final Random rand = SecureRandom.getInstanceStrong();
+    private GameService gameService;
+    private PromptAnswerService promptAnswerService;
+    private QuizQuestionGenerator quizQuestionGenerator;
 
     @Autowired
     public QuizQuestionService(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository) throws NoSuchAlgorithmException {
@@ -50,6 +48,7 @@ public class QuizQuestionService {
     private void setGameService(GameService gameService) {
         this.gameService = gameService;
     }
+
     @Autowired
     private void setQuizQuestionGenerator(QuizQuestionGenerator quizQuestionGenerator) {
         this.quizQuestionGenerator = quizQuestionGenerator;
@@ -92,6 +91,6 @@ public class QuizQuestionService {
     }
 
 
-        // TODO: a method to check if a QuizQuestion is finished. (right?)
+    // TODO: a method to check if a QuizQuestion is finished. (right?)
 
 }
