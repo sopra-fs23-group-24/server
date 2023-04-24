@@ -61,6 +61,11 @@ public class PlayerService {
     public Player createPlayerAndAddToGame(Player newPlayer) {
 
         newPlayer.setToken(UUID.randomUUID().toString());
+        Player playerByUsernameAndPin = playerRepository.findByPlayerNameAndAssociatedGamePin(newPlayer.getPlayerName(), newPlayer.getAssociatedGamePin());
+
+        if(playerByUsernameAndPin != null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There already is a player with this username in the game.");
+        }
 
         newPlayer = playerRepository.save(newPlayer);
         playerRepository.flush();
