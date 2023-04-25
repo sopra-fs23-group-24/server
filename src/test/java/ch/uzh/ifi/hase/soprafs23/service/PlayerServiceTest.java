@@ -76,6 +76,15 @@ public class PlayerServiceTest {
         assertEquals(allPlayers, List.of(testPlayer));
     }
 
+    // score must either not be declared or not set other than 0 in the setup
+    @Test
+    public void getScoreOfAllPlayersFromGame(){
+        List<Player> allPlayers = playerService.getPlayersWithPin(testPlayer.getAssociatedGamePin());
+        for(Player player : allPlayers) {
+            assert player.getScore() == 0;
+        }
+    }
+
     @Test
     public void getPlayersWithPin_failure() {
         Mockito.when(playerRepository.findAllByAssociatedGamePin("invalidPin")).thenReturn(List.of());
@@ -160,6 +169,44 @@ public class PlayerServiceTest {
 
         assertThrows(ResponseStatusException.class, () -> playerService.changePlayerUsername(testPlayer, loggedInPlayerToken));
     }
+
+    /*
+    @Test
+    public void deletePlayer_success() {
+        // must be host or must be the player itself, cannot be host
+        // here I use a player that deletes itself
+        Player tokenPlayer = new Player();
+        tokenPlayer.setPlayerId(2L);
+        tokenPlayer.setAssociatedGamePin("123456");
+        tokenPlayer.setPlayerName("otherPlayer");
+        tokenPlayer.setToken("2");
+        String loggedInPlayerToken = "2";
+
+        Mockito.when(playerRepository.findByPlayerId(testPlayer.getPlayerId())).thenReturn(tokenPlayer);
+        Mockito.when(playerRepository.findByToken(loggedInPlayerToken)).thenReturn(tokenPlayer);
+
+        Mockito.when(playerService.getByToken(loggedInPlayerToken)).thenReturn(tokenPlayer);
+        Mockito.when(playerService.getById(tokenPlayer.getPlayerId())).thenReturn(tokenPlayer);
+        Mockito.when(playerService.deletePlayer(tokenPlayer.getPlayerId(),tokenPlayer.getToken(),tokenPlayer.getAssociatedGamePin())).thenReturn(tokenPlayer);
+
+        // test if player exists
+        Player existingPlayer = playerRepository.findByPlayerId(tokenPlayer.getPlayerId());
+        assertNotNull(existingPlayer);
+        // delete player
+        Player player = playerService.deletePlayer(tokenPlayer.getPlayerId(),tokenPlayer.getToken(),tokenPlayer.getAssociatedGamePin());
+        // test if player does not exist anymore
+        assertEquals(player, tokenPlayer);
+    }
+
+    @Test
+    public void deletePlayer_failure() {
+        // if host, or if another player as non-host
+
+        // some assertThrows
+    }
+
+     */
+
 
 
     /**
