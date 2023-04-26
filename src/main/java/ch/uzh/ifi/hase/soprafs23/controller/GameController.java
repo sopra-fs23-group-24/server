@@ -70,8 +70,8 @@ public class GameController {
     @PutMapping("/games/{pin}/quizQuestions")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO requestNextQuizQuestion(@PathVariable("pin") String gamePin){
-        Game updatedGame = gameService.changeToNextQuestion(gamePin);
+    public GameGetDTO requestNextQuizQuestion(@PathVariable("pin") String gamePin, @RequestHeader("playerToken") String loggedInToken){
+        Game updatedGame = gameService.changeToNextQuestion(gamePin, loggedInToken);
 
         return convertGameToDTO(updatedGame);
     }

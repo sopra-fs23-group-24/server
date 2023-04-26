@@ -10,6 +10,7 @@ import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +28,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -99,9 +102,9 @@ public class GameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
                 .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
+                //.andExpect(jsonPath("$.currentQuestion", is(null)));
     }
 
-    //TODO: check question
     @Test
     public void getGameByPin_returnsGame_WithCorrectAnswer() throws Exception {
         // given
@@ -128,9 +131,10 @@ public class GameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
                 .andExpect(jsonPath("$.status", is(game.getStatus().toString())))
-                .andExpect(jsonPath("$.currentQuestion.correctAnswer.answerOptionText", is(game.getCurrentQuestion().getCorrectAnswer().getAnswerOptionText())));    }
+                .andExpect(jsonPath("$.currentQuestion.quizQuestionText", is(testQuestion.getQuizQuestionText())))
+                .andExpect(jsonPath("$.currentQuestion.correctAnswer.answerOptionText", is(testCorrectAnswer.getAnswerOptionText())));
+    }
 
-    //TODO: check question
     @Test
     public void getGameByPin_returnsGame_HideCorrectAnswer() throws Exception {
         // given
@@ -156,7 +160,8 @@ public class GameControllerTest {
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
-                .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
+                .andExpect(jsonPath("$.status", is(game.getStatus().toString())))
+                .andExpect(jsonPath("$.currentQuestion.quizQuestionText", is(testQuestion.getQuizQuestionText())));
                 //.andExpect(jsonPath("$.currentQuestion.correctAnswer", is(null)));
     }
 
@@ -215,18 +220,47 @@ public class GameControllerTest {
         given(gameService.changeGameStatus(Mockito.any(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
         // when
-        MockHttpServletRequestBuilder getRequest = put("/games/123456")
+        MockHttpServletRequestBuilder putRequest = put("/games/123456")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(gamePutDTO))
                 .header("playerToken", "1");
 
         // then
-        mockMvc.perform(getRequest)
+        mockMvc.perform(putRequest)
                 .andExpect(status().isUnauthorized());
     }
     @Test
-    public void requestNextQuizQuestion(){
-        //TODO: test
+    public void requestNextQuizQuestion_success() throws Exception {
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.QUIZ);
+
+        given(gameService.changeToNextQuestion(Mockito.anyString(), Mockito.anyString())).willReturn(game);
+
+        MockHttpServletRequestBuilder putRequest = put("/games/123456/quizQuestions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("playerToken", "1");
+
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
+                .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
+    }
+
+    @Test
+    public void requestNextQuizQuestion_notByHost() throws Exception {
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.QUIZ);
+
+        given(gameService.changeToNextQuestion(Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        MockHttpServletRequestBuilder putRequest = put("/games/123456/quizQuestions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("playerToken", "1");
+
+        mockMvc.perform(putRequest)
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
