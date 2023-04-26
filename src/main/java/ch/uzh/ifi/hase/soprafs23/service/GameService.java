@@ -101,9 +101,6 @@ public class GameService {
     }
 
     //TODO: test Integration?
-
-
-    //TODO: test Integration?
     //TODO: test Service
     public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken) {
         System.out.println(requestedStatus);
@@ -131,19 +128,6 @@ public class GameService {
                 player.setScore(0);
             }
         }
-        gameByPin.setStatus(requestedStatus);
-        gameByPin = gameRepository.save(gameByPin);
-        gameRepository.flush();
-
-        return gameByPin;
-    }
-
-    public Game changeGameStatus(GameStatus requestedStatus, String gamePin) {
-        System.out.println(requestedStatus);
-        //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
-
-        Game gameByPin = getGameByPin(gamePin);
-
         gameByPin.setStatus(requestedStatus);
         gameByPin = gameRepository.save(gameByPin);
         gameRepository.flush();

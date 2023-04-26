@@ -66,9 +66,6 @@ public class PromptAnswerService {
         Game foundGame = findGameByPin(gamePin);
         answer.setAssociatedGamePin(gamePin);
         Player player = getByToken(playerToken);
-        if (player == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
-        }
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswer().equals("")) {
@@ -85,7 +82,7 @@ public class PromptAnswerService {
     public TrueFalsePromptAnswer saveTrueFalsePromptAnswer(TrueFalsePromptAnswer answer, String playerToken, String gamePin) {
         findGameByPin(gamePin);
         answer.setAssociatedGamePin(gamePin);
-        Player player = getByToken(playerToken); //TODO:check if throws
+        Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswerText().equals("")) {
@@ -103,7 +100,7 @@ public class PromptAnswerService {
     public DrawingPromptAnswer saveDrawingPromptAnswer(DrawingPromptAnswer answer, String playerToken, String gamePin) {
         findGameByPin(gamePin);
         answer.setAssociatedGamePin(gamePin);
-        Player player = getByToken(playerToken); //TODO:check if throws
+        Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswerDrawing().equals("")) { // throws if the content is empty
@@ -220,7 +217,7 @@ public class PromptAnswerService {
     }
 
 
-    public Player getByToken(String token) {
+    private Player getByToken(String token) {
         Player player = playerRepository.findByToken(token);
         if (player == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");

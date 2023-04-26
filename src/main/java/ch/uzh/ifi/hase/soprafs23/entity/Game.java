@@ -140,7 +140,6 @@ public class Game implements Serializable {
             currentQuestion = quizQuestionSet.get(0);
             return currentQuestion;
         }
-
         int currentIndex = quizQuestionSet.indexOf(currentQuestion);
         if(currentIndex + 1 < quizQuestionSet.size()){
             currentQuestion = quizQuestionSet.get(currentIndex + 1);
