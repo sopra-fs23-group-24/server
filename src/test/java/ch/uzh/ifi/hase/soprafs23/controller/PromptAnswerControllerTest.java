@@ -74,7 +74,7 @@ class PromptAnswerControllerTest {
 
      // test canChangeToQUiz
     @Test
-    void testPostTrueFalsePromptAnswer() throws Exception {
+    void testPostTrueFalsePromptAnswer_success() throws Exception {
         // create DTO
         TrueFalsePromptAnswerPostDTO testDto = new TrueFalsePromptAnswerPostDTO();
         testDto.setAssociatedPromptNr(0);
@@ -111,7 +111,7 @@ class PromptAnswerControllerTest {
     }
 
     @Test
-    void postDrawingPromptAnswer() throws Exception {
+    void postDrawingPromptAnswer_success() throws Exception {
         // create DTO
         DrawingPromptAnswerPostDTO testDto = new DrawingPromptAnswerPostDTO();
         testDto.setAssociatedPromptNr(0);
