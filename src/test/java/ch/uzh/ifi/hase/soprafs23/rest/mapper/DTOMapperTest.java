@@ -95,5 +95,14 @@ public class DTOMapperTest {
         // implement
     }
 
+    @Test
+    public void convertToQuizQuestionGetDTO_fromQuizQuestion_success(){
+
+    }
+
+    @Test
+    public void convertFromQuizAnswerPostDTO_toQuizAnswer_success(){
+
+    }
 
 }

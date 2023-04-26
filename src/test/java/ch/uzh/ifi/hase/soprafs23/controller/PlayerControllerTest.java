@@ -147,11 +147,13 @@ public class PlayerControllerTest {
     public void getAllPlayersOfGame_returnsAllPlayersOfGame() throws Exception {
         List<Player> allPlayers = Collections.singletonList(testPlayer);
 
+
         given(playerService.getPlayersWithPin(Mockito.anyString())).willReturn(allPlayers);
+        given(playerService.sortPlayersByScore(Mockito.any())).willReturn(allPlayers);
+
 
         // when
         MockHttpServletRequestBuilder getRequest = get("/games/123456/players").contentType(MediaType.APPLICATION_JSON);
-
         // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
