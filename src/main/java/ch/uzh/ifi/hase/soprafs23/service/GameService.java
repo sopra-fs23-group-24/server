@@ -6,7 +6,10 @@ import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
-import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptAnswerService;
+import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,25 +39,28 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
-    private PlayerService playerService;
+    private final PlayerRepository playerRepository;
 
-    private PromptAnswerService promptAnswerService;
+    private final DrawingPromptAnswerRepository drawingPromptAnswerRepository;
+
+    private final TextPromptAnswerRepository textPromptAnswerRepository;
+
+    private final TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
 
     private final Random rand = SecureRandom.getInstanceStrong();
 
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository) throws NoSuchAlgorithmException {
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
+                       @Qualifier("playerRepository") PlayerRepository playerRepository,
+                       @Qualifier("textPromptAnswerRepository") TextPromptAnswerRepository textPromptAnswerRepository,
+                       @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
+                       @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository
+                       ) throws NoSuchAlgorithmException {
         this.gameRepository = gameRepository;
-        //this.playerService = playerService;
-    }
-
-    @Autowired
-    private void setPlayerService(PlayerService playerService) {
-        this.playerService = playerService;
-    }
-    @Autowired
-    private void setPromptAnswerService(PromptAnswerService promptAnswerService) {
-        this.promptAnswerService = promptAnswerService;
+        this.playerRepository = playerRepository;
+        this.textPromptAnswerRepository = textPromptAnswerRepository;
+        this.drawingPromptAnswerRepository = drawingPromptAnswerRepository;
+        this.trueFalsePromptAnswerRepository = trueFalsePromptAnswerRepository;
     }
 
 
@@ -120,7 +126,7 @@ public class GameService {
         System.out.println(requestedStatus);
         //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
 
-        Player loggedInPlayer = playerService.getByToken(loggedInToken);
+        Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
 
         Game gameByPin = getGameByPin(gamePin);
         if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
@@ -151,14 +157,16 @@ public class GameService {
     //TODO: test Service
     public Game deleteGameByPin(String gamePin, String loggedInToken) {
         Game gameByPin = getGameByPin(gamePin);
-        Player loggedInPlayer = playerService.getByToken(loggedInToken);
+        Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
 
         if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
         gameRepository.deleteByGamePin(gamePin);
-        promptAnswerService.deleteAllPromptAnswersByGamePin(gamePin);
+        drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+        textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+        trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
 
         return gameByPin;
     }
