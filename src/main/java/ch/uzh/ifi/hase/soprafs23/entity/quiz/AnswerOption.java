@@ -30,12 +30,10 @@ public class AnswerOption implements Serializable {
     }
 
     public String getAnswerOptionText() {
-        System.out.println(answerOptionText);
         return answerOptionText;
     }
 
     public void setAnswerOptionText(String answerOptionText) {
-        System.out.println(answerOptionText);
         this.answerOptionText = answerOptionText;
     }
 }

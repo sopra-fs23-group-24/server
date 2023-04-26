@@ -1,132 +1,179 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
-import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
+import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
-import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.PotentialQuestionRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class QuizAnswerServiceTest {
-    private Prompt tfTestPrompt;
-    private Prompt textTestPrompt;
-    private Prompt drawTestPrompt;
-
+    AnswerOption answerOption1;
+    AnswerOption answerOption2;
+    AnswerOption answerOption3;
+    AnswerOption answerOption4;
     private Game testGame;
-
+    private QuizQuestion testQuestion;
+    private Player testPlayer;
     @Mock
-    private PromptRepository promptRepository;
+    private AnswerOptionRepository answerOptionRepository;
+    @Mock
+    private PlayerRepository playerRepository;
 
     @Mock
     private GameRepository gameRepository;
 
+
     @Mock
-    private PotentialQuestionRepository pqRepository;
+    private QuizQuestionRepository quizQuestionRepository;
 
     @InjectMocks
-    private PromptService promptService;
+    private QuizAnswerService quizAnswerService;
 
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        tfTestPrompt = new Prompt();
-        tfTestPrompt.setPromptNr(999);
-        tfTestPrompt.setPromptText("Tell a story");
-        tfTestPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        textTestPrompt = new Prompt();
-        textTestPrompt.setPromptNr(998);
-        textTestPrompt.setPromptText("Answer a question");
-        textTestPrompt.setPromptType(PromptType.TEXT);
-
-        drawTestPrompt = new Prompt();
-        drawTestPrompt.setPromptNr(997);
-        drawTestPrompt.setPromptText("Draw something.");
-        drawTestPrompt.setPromptType(PromptType.DRAWING);
-
-        PotentialQuestion testPQ = new PotentialQuestion();
-        testPQ.setQuestionType(QuestionType.PLAYER);
-        testPQ.setQuestionText("Test question about a story of %s?");
-        testPQ.setRequiresTextInput(true);
-        testPQ.setDisplayType(AdditionalDisplayType.TEXT);
-        testPQ.setAssociatedPrompt(tfTestPrompt);
-
-        Mockito.when(promptRepository.findAll()).thenReturn(List.of(tfTestPrompt, textTestPrompt, drawTestPrompt));
-        Mockito.when(promptRepository.findAllByPromptType(PromptType.TRUEFALSE)).thenReturn(new ArrayList<>(List.of(tfTestPrompt)));
-        Mockito.when(promptRepository.findAllByPromptType(PromptType.TEXT)).thenReturn(new ArrayList<>(List.of(textTestPrompt)));
-        Mockito.when(promptRepository.findAllByPromptType(PromptType.DRAWING)).thenReturn(new ArrayList<>(List.of(drawTestPrompt)));
+        testPlayer = new Player();
+        testPlayer.setPlayerName("player");
+        testPlayer.setAssociatedGamePin("123456");
+        testPlayer.setToken("playerToken");
+        testPlayer.setScore(0);
+        Mockito.when(playerRepository.findByToken("playerToken")).thenReturn(testPlayer);
+        Mockito.when(playerRepository.findByToken("invalidToken")).thenReturn(null);
 
         testGame = new Game();
-        testGame.setGameId(1L);
         testGame.setGamePin("123456");
+        testGame.setHostId(2L);
+        testGame.addPlayer(testPlayer);
+        Mockito.when(gameRepository.findByGamePin("123456")).thenReturn(testGame);
+        Mockito.when(gameRepository.findByGamePin("invalidPin")).thenReturn(null);
+
+        answerOption1 = new AnswerOption();
+        answerOption1.setAnswerOptionText("option 1");
+        answerOption1.setAnswerOptionId(96L);
+        answerOption2 = new AnswerOption();
+        answerOption2.setAnswerOptionText("option 2");
+        answerOption2.setAnswerOptionId(97L);
+        answerOption3 = new AnswerOption();
+        answerOption3.setAnswerOptionText("option 3");
+        answerOption3.setAnswerOptionId(99L);
+        answerOption4 = new AnswerOption();
+        answerOption4.setAnswerOptionText("option 4");
+        answerOption4.setAnswerOptionId(99L);
+        List<AnswerOption> answerOptionList = List.of(answerOption1, answerOption2, answerOption3, answerOption4);
+        Mockito.when(answerOptionRepository.getAnswerOptionByAnswerOptionId(96L)).thenReturn(answerOption1);
+        Mockito.when(answerOptionRepository.getAnswerOptionByAnswerOptionId(97L)).thenReturn(answerOption2);
+
+
+        testQuestion = new QuizQuestion();
+        testQuestion.setAnswerOptions(answerOptionList);
+        testQuestion.setCorrectAnswer(answerOption1);
+        testQuestion.setQuizQuestionText("test text");
+        testQuestion.setQuestionStatus(CompletionStatus.NOT_FINISHED);
+        testQuestion.setAssociatedGamePin("123456");
+        testQuestion.setAssociatedPrompt(new Prompt());
+        testQuestion.setQuestionId(999L);
+
+        Mockito.when(quizQuestionRepository.findByQuestionId(Mockito.anyLong())).thenReturn(testQuestion);
     }
 
     @Test
-    public void getPrompts_success() {
-        List<Prompt> allTestPrompts = List.of(tfTestPrompt, textTestPrompt, drawTestPrompt);
+    public void addQuizAnswerToQuizQuestion_success_changeQuestionStatus() {
+        QuizAnswer quizAnswer = new QuizAnswer();
+        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
 
-        List<Prompt> allFound = promptService.getPrompts();
+        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
-        assertEquals(allFound, allTestPrompts);
-    }
+        QuizQuestion updatedQuestion = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), testPlayer.getToken());
 
-    /*@Test
-    public void getPromptsOfGame_success() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-        testGame.setPromptSet(listOfPrompts);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
-
-        List<Prompt> foundPrompts = promptService.getPromptsOfGame(testGame.getGamePin());
-
-        assertEquals(foundPrompts, listOfPrompts);
+        Assertions.assertEquals(updatedQuestion.getReceivedAnswers().size(), 1);
+        Assertions.assertEquals(updatedQuestion.getReceivedAnswers().get(0).getAssociatedPlayer(), testPlayer);
+        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.FINISHED);
     }
 
     @Test
-    public void getPromptsOfGame_invalidPin() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
+    public void addQuizAnswerToQuizQuestion_invalidPin() {
+        QuizAnswer quizAnswer = new QuizAnswer();
+        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
 
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-        testGame.setPromptSet(listOfPrompts);
+        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), "invalidPin", testPlayer.getToken()));
+    }
 
-        assertThrows(ResponseStatusException.class, () -> promptService.getPromptsOfGame(testGame.getGamePin()));
-    }*/
+    @Test
+    public void addQuizAnswerToQuizQuestion_invalidToken() {
+        QuizAnswer quizAnswer = new QuizAnswer();
+        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
 
-    /**
-     * Setup functions tests
-     */
-    //all private
+        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
+        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), "invalidToken"));
+    }
 
-    /**
-     * Helper functions tests
-     */
-    //all private
+    @Test
+    public void addQuizAnswerToQuizQuestion_alreadyAnsweredQuestion() {
+        QuizAnswer quizAnswer = new QuizAnswer();
+        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
+        testQuestion.addReceivedAnswer(quizAnswer);
+        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+
+        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), testPlayer.getToken()));
+    }
+
+    @Test
+    public void calculateAndAddScore_correctAnswer() {
+        QuizAnswer quizAnswer = new QuizAnswer();
+        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
+
+        Assertions.assertEquals(testPlayer.getScore(), 0);
+
+        int score = quizAnswerService.calculateAndAddScore(testPlayer.getToken(), quizAnswer, testQuestion.getQuestionId());
+
+        Assertions.assertTrue(score > 0);
+        Assertions.assertTrue(testPlayer.getScore() > 0);
+    }
+
+    @Test
+    public void calculateAndAddScore_incorrectAnswer() {
+        QuizAnswer quizAnswer = new QuizAnswer();
+        quizAnswer.setPickedAnswerOptionId(answerOption2.getAnswerOptionId());
+
+        Assertions.assertEquals(testPlayer.getScore(), 0);
+
+        int score = quizAnswerService.calculateAndAddScore(testPlayer.getToken(), quizAnswer, testQuestion.getQuestionId());
+
+        Assertions.assertEquals(score, 0);
+        Assertions.assertEquals(testPlayer.getScore(), 0);
+    }
+    @Test
+    public void calculateAndAddScore_invalidToken() {
+        QuizAnswer quizAnswer = new QuizAnswer();
+        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
+
+        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.calculateAndAddScore("invalidToken", quizAnswer, testQuestion.getQuestionId()));
+
+    }
+
 }

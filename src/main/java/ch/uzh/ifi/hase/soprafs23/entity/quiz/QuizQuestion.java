@@ -142,16 +142,5 @@ public class QuizQuestion implements Serializable {
 
     public void addReceivedAnswer(QuizAnswer answer){
         receivedAnswers.add(answer);
-
-        /*List<Player> playersThatAnswered = new ArrayList<>();
-        for(QuizAnswer receivedAnswer : receivedAnswers){
-            playersThatAnswered.add(receivedAnswer.getAssociatedPlayer());
-        }
-        for(Player player : associatedPlayerGroup){
-            if(!playersThatAnswered.contains(player)){
-                return CompletionStatus.NOT_FINISHED;
-            }
-        }
-        return CompletionStatus.FINISHED;*/
     }
 }

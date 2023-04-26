@@ -50,7 +50,6 @@ public class PromptServiceIntegrationTest {
         testGame = new Game();
         testGame.setStatus(GameStatus.SELECTION);
         testGame.setGamePin("123456");
-        Hibernate.initialize(testGame.getPromptSet());
         gameRepository.save(testGame);
         gameRepository.flush();
     }

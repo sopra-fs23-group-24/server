@@ -24,4 +24,5 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @SpringBootTest
 public class QuizAnswerServiceIntegrationTest {
 
+
 }

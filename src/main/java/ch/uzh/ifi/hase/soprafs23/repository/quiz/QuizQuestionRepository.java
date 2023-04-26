@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository("quizQuestionRepository")
 public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long> {
+    QuizQuestion findByQuestionId(Long id);
     List<QuizQuestion> findAllByAssociatedGamePin(String gamePin);
     void deleteAllByAssociatedGamePin(String gamePin);
 }
