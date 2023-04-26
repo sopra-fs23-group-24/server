@@ -21,7 +21,7 @@ class PromptAnswerServiceTest {
     private Game testGame;
 
     private Player testPlayer;
-    private TextPromptAnswer testTPAnswer;
+    private TextPromptAnswer testTextPromptAnswer;
 
     @Mock
     private TextPromptAnswerRepository textPromptAnswerRepository;
@@ -48,22 +48,20 @@ class PromptAnswerServiceTest {
         testPlayer.setPlayerName("test");
         testPlayer.setToken("1");
 
-        testTPAnswer = new TextPromptAnswer();
-        testTPAnswer.setAssociatedPromptNr(1);
-        testTPAnswer.setAssociatedPlayerId(2L);
-        testTPAnswer.setAssociatedGamePin("123456");
-        testTPAnswer.setAnswer("TestAnswer");
+        testTextPromptAnswer = new TextPromptAnswer();
+        testTextPromptAnswer.setAssociatedPromptNr(1);
+        testTextPromptAnswer.setAnswer("TestAnswer");
 
     }
 
     @Test
     void testSaveTextPromptAnswer_success() {
-        // the problem is that within the promptAnswerService, the gameService is null.
+        // call
+        // promptAnswerService.saveTextPromptAnswer(testTextPromptAnswer,
+        //        testPlayer.getToken(),testGame.getGamePin());
+        // should set the player by token...
+        // should set the game by gamePin
 
-        // set it with metaprogramming but would be hard and ... -> promptAnswerService.setGameService
-
-        //promptAnswerService.saveTextPromptAnswer(testTPAnswer,testPlayer.getToken(), testGame.getGamePin());
-        //Mockito.verify(textPromptAnswerRepository, Mockito.times(1)).save(Mockito.any());
 
 
     }

@@ -37,18 +37,18 @@ public class GameServiceIntegrationTest {
 
     @Test
     public void createGame_success() {
-        // given
-        assertEquals(new ArrayList<Game>(), gameRepository.findAll());
+        assertTrue(gameRepository.findAll().isEmpty());
 
-        // when
         Game createdGame = gameService.createGame();
 
-        // then
         assertNotNull(createdGame.getGameId());
         assertNotNull(createdGame.getGamePin());
         assertEquals(GameStatus.LOBBY, createdGame.getStatus());
         assertNull(createdGame.getHostId());
-        assertEquals(new ArrayList<Player>(), createdGame.getPlayerGroup());
+        assertTrue(createdGame.getPlayerGroup().isEmpty());
+        assertTrue(createdGame.getPromptSet().isEmpty());
+        assertTrue(createdGame.getQuizQuestionSet().isEmpty());
+        assertNull(createdGame.getCurrentQuestion());
 
         assertNotNull(gameRepository.findByGamePin(createdGame.getGamePin()));
     }

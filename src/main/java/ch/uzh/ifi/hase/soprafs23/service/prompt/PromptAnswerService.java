@@ -117,6 +117,7 @@ public class PromptAnswerService {
         return answer;
     }
 
+    /*
     // just so that we can test generating quizQuestions in postman
     public void mockPromptAnswersForGame(String gamePin){
         Game currentGame = findGameByPin(gamePin);
@@ -149,6 +150,9 @@ public class PromptAnswerService {
             }
         }
     }
+
+     */
+
 
 
     // check if all users have answered all prompts
@@ -206,12 +210,6 @@ public class PromptAnswerService {
         return false;
     }
 
-
-    public void deleteAllPromptAnswersByGamePin(String gamePin) {
-        drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-        textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-        trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-    }
 
     private Game findGameByPin(String gamePin){
         Game foundGame = gameRepository.findByGamePin(gamePin);
