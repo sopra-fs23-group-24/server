@@ -1,7 +1,11 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.DrawingPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.TextPromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.TrueFalsePromptAnswer;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.DrawingPromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TextPromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TrueFalsePromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptAnswerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,13 +42,15 @@ class PromptAnswerControllerTest {
 
         // create DTO
         TextPromptAnswerPostDTO testDto = new TextPromptAnswerPostDTO();
-        // set...
+        testDto.setAssociatedPromptNr(0);
+        testDto.setAnswer("Test");
 
         // the desired answer which service should create
         TextPromptAnswer textPromptAnswer = new TextPromptAnswer();
         textPromptAnswer.setAssociatedPromptNr(0);
-        textPromptAnswer.setAssociatedPlayerId(2L);
         textPromptAnswer.setAnswer("Test");
+
+        textPromptAnswer.setAssociatedPlayerId(2L);
         textPromptAnswer.setAssociatedGamePin("123456");
 
         String playerToken = "TESTTOKEN";
@@ -61,20 +67,81 @@ class PromptAnswerControllerTest {
         // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.associatedPromptNr", is(textPromptAnswer.getAssociatedPromptNr())));
-                //.andExpect(jsonPath("$.playerName", is(testPlayer.getPlayerName())))
-
-
+                .andExpect(jsonPath("$.associatedPromptNr", is(textPromptAnswer.getAssociatedPromptNr())))
+                .andExpect(jsonPath("$.answer", is(testDto.getAnswer())));
     }
 
 
      // test canChangeToQUiz
     @Test
-    void testPostTrueFalsePromptAnswer() {
+    void testPostTrueFalsePromptAnswer() throws Exception {
+        // create DTO
+        TrueFalsePromptAnswerPostDTO testDto = new TrueFalsePromptAnswerPostDTO();
+        testDto.setAssociatedPromptNr(0);
+        testDto.setAnswerBoolean(true);
+        testDto.setAnswerText("Test");
+
+        // the desired answer which service should create
+        TrueFalsePromptAnswer trueFalsePromptAnswer = new TrueFalsePromptAnswer();
+        trueFalsePromptAnswer.setAssociatedPromptNr(0);
+        trueFalsePromptAnswer.setAnswerBoolean(true);
+        trueFalsePromptAnswer.setAnswerText("Test");
+        // is this necessary, as it will not be tested here.
+        trueFalsePromptAnswer.setAssociatedPlayerId(2L);
+        trueFalsePromptAnswer.setAssociatedGamePin("123456");
+
+        String playerToken = "TESTTOKEN";
+
+        given(promptAnswerService.saveTrueFalsePromptAnswer(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
+                .willReturn(trueFalsePromptAnswer);
+
+        // when
+        MockHttpServletRequestBuilder postRequest = post("/games/123456/prompt-answers/tf")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(testDto))
+                .header("playerToken", playerToken);
+
+        // then
+        // throws Exception
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.associatedPromptNr", is(trueFalsePromptAnswer.getAssociatedPromptNr())))
+                .andExpect(jsonPath("$.answerBoolean", is(testDto.getAnswerBoolean())))
+                .andExpect(jsonPath("$.answerText", is(testDto.getAnswerText())));
     }
 
     @Test
-    void postDrawingPromptAnswer() {
+    void postDrawingPromptAnswer() throws Exception {
+        // create DTO
+        DrawingPromptAnswerPostDTO testDto = new DrawingPromptAnswerPostDTO();
+        testDto.setAssociatedPromptNr(0);
+        testDto.setAnswerDrawing("TestDrawing");
+
+        // the desired answer which service should create
+        DrawingPromptAnswer drawingPromptAnswer = new DrawingPromptAnswer();
+        drawingPromptAnswer.setAssociatedPromptNr(0);
+        drawingPromptAnswer.setAnswerDrawing("TestDrawing");
+
+        drawingPromptAnswer.setAssociatedPlayerId(2L);
+        drawingPromptAnswer.setAssociatedGamePin("123456");
+
+        String playerToken = "TESTTOKEN";
+
+        given(promptAnswerService.saveDrawingPromptAnswer(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
+                .willReturn(drawingPromptAnswer);
+
+        // when
+        MockHttpServletRequestBuilder postRequest = post("/games/123456/prompt-answers/drawing")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(testDto))
+                .header("playerToken", playerToken);
+
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.associatedPromptNr", is(drawingPromptAnswer.getAssociatedPromptNr())))
+                .andExpect(jsonPath("$.answerDrawing", is(testDto.getAnswerDrawing())));
+
     }
 
     private String asJsonString(final Object object) {
