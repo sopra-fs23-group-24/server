@@ -83,9 +83,9 @@ public class PromptAnswerService {
     }
 
     public TrueFalsePromptAnswer saveTrueFalsePromptAnswer(TrueFalsePromptAnswer answer, String playerToken, String gamePin) {
-        gameRepository.findByGamePin(gamePin); //TODO:check if throws
+        findGameByPin(gamePin);
         answer.setAssociatedGamePin(gamePin);
-        Player player = playerRepository.findByToken(playerToken); //TODO:check if throws
+        Player player = getByToken(playerToken); //TODO:check if throws
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswerText().equals("")) {
@@ -101,10 +101,9 @@ public class PromptAnswerService {
     }
 
     public DrawingPromptAnswer saveDrawingPromptAnswer(DrawingPromptAnswer answer, String playerToken, String gamePin) {
-
-        gameRepository.findByGamePin(gamePin); //TODO:check if throws
+        findGameByPin(gamePin);
         answer.setAssociatedGamePin(gamePin);
-        Player player = playerRepository.findByToken(playerToken); //TODO:check if throws
+        Player player = getByToken(playerToken); //TODO:check if throws
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswerDrawing().equals("")) { // throws if the content is empty
@@ -119,8 +118,8 @@ public class PromptAnswerService {
     }
 
     // just so that we can test generating quizQuestions in postman
-    /*public void mockPromptAnswersForGame(String gamePin){
-        Game currentGame = gameRepository.findByGamePin(gamePin);
+    public void mockPromptAnswersForGame(String gamePin){
+        Game currentGame = findGameByPin(gamePin);
         for(Player player : currentGame.getPlayerGroup()){
             for(Prompt prompt : currentGame.getPromptSet()){
                 if(prompt.getPromptType() == PromptType.DRAWING){
@@ -150,8 +149,6 @@ public class PromptAnswerService {
             }
         }
     }
-
-     */
 
 
     // check if all users have answered all prompts
@@ -207,6 +204,30 @@ public class PromptAnswerService {
         System.out.println("not all prompts answered by all players, continue");
        //return gameService.getGameByPin(gamePin);
         return false;
+    }
+
+
+    public void deleteAllPromptAnswersByGamePin(String gamePin) {
+        drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+        textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+        trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+    }
+
+    private Game findGameByPin(String gamePin){
+        Game foundGame = gameRepository.findByGamePin(gamePin);
+        if (foundGame == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+        }
+        return foundGame;
+    }
+
+
+    public Player getByToken(String token) {
+        Player player = playerRepository.findByToken(token);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
+        }
+        return player;
     }
 }
 

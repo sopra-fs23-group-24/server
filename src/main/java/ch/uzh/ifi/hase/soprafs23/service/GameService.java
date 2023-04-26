@@ -10,6 +10,7 @@ import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,8 @@ public class GameService {
 
     private final TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
 
+    private final QuizQuestionRepository quizQuestionRepository;
+
     private final Random rand = SecureRandom.getInstanceStrong();
 
     @Autowired
@@ -55,13 +58,15 @@ public class GameService {
                        @Qualifier("playerRepository") PlayerRepository playerRepository,
                        @Qualifier("textPromptAnswerRepository") TextPromptAnswerRepository textPromptAnswerRepository,
                        @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
-                       @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository
+                       @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository,
+                       @Qualifier("quizQuestionRepository") QuizQuestionRepository quizQuestionRepository
                        ) throws NoSuchAlgorithmException {
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
         this.textPromptAnswerRepository = textPromptAnswerRepository;
         this.drawingPromptAnswerRepository = drawingPromptAnswerRepository;
         this.trueFalsePromptAnswerRepository = trueFalsePromptAnswerRepository;
+        this.quizQuestionRepository = quizQuestionRepository;
     }
 
 
@@ -115,6 +120,17 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
+        if(requestedStatus == GameStatus.LOBBY){
+            gameByPin.emptyPromptSet();
+            gameByPin.emptyQuizQuestions();
+            quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
+            drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            for(Player player : gameByPin.getPlayerGroup()){
+                player.setScore(0);
+            }
+        }
         gameByPin.setStatus(requestedStatus);
         gameByPin = gameRepository.save(gameByPin);
         gameRepository.flush();
@@ -156,24 +172,13 @@ public class GameService {
         return gameByPin;
     }
 
-    public Game addQuizQuestionsToGame(List<QuizQuestion> questionsForGame, String gamePin) {
+
+    public Game changeToNextQuestion(String gamePin, String loggedInToken){
         Game gameByPin = getGameByPin(gamePin);
-        if (!gameByPin.getQuizQuestionSet().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has quiz questions created for it.");
+        Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
+        if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
-
-        gameByPin.addQuizQuestions(questionsForGame);
-
-        gameByPin.setStatus(GameStatus.QUIZ);
-
-        gameRepository.save(gameByPin);
-        gameRepository.flush();
-
-        return gameByPin;
-    }
-
-    public Game changeToNextQuestion(String gamePin){
-        Game gameByPin = getGameByPin(gamePin);
         gameByPin.nextQuestion();
         if(gameByPin.nextQuestion() == null && gameByPin.getStatus() == GameStatus.QUIZ){
             gameByPin.setStatus(GameStatus.END);
@@ -187,7 +192,7 @@ public class GameService {
      * Helper functions
      */
 
-    public boolean checkIfHost(Game game, long userId) {
+    private boolean checkIfHost(Game game, long userId) {
         return game.getHostId() == userId;
     }
 

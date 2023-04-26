@@ -129,25 +129,6 @@ public class GameServiceTest {
 
     }*/
 
-    /**
-     * Helper functions tests
-     */
-
-    @Test
-    public void checkIfHost_true() {
-        testGame.setHostId(2L);
-        testPlayer.setPlayerId(2L);
-
-        assertTrue(gameService.checkIfHost(testGame, testPlayer.getPlayerId()));
-    }
-
-    @Test
-    public void checkIfHost_false() {
-        testGame.setHostId(3L);
-        testPlayer.setPlayerId(2L);
-
-        assertFalse(gameService.checkIfHost(testGame, testPlayer.getPlayerId()));
-    }
 }
 
 

@@ -93,7 +93,7 @@ public class PromptControllerTest {
     @Test
     public void setPrompts_exceedAvailableNumber() throws Exception {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
-        promptPostDTO.setDrawingNr(1);
+        promptPostDTO.setDrawingNr(10);
         promptPostDTO.setTextNr(1);
         promptPostDTO.setTruefalseNr(1);
 

@@ -113,8 +113,10 @@ public class PlayerService {
         if (playerById != loggedInPlayer) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
-        if (newPlayerInfo.getPlayerName().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Empty username.");
+
+        Player playerByUsernameAndPin = playerRepository.findByPlayerNameAndAssociatedGamePin(newPlayerInfo.getPlayerName(), newPlayerInfo.getAssociatedGamePin());
+        if (newPlayerInfo.getPlayerName().isBlank() || playerByUsernameAndPin != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid username, might be empty or already in use.");
         }
 
         playerById.setPlayerName(newPlayerInfo.getPlayerName());

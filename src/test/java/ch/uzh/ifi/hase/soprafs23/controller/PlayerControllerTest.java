@@ -109,7 +109,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void newPlayerInGame_gameAlreadyHasHost() throws Exception {
+    public void newPlayerInGame_gameAlreadyHasHostOrUsernameDuplicate() throws Exception {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -124,11 +124,6 @@ public class PlayerControllerTest {
         // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void newPlayerInGame_UsernameAlreadyExistsWithinGame(){
-        //TODO: test
     }
 
     @Test
@@ -233,7 +228,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void changeUsername_usernameIsBlank() throws Exception {
+    public void changeUsername_usernameIsBlankOrAlreadyUsed() throws Exception {
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("");
 

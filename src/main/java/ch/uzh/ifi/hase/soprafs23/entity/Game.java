@@ -22,7 +22,6 @@ public class Game implements Serializable {
     @GeneratedValue
     private Long gameId;
 
-
     @Column(nullable = false, unique = true)
     private String gamePin;
 
@@ -109,6 +108,10 @@ public class Game implements Serializable {
         promptSet.addAll(newPrompts);
     }
 
+    public void emptyPromptSet(){
+        promptSet = new ArrayList<>();
+    }
+
     public List<QuizQuestion> getQuizQuestionSet() {
         return quizQuestionSet;
     }
@@ -118,6 +121,11 @@ public class Game implements Serializable {
     }
 
     public void addQuizQuestions(List<QuizQuestion> newQuestions){quizQuestionSet.addAll(newQuestions);}
+
+    public void emptyQuizQuestions(){
+        currentQuestion = null;
+        quizQuestionSet = new ArrayList<>();
+    }
 
     public QuizQuestion getCurrentQuestion() {
         return currentQuestion;
