@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PromptAnswerController.class)
 class PromptAnswerControllerTest {
@@ -32,15 +33,12 @@ class PromptAnswerControllerTest {
         TextPromptAnswer textPromptAnswer = new TextPromptAnswer();
 
         textPromptAnswer.setAssociatedPromptNr(0);
-        textPromptAnswer.setAssociatedPlayerId(1L);
+        textPromptAnswer.setAssociatedPlayerId(2L);
         textPromptAnswer.setAnswer("Test");
         String gamePin = "123";
         textPromptAnswer.setAssociatedGamePin(gamePin);
+        String playerToken = "TESTTOKEN";
 
-        // maybe I need to add the gamePin to the textPromptAnswer as well...
-        String playerToken = "TESTTOKEN-1";
-
-        // does this get executed
         given(promptAnswerService.saveTextPromptAnswer(textPromptAnswer, playerToken, gamePin))
                 .willReturn(textPromptAnswer);
 
@@ -49,8 +47,11 @@ class PromptAnswerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         // then
-        mockMvc.perform(postRequest);
-            // does nothing yet
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.getAssociatedPromptNr", is(0)));
+                //.andExpect(jsonPath("$.playerName", is(testPlayer.getPlayerName())))
+
 
     }
 
