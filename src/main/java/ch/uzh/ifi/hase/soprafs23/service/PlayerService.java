@@ -82,6 +82,7 @@ public class PlayerService {
         if (joinedGame == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
         }
+
         if (joinedGame.getStatus() != GameStatus.LOBBY) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is already running. Try again with a different pin or join later.");
         }
@@ -145,21 +146,6 @@ public class PlayerService {
         playerRepository.flush();
 
         return playerToDelete;
-    }
-
-    //TODO: test Integration?
-    //TODO: test Service
-    public List<Player> deleteAllPlayersByGamePin(String gamePin) {
-        List<Player> allPlayersToDelete = playerRepository.findAllByAssociatedGamePin(gamePin);
-        for (Player player : allPlayersToDelete) {
-            Game gameByPin = gameRepository.findByGamePin(gamePin);
-            gameByPin.removePlayer(player);
-
-            playerRepository.delete(player);
-            playerRepository.flush();
-        }
-
-        return allPlayersToDelete;
     }
 
     // sorts the list of players, and returns it

@@ -63,10 +63,12 @@ public class PromptAnswerService {
 
 
     public TextPromptAnswer saveTextPromptAnswer(TextPromptAnswer answer, String playerToken, String gamePin) {
-
-        gameRepository.findByGamePin(gamePin); // TODO:check if throws
+        Game foundGame = findGameByPin(gamePin);
         answer.setAssociatedGamePin(gamePin);
-        Player player = playerRepository.findByToken(playerToken); //TODO:check if throws
+        Player player = getByToken(playerToken);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
+        }
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswer().equals("")) {
@@ -155,9 +157,10 @@ public class PromptAnswerService {
     // check if all users have answered all prompts
     // change game status below in a separate method
     public Boolean haveAllPlayersAnsweredAllPrompts(String gamePin) {
+        Game gameByPin = findGameByPin(gamePin);
 
-        List<Player> players = gameRepository.findByGamePin(gamePin).getPlayerGroup();
-        List<Prompt> prompts = gameRepository.findByGamePin(gamePin).getPromptSet();
+        List<Player> players = gameByPin.getPlayerGroup();
+        List<Prompt> prompts = gameByPin.getPromptSet();
 
         for (Player player : players) {
             Long playerId = player.getPlayerId();
@@ -195,7 +198,7 @@ public class PromptAnswerService {
         if(haveAllPlayersAnsweredAllPrompts(gamePin)) {
             System.out.println("Deemed that all players have answered all prompts - will now change GameStatus");
             // change Status to Quiz
-            gameRepository.findByGamePin(gamePin).setStatus(GameStatus.QUIZ);
+            findGameByPin(gamePin).setStatus(GameStatus.QUIZ);
 
             // initialize change to Quiz stage
             quizQuestionGenerator.createQuizQuestions(gamePin);
