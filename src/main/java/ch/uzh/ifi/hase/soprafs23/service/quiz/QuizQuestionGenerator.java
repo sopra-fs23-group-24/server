@@ -329,6 +329,7 @@ public class QuizQuestionGenerator {
         else if(pq.getQuestionType() == QuestionType.BOOLEAN){
             System.out.println("Drawing question - Boolean");
 
+            // gets a random answer from all answers and gets the corresponding player
             TrueFalsePromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
             Player correctAnswerPlayer = playerService.getById(selectedCorrectPromptAnswer.getAssociatedPlayerId());
 
@@ -345,6 +346,7 @@ public class QuizQuestionGenerator {
 
             System.out.println("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getStoryToDisplay());
 
+            // "make" correct answer
             AnswerOption correctAnswer = new AnswerOption();
             correctAnswer.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswerBoolean().toString());
             newQuestion.setCorrectAnswer(correctAnswer);
@@ -353,13 +355,14 @@ public class QuizQuestionGenerator {
             answerOptionRepository.flush();
             allAnswers.remove(selectedCorrectPromptAnswer);
 
+            // "make" other answer
             AnswerOption newAnswerOption = new AnswerOption();
             if(selectedCorrectPromptAnswer.getAnswerBoolean()){
                 newAnswerOption.setAnswerOptionText("false");
             }else{
                 newAnswerOption.setAnswerOptionText("true");
             }
-
+            newQuestion.addAnswerOption(newAnswerOption);
             answerOptionRepository.save(newAnswerOption);
             answerOptionRepository.flush();
         }
