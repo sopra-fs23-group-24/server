@@ -24,26 +24,6 @@ public class PromptAnswerController {
     }
 
 
-    @GetMapping("prompt-answers/text")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public List<TextPromptAnswer> getAllTextPromptAnswers(){
-
-        List<TextPromptAnswer> allTextPromptAnswers = promptAnswerService.getAllTextPromptAnswers();
-
-        return allTextPromptAnswers;
-    }
-
-    @GetMapping("/games/{pin}/prompt-answers/text")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public List<TextPromptAnswer> getAllTextPromptAnswersOfGame(@PathVariable("pin") String gamePin){
-        List<TextPromptAnswer> allTextPromptAnswers = promptAnswerService.getAllTextPromptAnswersByGamePin(gamePin);
-
-        return allTextPromptAnswers;
-    }
-
-
     // currently the playerToken header is not needed, / used, would only be needed for authentication I think
     // I added the playerToken as an HTTP Header, but I don't know where...
     // the game pin is needed for the {pin} part as far as I know
