@@ -39,6 +39,7 @@ public class QuizAnswerService {
 
 
     // return value is never used
+    // also checks if already answered, and changes status if all have answered
     public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin, String loggedInToken){
         // set the player
         newQuizAnswer.setAssociatedPlayer(playerRepository.findByToken(loggedInToken));
@@ -54,6 +55,8 @@ public class QuizAnswerService {
         qqRepository.save(questionById);
         qqRepository.flush();
 
+        // maybe take this out into another method
+        // TODO: all players need to answer
         List<Player> allPlayersOfGame = gameService.getGameByPin(gamePin).getPlayerGroup();
         for(QuizAnswer answer : questionById.getReceivedAnswers()){
             allPlayersOfGame.remove(answer.getAssociatedPlayer());

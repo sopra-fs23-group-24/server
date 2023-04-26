@@ -146,12 +146,10 @@ public class QuizQuestionGenerator {
                 DrawingPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
                 Player selectedPromptPlayer = playerService.getById(selectedPromptAnswer.getAssociatedPlayerId());
 
-                // creat and set a new answer option with that according player
+                // create and set a new answer option with that according player
                 AnswerOption newAnswerOption = new AnswerOption();
                 newAnswerOption.setAnswerOptionText(selectedPromptPlayer.getPlayerName());
 
-                // "if the players name is already used - choose another one" - I think that is the mistake,
-                // because I sometimes create players with the same name...
                 newQuestion.addAnswerOption(newAnswerOption);
                 answerOptionRepository.save(newAnswerOption);
                 answerOptionRepository.flush();
