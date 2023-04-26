@@ -45,7 +45,7 @@ public class GameController {
         for (Game game : allGames) {
             GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertToGameGetDTO(game);
             gameGetDTO.setCurrentQuestion(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(game.getCurrentQuestion()));
-            if(game.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
+            if(game.getCurrentQuestion() != null && game.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
                 gameGetDTO.getCurrentQuestion().setCorrectAnswer(null);
             }
             gamesGetDTOs.add(gameGetDTO);

@@ -60,6 +60,7 @@ public class PlayerController {
     @ResponseBody
     public List<PlayerGetDTO> getAllPlayersOfGame(@PathVariable("pin") String gamePin) {
         List<Player> players = playerService.getPlayersWithPin(gamePin);
+
         // sort players
         List<Player> sortedPlayers = playerService.sortPlayersByScore(players);
 
