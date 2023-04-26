@@ -72,6 +72,9 @@ public class PromptService {
     //TODO: test Integration?
     public List<Prompt> getPromptsOfGame(String gamePin) {
         Game gameByPin = gameRepository.findByGamePin(gamePin);
+        if (gameByPin == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+        }
         return gameByPin.getPromptSet();
     }
 
@@ -108,8 +111,10 @@ public class PromptService {
 
     //TODO: test Integration?
     private Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {
-
         Game gameByPin = gameRepository.findByGamePin(gamePin);
+        if (gameByPin == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+        }
         if (gameByPin.getStatus() != GameStatus.SELECTION) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is in the wrong state to take prompts.");
         }

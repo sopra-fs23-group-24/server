@@ -40,8 +40,17 @@ public class QuizAnswerService {
 
     // return value is never used
     public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin, String loggedInToken){
+        Game gameByPin = gameRepository.findByGamePin(gamePin);
+        if (gameByPin == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+        }
+
         // set the player
-        newQuizAnswer.setAssociatedPlayer(playerRepository.findByToken(loggedInToken));
+        Player player = playerRepository.findByToken(loggedInToken);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
+        }
+        newQuizAnswer.setAssociatedPlayer(player);
 
         // check if already answered
         QuizQuestion questionById = qqRepository.getOne(quizQuestionId);
@@ -56,7 +65,8 @@ public class QuizAnswerService {
         qqRepository.flush();
 
         // check if all players have answered a question
-        List<Player> allPlayersOfGame = gameRepository.findByGamePin(gamePin).getPlayerGroup();
+
+        List<Player> allPlayersOfGame = gameByPin.getPlayerGroup();
         for(QuizAnswer answer : questionById.getReceivedAnswers()){
             allPlayersOfGame.remove(answer.getAssociatedPlayer());
         }
@@ -79,7 +89,11 @@ public class QuizAnswerService {
         AnswerOption correctAnswer = qqRepository.getOne(questionId).getCorrectAnswer();
 
         // set the player
-        quizAnswer.setAssociatedPlayer(playerRepository.findByToken(loggedInToken));
+        Player player = playerRepository.findByToken(loggedInToken);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
+        }
+        quizAnswer.setAssociatedPlayer(player);
 
         int score = 0;
         if (chosenAnswer.equals(correctAnswer)) {

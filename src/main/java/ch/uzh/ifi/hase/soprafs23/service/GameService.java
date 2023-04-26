@@ -104,7 +104,11 @@ public class GameService {
         System.out.println(requestedStatus);
         //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
 
+
         Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
+        if (loggedInPlayer == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
+        }
 
         Game gameByPin = getGameByPin(gamePin);
         if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
@@ -136,6 +140,9 @@ public class GameService {
     public Game deleteGameByPin(String gamePin, String loggedInToken) {
         Game gameByPin = getGameByPin(gamePin);
         Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
+        if (loggedInPlayer == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
+        }
 
         if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
