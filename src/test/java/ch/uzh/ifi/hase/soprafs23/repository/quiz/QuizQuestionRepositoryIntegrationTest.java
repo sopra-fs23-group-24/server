@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.repository.quiz;
 
 import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
@@ -32,11 +33,19 @@ public class QuizQuestionRepositoryIntegrationTest {
         entityManager.merge(testAnswerOption);
         entityManager.flush();
 
+        Prompt testPrompt = new Prompt();
+        testPrompt.setPromptNr(999);
+        testPrompt.setPromptText("Tell a story");
+        testPrompt.setPromptType(PromptType.TRUEFALSE);
+
+        entityManager.persist(testPrompt);
+        entityManager.flush();
+
         testQuizQuestion = new QuizQuestion();
         testQuizQuestion.setAssociatedGamePin("123456");
         testQuizQuestion.setQuizQuestionText("test text");
         testQuizQuestion.setQuestionStatus(CompletionStatus.NOT_FINISHED);
-        testQuizQuestion.setAssociatedPrompt(new Prompt());
+        testQuizQuestion.setAssociatedPrompt(testPrompt);
         testQuizQuestion.setAnswerOptions(List.of(testAnswerOption));
 
         entityManager.merge(testQuizQuestion);
@@ -46,8 +55,7 @@ public class QuizQuestionRepositoryIntegrationTest {
 
     @AfterEach
     void emptyRepository() {
-        entityManager.remove(testQuizQuestion);
-        entityManager.flush();
+        quizQuestionRepository.deleteAll();
     }
 
     @Test
@@ -55,7 +63,7 @@ public class QuizQuestionRepositoryIntegrationTest {
         List<QuizQuestion> foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
 
         Assertions.assertEquals(foundQuestions.size(), 1);
-        Assertions.assertEquals(foundQuestions.get(1).getQuizQuestionText(), testQuizQuestion.getQuizQuestionText());
+        Assertions.assertEquals(foundQuestions.get(0).getQuizQuestionText(), testQuizQuestion.getQuizQuestionText());
     }
 
     @Test

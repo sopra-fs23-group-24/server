@@ -35,13 +35,13 @@ public class Game implements Serializable {
     private List<Player> playerGroup = new ArrayList<>();
     //TODO: should we use players or id? - and why does id not work?
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Prompt> promptSet = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizQuestion> quizQuestionSet = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private QuizQuestion currentQuestion = null;
 
     // add getters and setters

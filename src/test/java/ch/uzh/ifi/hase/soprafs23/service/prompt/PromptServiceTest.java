@@ -11,6 +11,8 @@ import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptPostDTO;
 import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,12 +68,12 @@ public class PromptServiceTest {
         drawTestPrompt.setPromptText("Draw something.");
         drawTestPrompt.setPromptType(PromptType.DRAWING);
 
-        PotentialQuestion testPQ = new PotentialQuestion();
+        /*PotentialQuestion testPQ = new PotentialQuestion();
         testPQ.setQuestionType(QuestionType.PLAYER);
         testPQ.setQuestionText("Test question about a story of %s?");
         testPQ.setRequiresTextInput(true);
         testPQ.setDisplayType(AdditionalDisplayType.TEXT);
-        testPQ.setAssociatedPrompt(tfTestPrompt);
+        testPQ.setAssociatedPrompt(tfTestPrompt);*/
 
         Mockito.when(promptRepository.findAll()).thenReturn(List.of(tfTestPrompt, textTestPrompt, drawTestPrompt));
         Mockito.when(promptRepository.findAllByPromptType(PromptType.TRUEFALSE)).thenReturn(new ArrayList<>(List.of(tfTestPrompt)));
@@ -81,6 +83,7 @@ public class PromptServiceTest {
         testGame = new Game();
         testGame.setGameId(1L);
         testGame.setGamePin("123456");
+
     }
 
     @Test
@@ -92,14 +95,9 @@ public class PromptServiceTest {
         assertEquals(allFound, allTestPrompts);
     }
 
-    /*@Test
+    @Test
     public void getPromptsOfGame_success() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
+        List<Prompt> listOfPrompts = List.of(tfTestPrompt, textTestPrompt, drawTestPrompt);
         testGame.setPromptSet(listOfPrompts);
 
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
@@ -111,94 +109,74 @@ public class PromptServiceTest {
 
     @Test
     public void getPromptsOfGame_invalidPin() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-        testGame.setPromptSet(listOfPrompts);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(null);
 
         assertThrows(ResponseStatusException.class, () -> promptService.getPromptsOfGame(testGame.getGamePin()));
-    }*/
+    }
 
-    //TODO: test addPromptsToGame
-    /*
     @Test
-    public void addPromptsToGame_success() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
-
-        assertEquals(gameService.getGameByPin(testGame.getGamePin()).getPlayerGroup(), new ArrayList<Player>());
+    public void pickPrompts_addPromptsToGame_success() {
+        PromptPostDTO testDTO = new PromptPostDTO();
+        testDTO.setDrawingNr(1);
+        testDTO.setTextNr(1);
+        testDTO.setTruefalseNr(1);
 
         testGame.setStatus(GameStatus.SELECTION);
+        testGame.emptyPromptSet();
+        Mockito.when(gameRepository.findByGamePin(Mockito.anyString())).thenReturn(testGame);
 
-        Game gameWithPrompts = gameService.addPromptsToGame(listOfPrompts, testGame.getGamePin());
+        assertTrue(gameRepository.findByGamePin(testGame.getGamePin()).getPromptSet().isEmpty());
+        assertEquals(gameRepository.findByGamePin(testGame.getGamePin()).getStatus(), GameStatus.SELECTION);
+
+        List<Prompt> listOfPrompts = List.of(textTestPrompt, tfTestPrompt, drawTestPrompt);
+
+        List<Prompt> createdPrompts = promptService.pickPrompts(testDTO, "123456");
 
         Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
-        assertTrue(gameWithPrompts.getPromptSet().contains(testPrompt));
+
+        assertEquals(createdPrompts, listOfPrompts);
+        assertEquals(gameRepository.findByGamePin(testGame.getGamePin()).getPromptSet(), listOfPrompts);
+        assertEquals(gameRepository.findByGamePin(testGame.getGamePin()).getStatus(), GameStatus.PROMPT);
     }
 
     @Test
-    public void addPromptsToGame_invalidGamePin() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
+    public void pickPrompts_addPromptsToGame_invalidGamePin() {
+        PromptPostDTO testDTO = new PromptPostDTO();
+        testDTO.setDrawingNr(1);
+        testDTO.setTextNr(1);
+        testDTO.setTruefalseNr(1);
 
-        List<Prompt> listOfPrompts = List.of(testPrompt);
+        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(null);
 
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        testGame.setStatus(GameStatus.SELECTION);
-        testGame.setPromptSet(new ArrayList<>());
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPromptsToGame(listOfPrompts, testGame.getGamePin()));
+        assertThrows(ResponseStatusException.class, () -> promptService.pickPrompts(testDTO, testGame.getGamePin()));
     }
 
     @Test
-    public void addPromptsToGame_gameNotInSelectionStage() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
+    public void pickPrompts_addPromptsToGame_gameNotInSelectionStage() {
+        PromptPostDTO testDTO = new PromptPostDTO();
+        testDTO.setDrawingNr(1);
+        testDTO.setTextNr(1);
+        testDTO.setTruefalseNr(1);
 
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-
+        testGame.setStatus(GameStatus.PROMPT);
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
 
-        testGame.setStatus(GameStatus.LOBBY);
-        testGame.setPromptSet(new ArrayList<>());
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPromptsToGame(listOfPrompts, testGame.getGamePin()));
+        assertThrows(ResponseStatusException.class, () -> promptService.pickPrompts(testDTO, testGame.getGamePin()));
     }
 
     @Test
-    public void addPromptsToGame_alreadyHasPrompts() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
+    public void pickPrompts_addPromptsToGame_alreadyHasPrompts() {
+        PromptPostDTO testDTO = new PromptPostDTO();
+        testDTO.setDrawingNr(1);
+        testDTO.setTextNr(1);
+        testDTO.setTruefalseNr(1);
 
         testGame.setStatus(GameStatus.SELECTION);
-        testGame.setPromptSet(listOfPrompts);
+        testGame.setPromptSet(List.of(textTestPrompt, tfTestPrompt, drawTestPrompt));
+        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
 
-        assertFalse(gameService.getGameByPin(testGame.getGamePin()).getPromptSet().isEmpty());
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPromptsToGame(listOfPrompts, testGame.getGamePin()));
-    }*/
+        assertThrows(ResponseStatusException.class, () -> promptService.pickPrompts(testDTO, testGame.getGamePin()));
+    }
 
     /**
      * Setup functions tests

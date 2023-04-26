@@ -55,7 +55,8 @@ public class PromptService {
     private BufferedReader input;
 
     @Autowired
-    public PromptService(@Qualifier("gameRepository") GameRepository gameRepository,  @Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException, IOException {
+    public PromptService(@Qualifier("gameRepository") GameRepository gameRepository,
+                         @Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException, IOException {
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
         this.gameRepository = gameRepository;
@@ -79,7 +80,6 @@ public class PromptService {
     }
 
     //TODO: test Integration?
-    //TODO test Service? (issues because needs GameService)
     public List<Prompt> pickPrompts(PromptPostDTO userRequest, String gamePin) {
         int wantedTextPrompts = 4;
         int wantedTrueFalsePrompts = 2;
@@ -135,8 +135,6 @@ public class PromptService {
      * set up functions
      */
 
-    //TODO: test Integration?
-    //TODO: test service?
     private void initialisePromptRepository() throws PromptSetupException, IOException {
         try{
             input = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
@@ -164,8 +162,6 @@ public class PromptService {
 
     }
 
-    //TODO: test Integration?
-    //TODO: test service?
     private void initialisePotentialQuestionRepository() throws PromptSetupException, IOException {
         try {
             String line;
@@ -190,10 +186,6 @@ public class PromptService {
                     throw new PromptSetupException("Prompt is missing a potential question!: " + prompt.getPromptNr().toString());
                 }
             }
-
-            /*for (PotentialQuestion question : potentialQuestionsRepository.findAll()) {
-            testCreateQuestions(question);
-            }*/
         }catch(IOException e){
             throw new PromptSetupException("Could not find file for potential questions.");
         }finally {
@@ -204,8 +196,7 @@ public class PromptService {
     /**
      * Helper functions
      */
-    //TODO: test Integration?
-    // TODO: test Service?
+
     private Prompt parsePrompt(String[] promptLine) {
         try {
             Prompt newPrompt = new Prompt();
@@ -222,8 +213,6 @@ public class PromptService {
         }
     }
 
-    //TODO: test Integration?
-    // TODO: test Service?
     private PotentialQuestion parsePotentialQuestion(String[] potentialQuestionLine) {
         try {
             PotentialQuestion newPotentialQuestion = new PotentialQuestion();
@@ -242,8 +231,6 @@ public class PromptService {
         }
     }
 
-    //TODO: test Integration?
-    // TODO: test Service?
     private List<Prompt> selectNrOfPromptsFromList(List<Prompt> allPromptsOfType, int wantedNumber) {
         List<Prompt> selectedPrompts = new ArrayList<>();
 
