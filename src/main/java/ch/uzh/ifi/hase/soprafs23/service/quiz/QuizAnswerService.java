@@ -43,17 +43,19 @@ public class QuizAnswerService {
         // set the player
         newQuizAnswer.setAssociatedPlayer(playerRepository.findByToken(loggedInToken));
 
+        // check if already answered
         QuizQuestion questionById = qqRepository.getOne(quizQuestionId);
         for(QuizAnswer answer : questionById.getReceivedAnswers()){
            if(answer.getAssociatedPlayer() == newQuizAnswer.getAssociatedPlayer()){
                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This player already answered this question.");
            }
         }
-
+        // add and save answer
         questionById.addReceivedAnswer(newQuizAnswer);
         qqRepository.save(questionById);
         qqRepository.flush();
 
+        // check if all players have answered a question
         List<Player> allPlayersOfGame = gameRepository.findByGamePin(gamePin).getPlayerGroup();
         for(QuizAnswer answer : questionById.getReceivedAnswers()){
             allPlayersOfGame.remove(answer.getAssociatedPlayer());
