@@ -10,12 +10,16 @@ class TrueFalsePromptAnswerRepositoryTest {
     @BeforeEach
     void setUp() {
     }
-
     @Test
-    void findByTrueFalsePromptAnswerId() {
+    void findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr() {
+        //todo: test
     }
-
     @Test
-    void deleteByTrueFalsePromptAnswerId() {
+    void findAllByAssociatedGamePinAndAssociatedPromptNr() {
+        //todo: test
+    }
+    @Test
+    void deleteAllByAssociatedGamePin() {
+        //todo: test
     }
 }

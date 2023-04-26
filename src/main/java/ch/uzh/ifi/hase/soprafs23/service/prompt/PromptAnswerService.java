@@ -22,21 +22,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
-
+@Transactional
 public class PromptAnswerService {
     private final Logger log = LoggerFactory.getLogger(PromptAnswerService.class);
-
     private final GameRepository gameRepository;
-
     private final PlayerRepository playerRepository;
-
     private QuizQuestionGenerator quizQuestionGenerator;
-
     private final TextPromptAnswerRepository textPromptAnswerRepository;
     private final TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
     private final DrawingPromptAnswerRepository drawingPromptAnswerRepository;

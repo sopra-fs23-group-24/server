@@ -141,7 +141,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void getAllPrompts_returnsPromptsOfGame() throws Exception {
+    public void getPromptsOfGame_returnsPromptsOfGame() throws Exception {
         // given
         Prompt prompt = new Prompt();
         prompt.setPromptNr(999);
@@ -167,7 +167,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void getAllPrompts_invalidGamePin() throws Exception {
+    public void getPromptsOfGame_invalidGamePin() throws Exception {
 
         given(promptService.getPromptsOfGame(Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 

@@ -27,17 +27,16 @@ public class AnswerOptionRepositoryIntegrationTest {
     @BeforeEach
     void setup() {
         //setup
-
-        entityManager.merge(testAnswerOption);
-        entityManager.flush();
     }
 
     @AfterEach
     void emptyRepository() {
-        entityManager.remove(testAnswerOption);
-        entityManager.flush();
     }
 
+    @Test
+    void getAnswerOptionByAnswerOptionId() {
+        //todo: test
+    }
 
 
 

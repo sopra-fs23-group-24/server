@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
@@ -13,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,6 +94,54 @@ public class PlayerServiceTest {
         assertThrows(ResponseStatusException.class, () -> playerService.getPlayersWithPin("invalidPin"));
     }
 
+
+    //TODO: addPlayer tests
+    /*@Test
+    public void addPlayerToGame_success() {
+        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
+
+        assertEquals(gameService.getGameByPin(testGame.getGamePin()).getPlayerGroup(), new ArrayList<Player>());
+
+        testGame.setStatus(GameStatus.LOBBY);
+        testGame.setHostId(null);
+
+        Game gameWithPlayer = gameService.addPlayerToGame(testPlayer);
+
+        Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
+        assertTrue(gameWithPlayer.getPlayerGroup().contains(testPlayer));
+    }
+
+    @Test
+    public void addPlayerToGame_invalidGamePin() {
+        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        testGame.setStatus(GameStatus.LOBBY);
+        testGame.setHostId(null);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
+    }
+
+    @Test
+    public void addPlayerToGame_gameNotInLobbyStage() {
+        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
+
+        testPlayer.setHost(true);
+        testGame.setStatus(GameStatus.SELECTION);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
+    }
+
+    @Test
+    public void addPlayerToGame_alreadyHasHost() {
+        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
+
+        assertNotNull(gameService.getGameByPin(testGame.getGamePin()).getHostId());
+
+        testPlayer.setHost(true);
+        testGame.setStatus(GameStatus.LOBBY);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
+    }*/
 
     //TODO: figure out what to do because cannot properly stub gameService
     /*@Test

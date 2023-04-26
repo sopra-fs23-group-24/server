@@ -34,7 +34,7 @@ class PromptAnswerControllerTest {
 
 
     @Test
-    void testPostTextPromptAnswer_success() throws Exception {
+    void postTextPromptAnswer_success() throws Exception {
 
         // create DTO
         TextPromptAnswerPostDTO testDto = new TextPromptAnswerPostDTO();

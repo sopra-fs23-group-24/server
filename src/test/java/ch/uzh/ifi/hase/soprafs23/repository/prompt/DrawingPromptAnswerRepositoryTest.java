@@ -12,18 +12,18 @@ class DrawingPromptAnswerRepositoryTest {
     }
 
     @Test
-    void findByDrawingPromptAnswerId() {
+    void findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr() {
+        //todo: test
     }
 
     @Test
-    void deleteByDrawingPromptAnswerId() {
+    void findAllByAssociatedGamePinAndAssociatedPromptNr() {
+        //todo: test
     }
 
     @Test
-    void findAllByAssociatedGamePin() {
+    void deleteAllByAssociatedGamePin() {
+        //todo: test
     }
 
-    @Test
-    void findAllByAssociatedPromptNr() {
-    }
 }

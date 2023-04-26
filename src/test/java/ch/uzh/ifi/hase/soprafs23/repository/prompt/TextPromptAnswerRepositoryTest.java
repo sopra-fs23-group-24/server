@@ -12,10 +12,22 @@ class TextPromptAnswerRepositoryTest {
     }
 
     @Test
-    void findByTextPromptAnswerId() {
+    void findAllByAssociatedGamePin() {
+        //todo: test
     }
 
     @Test
-    void deleteByTextPromptAnswerId() {
+    void findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr() {
+        //todo: test
     }
+    @Test
+    void findAllByAssociatedGamePinAndAssociatedPromptNr() {
+        //todo: test
+    }
+
+    @Test
+    void deleteAllByAssociatedGamePin() {
+        //todo: test
+    }
+
 }

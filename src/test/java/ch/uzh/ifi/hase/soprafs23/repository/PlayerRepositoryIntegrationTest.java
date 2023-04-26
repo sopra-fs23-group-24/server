@@ -86,5 +86,10 @@ public class PlayerRepositoryIntegrationTest {
         assertEquals(testPlayer.getAssociatedGamePin(), foundPlayers.get(0).getAssociatedGamePin());
     }
 
+    @Test
+    public void findByPlayerNameAndAssociatedGamePin(){
+        //todo: test
+    }
+
 
 }

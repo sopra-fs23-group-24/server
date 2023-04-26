@@ -56,14 +56,15 @@ public class QuizQuestionGenerator {
     private final Random rand = SecureRandom.getInstanceStrong();
 
     @Autowired
-    private QuizQuestionGenerator(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository,
-                                  @Qualifier("potentialQuestionRepository") PotentialQuestionRepository pqRepository,
-                                  @Qualifier("textPromptAnswerRepository") TextPromptAnswerRepository textPromptAnswerRepository,
-                                  @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
-                                  @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository,
-                                  @Qualifier("answerOptionRepository") AnswerOptionRepository answerOptionRepository,
-                                  @Qualifier("playerRepository") PlayerRepository playerRepository,
-                                  @Qualifier("gameRepository") GameRepository gameRepository) throws NoSuchAlgorithmException {
+    public QuizQuestionGenerator(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository,
+                                 @Qualifier("potentialQuestionRepository") PotentialQuestionRepository pqRepository,
+                                 @Qualifier("textPromptAnswerRepository") TextPromptAnswerRepository textPromptAnswerRepository,
+                                 @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
+                                 @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository,
+                                 @Qualifier("answerOptionRepository") AnswerOptionRepository answerOptionRepository,
+                                 @Qualifier("playerRepository") PlayerRepository playerRepository,
+                                 @Qualifier("gameRepository") GameRepository gameRepository)
+            throws NoSuchAlgorithmException {
         this.qqRepository = qqRepository;
         this.pqRepository = pqRepository;
         this.textPromptAnswerRepository = textPromptAnswerRepository;

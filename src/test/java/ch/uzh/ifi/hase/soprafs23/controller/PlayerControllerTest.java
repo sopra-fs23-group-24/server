@@ -127,6 +127,11 @@ public class PlayerControllerTest {
     }
 
     @Test
+    public void newPlayerInGame_UsernameAlreadyExistsWithinGame(){
+        //TODO: test
+    }
+
+    @Test
     public void getAllPlayers_returnsAllPlayers() throws Exception {
         List<Player> allPlayers = Collections.singletonList(testPlayer);
 
@@ -160,6 +165,11 @@ public class PlayerControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].playerName", is(testPlayer.getPlayerName())))
                 .andExpect(jsonPath("$[0].score", is(testPlayer.getScore())));
+    }
+
+    @Test
+    public void getAllPlayersOfGame_invalidGamePin(){
+        //TODO: test
     }
 
     @Test

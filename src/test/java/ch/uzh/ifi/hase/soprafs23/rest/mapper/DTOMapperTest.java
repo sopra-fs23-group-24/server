@@ -87,22 +87,27 @@ public class DTOMapperTest {
     }
     @Test
     public void convertFromTextPromptAnswerDTO_toTextPromptAnswer_success() {
-        // implement
+        //todo: test
     }
 
     @Test
     public void convertFromTrueFalsePromptAnswerPostDTO_toTrueFalsePromptAnswer_success() {
-        // implement
+        //todo: test
+    }
+
+    @Test
+    public void convertFromDrawingPromptAnswerPostDTO_toDrawingPromptAnswer_success() {
+        //todo: test
     }
 
     @Test
     public void convertToQuizQuestionGetDTO_fromQuizQuestion_success(){
-
+        //todo: test
     }
 
     @Test
     public void convertFromQuizAnswerPostDTO_toQuizAnswer_success(){
-
+        //todo: test
     }
 
 }

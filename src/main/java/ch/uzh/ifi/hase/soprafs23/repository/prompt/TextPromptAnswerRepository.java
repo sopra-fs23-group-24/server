@@ -9,12 +9,9 @@ import java.util.List;
 
 @Repository("textPromptAnswerRepository")
 public interface TextPromptAnswerRepository extends JpaRepository<TextPromptAnswer, Long> {
-    TextPromptAnswer findByTextPromptAnswerId(long id);
-    void deleteByTextPromptAnswerId(long id);
+
 
     List<TextPromptAnswer> findAllByAssociatedGamePin(String pin);
-
-    List<TextPromptAnswer> findAllByAssociatedPromptNr(int promptNr);
 
     TextPromptAnswer findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(long id, int promptNr);
 

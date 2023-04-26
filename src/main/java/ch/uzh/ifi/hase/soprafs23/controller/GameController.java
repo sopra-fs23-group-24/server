@@ -62,7 +62,6 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameGetDTO updateGameStatus(@RequestBody GamePutDTO newStatus, @RequestHeader("playerToken") String loggedInToken, @PathVariable("pin") String gamePin) {
-        //TODO: error catching doesn't work yet
         Game newStatusGame = DTOMapper.INSTANCE.convertFromGamePutDTO(newStatus);
         Game updatedGame = gameService.changeGameStatus(newStatusGame.getStatus(), gamePin, loggedInToken);
         return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);

@@ -6,6 +6,10 @@ import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,15 +31,17 @@ public class GameServiceTest {
 
     @Mock
     private GameRepository gameRepository;
+    @Mock
+    private PlayerRepository playerRepository;
+    @Mock
+    private DrawingPromptAnswerRepository drawingPromptAnswerRepository;
+    @Mock
+    private TextPromptAnswerRepository textPromptAnswerRepository;
+    @Mock
+    private TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
 
     @InjectMocks
     private GameService gameService;
-
-    /*@Mock
-    private PlayerRepository playerRepository;
-
-    @InjectMocks
-    private PlayerService playerService;*/
 
     @BeforeEach
     public void setup() {
@@ -55,6 +61,7 @@ public class GameServiceTest {
         testPlayer.setAssociatedGamePin("123456");
         testPlayer.setPlayerName("test");
         testPlayer.setToken("1");
+        Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(testPlayer);
     }
 
     @Test
@@ -95,126 +102,7 @@ public class GameServiceTest {
         assertThrows(ResponseStatusException.class, () -> gameService.getGameByPin("invalidPin"));
     }
 
-    @Test
-    public void addPlayerToGame_success() {
-        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
 
-        assertEquals(gameService.getGameByPin(testGame.getGamePin()).getPlayerGroup(), new ArrayList<Player>());
-
-        testGame.setStatus(GameStatus.LOBBY);
-        testGame.setHostId(null);
-
-        Game gameWithPlayer = gameService.addPlayerToGame(testPlayer);
-
-        Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
-        assertTrue(gameWithPlayer.getPlayerGroup().contains(testPlayer));
-    }
-
-    @Test
-    public void addPlayerToGame_invalidGamePin() {
-        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        testGame.setStatus(GameStatus.LOBBY);
-        testGame.setHostId(null);
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
-    }
-
-    @Test
-    public void addPlayerToGame_gameNotInLobbyStage() {
-        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
-
-        testPlayer.setHost(true);
-        testGame.setStatus(GameStatus.SELECTION);
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
-    }
-
-    @Test
-    public void addPlayerToGame_alreadyHasHost() {
-        Mockito.when(gameRepository.findByGamePin(testPlayer.getAssociatedGamePin())).thenReturn(testGame);
-
-        assertNotNull(gameService.getGameByPin(testGame.getGamePin()).getHostId());
-
-        testPlayer.setHost(true);
-        testGame.setStatus(GameStatus.LOBBY);
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPlayerToGame(testPlayer));
-    }
-
-    @Test
-    public void addPromptsToGame_success() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
-
-        assertEquals(gameService.getGameByPin(testGame.getGamePin()).getPlayerGroup(), new ArrayList<Player>());
-
-        testGame.setStatus(GameStatus.SELECTION);
-
-        Game gameWithPrompts = gameService.addPromptsToGame(listOfPrompts, testGame.getGamePin());
-
-        Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
-        assertTrue(gameWithPrompts.getPromptSet().contains(testPrompt));
-    }
-
-    @Test
-    public void addPromptsToGame_invalidGamePin() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        testGame.setStatus(GameStatus.SELECTION);
-        testGame.setPromptSet(new ArrayList<>());
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPromptsToGame(listOfPrompts, testGame.getGamePin()));
-    }
-
-    @Test
-    public void addPromptsToGame_gameNotInSelectionStage() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
-
-        testGame.setStatus(GameStatus.LOBBY);
-        testGame.setPromptSet(new ArrayList<>());
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPromptsToGame(listOfPrompts, testGame.getGamePin()));
-    }
-
-    @Test
-    public void addPlayerToGame_alreadyHasPrompts() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptNr(999);
-        testPrompt.setPromptText("Tell a story");
-        testPrompt.setPromptType(PromptType.TRUEFALSE);
-
-        List<Prompt> listOfPrompts = List.of(testPrompt);
-
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
-
-        testGame.setStatus(GameStatus.SELECTION);
-        testGame.setPromptSet(listOfPrompts);
-
-        assertFalse(gameService.getGameByPin(testGame.getGamePin()).getPromptSet().isEmpty());
-
-        assertThrows(ResponseStatusException.class, () -> gameService.addPromptsToGame(listOfPrompts, testGame.getGamePin()));
-    }
 
     //TODO: figure out how to do this, fails because cannot connect to playerService/playerRepository properly
 

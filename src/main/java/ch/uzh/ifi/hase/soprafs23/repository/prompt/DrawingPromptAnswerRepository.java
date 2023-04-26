@@ -9,12 +9,6 @@ import java.util.List;
 
 @Repository("drawingPromptAnswerRepository")
 public interface DrawingPromptAnswerRepository extends JpaRepository<DrawingPromptAnswer, Long> {
-    DrawingPromptAnswer findByDrawingPromptAnswerId(long id);
-    void deleteByDrawingPromptAnswerId(long id);
-
-    List<DrawingPromptAnswer> findAllByAssociatedGamePin(String pin);
-
-    List<DrawingPromptAnswer> findAllByAssociatedPromptNr(int promptNr);
 
     DrawingPromptAnswer findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Long playerId, int promptNr);
 

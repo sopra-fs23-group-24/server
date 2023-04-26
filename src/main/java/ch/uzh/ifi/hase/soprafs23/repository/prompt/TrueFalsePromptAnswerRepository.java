@@ -9,12 +9,6 @@ import java.util.List;
 
 @Repository("trueFalsePromptAnswerRepository")
 public interface TrueFalsePromptAnswerRepository extends JpaRepository<TrueFalsePromptAnswer, Long> {
-    TrueFalsePromptAnswer findByTrueFalsePromptAnswerId(long id);
-    void deleteByTrueFalsePromptAnswerId(long id);
-
-    List<TrueFalsePromptAnswer> findAllByAssociatedGamePin(String pin);
-
-    List<TrueFalsePromptAnswer> findAllByAssociatedPromptNr(int promptNr);
 
     TrueFalsePromptAnswer findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Long playerId, int promptNr);
 
