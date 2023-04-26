@@ -1,8 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -78,11 +82,12 @@ public class GameControllerTest {
     }
 
     @Test
-    public void getGameByPin_returnsGame() throws Exception {
+    public void getGameByPin_returnsGame_currentQuestionNull() throws Exception {
         // given
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.LOBBY);
+        game.setCurrentQuestion(null);
 
         given(gameService.getGameByPin(Mockito.anyString())).willReturn(game);
 
@@ -94,6 +99,67 @@ public class GameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
                 .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
+    }
+
+    @Test
+    public void getGameByPin_returnsGame_WithCorrectAnswer() throws Exception {
+        // given
+        AnswerOption testCorrectAnswer = new AnswerOption();
+        testCorrectAnswer.setAnswerOptionId(999L);
+        testCorrectAnswer.setAnswerOptionText("correct answer");
+
+        QuizQuestion testQuestion = new QuizQuestion();
+        testQuestion.setQuestionStatus(CompletionStatus.FINISHED);
+        testQuestion.setCorrectAnswer(testCorrectAnswer);
+
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.LOBBY);
+        game.setCurrentQuestion(testQuestion);
+
+        given(gameService.getGameByPin(Mockito.anyString())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/games/123456").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
+                .andExpect(jsonPath("$.status", is(game.getStatus().toString())))
+                //TODO: figure out how to check currentQuestion corrrectly
+                .andExpect(jsonPath("$.currentQuestion", is(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(testQuestion))))
+                .andExpect(jsonPath("$.currentQuestion.correctAnswer", is(game.getCurrentQuestion().getCorrectAnswer())));    }
+
+    @Test
+    public void getGameByPin_returnsGame_HideCorrectAnswer() throws Exception {
+        // given
+        AnswerOption testCorrectAnswer = new AnswerOption();
+        testCorrectAnswer.setAnswerOptionId(999L);
+        testCorrectAnswer.setAnswerOptionText("correct answer");
+
+        QuizQuestion testQuestion = new QuizQuestion();
+        testQuestion.setQuestionStatus(CompletionStatus.NOT_FINISHED);
+        testQuestion.setCorrectAnswer(testCorrectAnswer);
+
+        Game game = new Game();
+        game.setGamePin("123456");
+        game.setStatus(GameStatus.LOBBY);
+        game.setCurrentQuestion(testQuestion);
+
+        given(gameService.getGameByPin(Mockito.anyString())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/games/123456").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
+                .andExpect(jsonPath("$.status", is(game.getStatus().toString())))
+                //TODO: figure out how to check currentQuestion corrrectly
+                .andExpect(jsonPath("$.currentQuestion", is(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(testQuestion))))
+                .andExpect(jsonPath("$.currentQuestion.correctAnswer", is(null)));
     }
 
     @Test
@@ -198,6 +264,7 @@ public class GameControllerTest {
         mockMvc.perform(deleteRequest)
                 .andExpect(status().isUnauthorized());
     }
+
 
 
     private String asJsonString(final Object object) {

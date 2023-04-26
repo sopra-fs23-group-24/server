@@ -43,13 +43,7 @@ public class GameController {
         List<GameGetDTO> gamesGetDTOs = new ArrayList<>();
 
         for (Game game : allGames) {
-            GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertToGameGetDTO(game);
-            gameGetDTO.setCurrentQuestion(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(game.getCurrentQuestion()));
-            if(game.getCurrentQuestion() != null && game.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
-                gameGetDTO.getCurrentQuestion().setCorrectAnswer(null);
-            }
-            gamesGetDTOs.add(gameGetDTO);
-
+            gamesGetDTOs.add(convertGameToDTO(game));
         }
 
         return gamesGetDTOs;
@@ -60,12 +54,8 @@ public class GameController {
     @ResponseBody
     public GameGetDTO getGameByPin(@PathVariable("pin") String gamePin) {
         Game currentGame = gameService.getGameByPin(gamePin);
-        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertToGameGetDTO(currentGame);
-        gameGetDTO.setCurrentQuestion(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(currentGame.getCurrentQuestion()));
-        if(currentGame.getCurrentQuestion() != null && currentGame.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
-            gameGetDTO.getCurrentQuestion().setCorrectAnswer(null);
-        }
-        return gameGetDTO;
+
+        return convertGameToDTO(currentGame);
     }
 
     @PutMapping("/games/{pin}")
@@ -84,7 +74,7 @@ public class GameController {
     public GameGetDTO requestNextQuizQuestion(@PathVariable("pin") String gamePin){
         Game updatedGame = gameService.changeToNextQuestion(gamePin);
 
-        return DTOMapper.INSTANCE.convertToGameGetDTO(updatedGame);
+        return convertGameToDTO(updatedGame);
     }
 
     @DeleteMapping("/games/{pin}")
@@ -94,5 +84,14 @@ public class GameController {
         gameService.deleteGameByPin(gamePin, loggedInToken);
 
         return "Deleted game successfully";
+    }
+
+    private GameGetDTO convertGameToDTO(Game game){
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertToGameGetDTO(game);
+        gameGetDTO.setCurrentQuestion(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(game.getCurrentQuestion()));
+        if(game.getCurrentQuestion() != null && game.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
+            gameGetDTO.getCurrentQuestion().setCorrectAnswer(null);
+        }
+        return gameGetDTO;
     }
 }
