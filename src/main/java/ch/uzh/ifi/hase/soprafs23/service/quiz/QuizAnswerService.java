@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
@@ -23,18 +24,17 @@ public class QuizAnswerService {
     private final QuizQuestionRepository qqRepository;
     private final AnswerOptionRepository answerOptionRepository;
     private final PlayerRepository playerRepository;
-    private GameService gameService;
+
+    private final GameRepository gameRepository;
     @Autowired
-    public QuizAnswerService(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository,
+    public QuizAnswerService(@Qualifier("gameRepository") GameRepository gameRepository,
+                             @Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository,
                              @Qualifier("answerOptionRepository") AnswerOptionRepository answerOptionRepository,
                              @Qualifier("playerRepository") PlayerRepository playerRepository)  {
+        this.gameRepository = gameRepository;
         this.qqRepository = qqRepository;
         this.answerOptionRepository = answerOptionRepository;
         this.playerRepository = playerRepository;
-    }
-    @Autowired
-    private void setGameService(GameService gameService) {
-        this.gameService = gameService;
     }
 
 
@@ -54,7 +54,7 @@ public class QuizAnswerService {
         qqRepository.save(questionById);
         qqRepository.flush();
 
-        List<Player> allPlayersOfGame = gameService.getGameByPin(gamePin).getPlayerGroup();
+        List<Player> allPlayersOfGame = gameRepository.findByGamePin(gamePin).getPlayerGroup();
         for(QuizAnswer answer : questionById.getReceivedAnswers()){
             allPlayersOfGame.remove(answer.getAssociatedPlayer());
         }

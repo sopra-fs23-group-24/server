@@ -41,6 +41,7 @@ public class GameService {
 
     private final PlayerRepository playerRepository;
 
+
     private final DrawingPromptAnswerRepository drawingPromptAnswerRepository;
 
     private final TextPromptAnswerRepository textPromptAnswerRepository;
@@ -95,30 +96,7 @@ public class GameService {
     }
 
     //TODO: test Integration?
-    public Game addPlayerToGame(Player newPlayer) {
 
-        Game joinedGame = getGameByPin(newPlayer.getAssociatedGamePin());
-        if (joinedGame == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
-        }
-        if (joinedGame.getStatus() != GameStatus.LOBBY) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is already running. Try again with a different pin or join later.");
-        }
-
-        joinedGame.addPlayer(newPlayer);
-        if (newPlayer.isHost()) {
-            if (joinedGame.getHostId() != null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game already has a host. Please try to join instead.");
-            }
-            joinedGame.setHostId(newPlayer.getPlayerId());
-        }
-
-        joinedGame = gameRepository.save(joinedGame);
-        gameRepository.flush();
-
-        log.debug("Added to game: {}", joinedGame);
-        return joinedGame;
-    }
 
     //TODO: test Integration?
     //TODO: test Service
@@ -171,26 +149,6 @@ public class GameService {
         return gameByPin;
     }
 
-    //TODO: test Integration?
-    public Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {
-
-        Game gameByPin = getGameByPin(gamePin);
-        if (gameByPin.getStatus() != GameStatus.SELECTION) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is in the wrong state to take prompts.");
-        }
-        if (!gameByPin.getPromptSet().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has prompts selected.");
-        }
-
-        gameByPin.setPromptSet(promptsForGame);
-
-        gameByPin.setStatus(GameStatus.PROMPT);
-
-        gameRepository.save(gameByPin);
-        gameRepository.flush();
-
-        return gameByPin;
-    }
     public Game addQuizQuestionsToGame(List<QuizQuestion> questionsForGame, String gamePin) {
         Game gameByPin = getGameByPin(gamePin);
         if (!gameByPin.getQuizQuestionSet().isEmpty()) {

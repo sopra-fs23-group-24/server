@@ -19,6 +19,7 @@ public class QuizQuestionController {
     */
     private final QuizQuestionService quizQuestionService;
 
+
     QuizQuestionController(QuizQuestionService quizQuestionService) {
         this.quizQuestionService = quizQuestionService;
     }
@@ -53,19 +54,4 @@ public class QuizQuestionController {
         return quizQuestionGetDTOS;
     }
 
-    //currently only for testing, should be done automatically when all prompts are filled out
-    @PostMapping("/games/{pin}/quizQuestions")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public List<QuizQuestionGetDTO> createQuizQuestions(@PathVariable("pin") String gamePin){
-        List<QuizQuestion> allQuizQuestions = quizQuestionService.createQuizQuestions(gamePin);
-
-        List<QuizQuestionGetDTO> quizQuestionGetDTOS = new ArrayList<>();
-
-        for (QuizQuestion question : allQuizQuestions) {
-            quizQuestionGetDTOS.add(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(question));
-        }
-
-        return quizQuestionGetDTOS;
-    }
 }

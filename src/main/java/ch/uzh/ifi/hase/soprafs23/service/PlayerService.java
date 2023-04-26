@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +31,12 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
 
-    private GameService gameService;
+    private final GameRepository gameRepository;
 
     @Autowired
-    public PlayerService(@Qualifier("playerRepository") PlayerRepository userRepository) {
-        this.playerRepository = userRepository;
-    }
-
-    @Autowired
-    private void setGameService(GameService gameService) {
-        this.gameService = gameService;
+    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
+        this.playerRepository = playerRepository;
+        this.gameRepository = gameRepository;
     }
 
 
@@ -70,12 +68,37 @@ public class PlayerService {
         newPlayer = playerRepository.save(newPlayer);
         playerRepository.flush();
 
-        Game joinedGame = gameService.addPlayerToGame(newPlayer);
+        Game joinedGame = addPlayerToGame(newPlayer);
 
         log.debug("Created Information for Player: {}", newPlayer);
         log.debug("Added to Game: {}", joinedGame);
 
         return newPlayer;
+    }
+
+    public Game addPlayerToGame(Player newPlayer) {
+
+        Game joinedGame = gameRepository.findByGamePin(newPlayer.getAssociatedGamePin());
+        if (joinedGame == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
+        }
+        if (joinedGame.getStatus() != GameStatus.LOBBY) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is already running. Try again with a different pin or join later.");
+        }
+
+        joinedGame.addPlayer(newPlayer);
+        if (newPlayer.isHost()) {
+            if (joinedGame.getHostId() != null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game already has a host. Please try to join instead.");
+            }
+            joinedGame.setHostId(newPlayer.getPlayerId());
+        }
+
+        joinedGame = gameRepository.save(joinedGame);
+        gameRepository.flush();
+
+        log.debug("Added to game: {}", joinedGame);
+        return joinedGame;
     }
 
     //TODO: test Integration?
@@ -106,16 +129,16 @@ public class PlayerService {
         Player loggedInPlayer = getByToken(loggedInPlayerToken);
         Player playerToDelete = getById(playerToBeDeletedId);
 
-        if (gameService.checkIfHost(gameService.getGameByPin(gamePin), playerToDelete.getPlayerId())) {
+        if (checkIfHost(gamePin, playerToBeDeletedId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "May not delete host.");
         }
 
-        if (playerToBeDeletedId != loggedInPlayer.getPlayerId() && !gameService.checkIfHost(gameService.getGameByPin(gamePin), loggedInPlayer.getPlayerId())) {
+        if (playerToBeDeletedId != loggedInPlayer.getPlayerId() && !checkIfHost(gamePin, loggedInPlayer.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
 
-        Game gameByPin = gameService.getGameByPin(playerToDelete.getAssociatedGamePin());
+        Game gameByPin = gameRepository.findByGamePin(playerToDelete.getAssociatedGamePin());
         gameByPin.removePlayer(playerToDelete);
 
         playerRepository.delete(playerToDelete);
@@ -129,7 +152,7 @@ public class PlayerService {
     public List<Player> deleteAllPlayersByGamePin(String gamePin) {
         List<Player> allPlayersToDelete = playerRepository.findAllByAssociatedGamePin(gamePin);
         for (Player player : allPlayersToDelete) {
-            Game gameByPin = gameService.getGameByPin(gamePin);
+            Game gameByPin = gameRepository.findByGamePin(gamePin);
             gameByPin.removePlayer(player);
 
             playerRepository.delete(player);
@@ -166,4 +189,8 @@ public class PlayerService {
         }
         return player;
     }
+    public boolean checkIfHost(String gamePin, long userId) {
+        return gameRepository.findByGamePin((gamePin)).getHostId() == userId;
+    }
+
 }

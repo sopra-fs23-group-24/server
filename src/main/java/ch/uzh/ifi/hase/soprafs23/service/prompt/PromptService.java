@@ -1,12 +1,14 @@
 package ch.uzh.ifi.hase.soprafs23.service.prompt;
 
 import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.exceptions.PromptSetupException;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptPostDTO;
@@ -46,23 +48,19 @@ public class PromptService {
 
     private final PotentialQuestionRepository potentialQuestionsRepository;
 
-    private GameService gameService;
+    private final GameRepository gameRepository;
 
     private final Random rand = SecureRandom.getInstanceStrong();
 
     private BufferedReader input;
 
     @Autowired
-    public PromptService(@Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException, IOException {
+    public PromptService(@Qualifier("gameRepository") GameRepository gameRepository,  @Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException, IOException {
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
+        this.gameRepository = gameRepository;
         initialisePromptRepository();
         initialisePotentialQuestionRepository();
-    }
-
-    @Autowired
-    private void setGameService(GameService gameService) {
-        this.gameService = gameService;
     }
 
     //TODO: test Integration?
@@ -73,7 +71,7 @@ public class PromptService {
 
     //TODO: test Integration?
     public List<Prompt> getPromptsOfGame(String gamePin) {
-        Game gameByPin = gameService.getGameByPin(gamePin);
+        Game gameByPin = gameRepository.findByGamePin(gamePin);
         return gameByPin.getPromptSet();
     }
 
@@ -104,10 +102,30 @@ public class PromptService {
         promptsForGame.addAll(selectNrOfPromptsFromList(allTrueFalsePrompts, wantedTrueFalsePrompts));
         promptsForGame.addAll(selectNrOfPromptsFromList(allDrawingPrompts, wantedDrawingPrompts));
 
-        gameService.addPromptsToGame(promptsForGame, gamePin);
+        addPromptsToGame(promptsForGame, gamePin);
         return promptsForGame;
     }
 
+    //TODO: test Integration?
+    private Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {
+
+        Game gameByPin = gameRepository.findByGamePin(gamePin);
+        if (gameByPin.getStatus() != GameStatus.SELECTION) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is in the wrong state to take prompts.");
+        }
+        if (!gameByPin.getPromptSet().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has prompts selected.");
+        }
+
+        gameByPin.setPromptSet(promptsForGame);
+
+        gameByPin.setStatus(GameStatus.PROMPT);
+
+        gameRepository.save(gameByPin);
+        gameRepository.flush();
+
+        return gameByPin;
+    }
     /**
      * set up functions
      */

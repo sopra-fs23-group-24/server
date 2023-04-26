@@ -5,11 +5,16 @@ import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.*;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
+import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionGenerator;
 import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +31,11 @@ import java.util.List;
 public class PromptAnswerService {
     private final Logger log = LoggerFactory.getLogger(PromptAnswerService.class);
 
-    private GameService gameService;
-    private PromptService promptService;
-    private PlayerService playerService;
-    private QuizQuestionService quizQuestionService;
+    private final GameRepository gameRepository;
+
+    private final PlayerRepository playerRepository;
+
+    private QuizQuestionGenerator quizQuestionGenerator;
 
     private final TextPromptAnswerRepository textPromptAnswerRepository;
     private final TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
@@ -43,37 +49,27 @@ public class PromptAnswerService {
     @Autowired
     public PromptAnswerService(@Qualifier("textPromptAnswerRepository") TextPromptAnswerRepository textPromptAnswerRepository,
                                @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
-                               @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository) {
+                               @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository,
+                               @Qualifier("gameRepository") GameRepository gameRepository,
+                               @Qualifier("playerRepository") PlayerRepository playerRepository){
+        this.gameRepository = gameRepository;
+        this.playerRepository = playerRepository;
         this.textPromptAnswerRepository = textPromptAnswerRepository;
         this.trueFalsePromptAnswerRepository = trueFalsePromptAnswerRepository;
         this.drawingPromptAnswerRepository = drawingPromptAnswerRepository;
     }
 
     @Autowired
-    private void setGameService(GameService gameService) {
-        this.gameService = gameService;
+    private void setQuizQuestionGenerator(QuizQuestionGenerator quizQuestionGenerator) {
+        this.quizQuestionGenerator = quizQuestionGenerator;
     }
 
-    @Autowired
-    private void setPlayerService(PlayerService playerService) {
-        this.playerService = playerService;
-    }
-
-    @Autowired
-    public void setPromptService(PromptService promptService) {
-        this.promptService = promptService;
-    }
-
-    @Autowired
-    public void setQuizQuestionService(QuizQuestionService quizQuestionService) {
-        this.quizQuestionService = quizQuestionService;
-    }
 
     public TextPromptAnswer saveTextPromptAnswer(TextPromptAnswer answer, String playerToken, String gamePin) {
 
-        gameService.getGameByPin(gamePin); // throws if not correct
+        gameRepository.findByGamePin(gamePin); // TODO:check if throws
         answer.setAssociatedGamePin(gamePin);
-        Player player = playerService.getByToken(playerToken); //throws if not correct
+        Player player = playerRepository.findByToken(playerToken); //TODO:check if throws
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswer().equals("")) {
@@ -88,9 +84,9 @@ public class PromptAnswerService {
     }
 
     public TrueFalsePromptAnswer saveTrueFalsePromptAnswer(TrueFalsePromptAnswer answer, String playerToken, String gamePin) {
-        gameService.getGameByPin(gamePin); // throws if not correct
+        gameRepository.findByGamePin(gamePin); //TODO:check if throws
         answer.setAssociatedGamePin(gamePin);
-        Player player = playerService.getByToken(playerToken); //throws if not correct
+        Player player = playerRepository.findByToken(playerToken); //TODO:check if throws
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswerText().equals("")) {
@@ -107,9 +103,9 @@ public class PromptAnswerService {
 
     public DrawingPromptAnswer saveDrawingPromptAnswer(DrawingPromptAnswer answer, String playerToken, String gamePin) {
 
-        gameService.getGameByPin(gamePin); // throws if game doesn't exist
+        gameRepository.findByGamePin(gamePin); //TODO:check if throws
         answer.setAssociatedGamePin(gamePin);
-        Player player = playerService.getByToken(playerToken); // throws if player doesn't exist
+        Player player = playerRepository.findByToken(playerToken); //TODO:check if throws
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswerDrawing().equals("")) { // throws if the content is empty
@@ -125,7 +121,7 @@ public class PromptAnswerService {
 
     // just so that we can test generating quizQuestions in postman
     public void mockPromptAnswersForGame(String gamePin){
-        Game currentGame = gameService.getGameByPin(gamePin);
+        Game currentGame = gameRepository.findByGamePin(gamePin);
         for(Player player : currentGame.getPlayerGroup()){
             for(Prompt prompt : currentGame.getPromptSet()){
                 if(prompt.getPromptType() == PromptType.DRAWING){
@@ -161,8 +157,8 @@ public class PromptAnswerService {
     // change game status below in a separate method
     public Boolean haveAllPlayersAnsweredAllPrompts(String gamePin) {
 
-        List<Player> players = gameService.getGameByPin(gamePin).getPlayerGroup();
-        List<Prompt> prompts = promptService.getPromptsOfGame(gamePin);
+        List<Player> players = gameRepository.findByGamePin(gamePin).getPlayerGroup();
+        List<Prompt> prompts = gameRepository.findByGamePin(gamePin).getPromptSet();
 
         for (Player player : players) {
             Long playerId = player.getPlayerId();
@@ -200,10 +196,10 @@ public class PromptAnswerService {
         if(haveAllPlayersAnsweredAllPrompts(gamePin)) {
             System.out.println("Deemed that all players have answered all prompts - will now change GameStatus");
             // change Status to Quiz
-            gameService.changeGameStatus(GameStatus.QUIZ, gamePin);
+            gameRepository.findByGamePin(gamePin).setStatus(GameStatus.QUIZ);
 
             // initialize change to Quiz stage
-            quizQuestionService.createQuizQuestions(gamePin);
+            quizQuestionGenerator.createQuizQuestions(gamePin);
             return true;
         }
         System.out.println("not all prompts answered by all players, continue");

@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptAnswerService;
@@ -34,28 +35,14 @@ public class QuizQuestionService {
 
     private final Logger log = LoggerFactory.getLogger(QuizQuestionService.class);
     private final QuizQuestionRepository qqRepository;
-    private GameService gameService;
+    private GameRepository gameRepository;
 
-    private PromptAnswerService promptAnswerService;
-    private QuizQuestionGenerator quizQuestionGenerator;
 
     @Autowired
-    public QuizQuestionService(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository){
+    public QuizQuestionService(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository,
+                               @Qualifier("gameRepository") GameRepository gameRepository){
         this.qqRepository = qqRepository;
-    }
-
-    @Autowired
-    private void setGameService(GameService gameService) {
-        this.gameService = gameService;
-    }
-
-    @Autowired
-    private void setQuizQuestionGenerator(QuizQuestionGenerator quizQuestionGenerator) {
-        this.quizQuestionGenerator = quizQuestionGenerator;
-    }
-    @Autowired
-    private void setPromptAnswerService(PromptAnswerService promptAnswerService) {
-        this.promptAnswerService = promptAnswerService;
+        this.gameRepository = gameRepository;
     }
 
     public List<QuizQuestion> getQuizQuestions() {
@@ -63,31 +50,10 @@ public class QuizQuestionService {
     }
 
     public List<QuizQuestion> getQuizQuestionsOfGame(String gamePin) {
-        Game gameByPin = gameService.getGameByPin(gamePin);
+        Game gameByPin = gameRepository.findByGamePin(gamePin);
         return gameByPin.getQuizQuestionSet();
     }
 
-
-    public List<QuizQuestion> createQuizQuestions(String gamePin) {
-        // to make testing in postman possible
-        // sets an answer for every prompt for every player
-        //promptAnswerService.mockPromptAnswersForGame(gamePin); //TODO: remove
-
-        Game gameByPin = gameService.getGameByPin(gamePin);
-
-        List<QuizQuestion> createdQuestions = new ArrayList<>();
-
-        for (Prompt prompt : gameByPin.getPromptSet()) {
-            createdQuestions.addAll(quizQuestionGenerator.generateQuizQuestions(prompt, gameByPin));
-        }
-        Collections.shuffle(createdQuestions);
-
-        gameService.addQuizQuestionsToGame(createdQuestions, gamePin);
-        gameByPin.nextQuestion();
-        // gameByPin.setStatus(GameStatus.QUIZ);
-
-        return createdQuestions;
-    }
 
 
     // TODO: a method to check if a QuizQuestion is finished. (right?)
