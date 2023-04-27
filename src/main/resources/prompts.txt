@@ -7,13 +7,18 @@
 \\
 1: TRUEFALSE: Tell a story about your last holiday. Then mark whether it is true or false.
 2: DRAWING: Draw a rat.
-3: TEXT: What is your favourite food?
+3: TEXT: What would be your weapon of choice in a zombie apocalypse?
 4: TRUEFALSE: Tell a story about your best friend. Then mark whether it is true or false.
 5: DRAWING: Draw a toilet.
-6: TEXT: What is your favourite colour?
+6: TEXT: What is the worst way to start a conversation?
 7: TRUEFALSE: Tell a story about your job/studies. Then mark whether it is true or false.
 8: DRAWING: Draw a unicorn.
 9: TEXT: What would you name a pet alligator?
 10: TRUEFALSE: Tell a story about an achievement you're proud of. Then mark whether it is true or false.
 11: DRAWING: Draw a baby.
 12: TEXT: Where do you think is the worst place to fall asleep?
+13: TRUEFALSE: Tell a story about something embarrassing that happened to you. Then mark whether it is true or false.
+14: DRAWING: Draw a lobster.
+15: TEXT: What would be the title of a movie about your life?
+16: TRUEFALSE: Tell a fun-fact. Then mark whether it is true or false.
+17: DRAWING: Draw an alien.
