@@ -12,6 +12,7 @@ import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
 import org.junit.jupiter.api.Assertions;
@@ -46,6 +47,8 @@ public class QuizAnswerServiceTest {
     @Mock
     private QuizQuestionRepository quizQuestionRepository;
 
+    @Mock
+    private QuizAnswerRepository quizAnswerRepository;
     @InjectMocks
     private QuizAnswerService quizAnswerService;
 
@@ -103,12 +106,14 @@ public class QuizAnswerServiceTest {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
 
+        Mockito.when(quizAnswerRepository.save(Mockito.any())).thenReturn(quizAnswer);
+
         Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        QuizAnswer newAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), testPlayer.getToken());
 
-        QuizQuestion updatedQuestion = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), testPlayer.getToken());
-
-        Assertions.assertEquals(updatedQuestion.getReceivedAnswers().size(), 1);
-        Assertions.assertEquals(updatedQuestion.getReceivedAnswers().get(0).getAssociatedPlayer(), testPlayer);
+        Assertions.assertEquals(newAnswer.getAssociatedPlayer(), testPlayer);
+        Assertions.assertEquals(testQuestion.getReceivedAnswers().size(), 1);
+        Assertions.assertEquals(testQuestion.getReceivedAnswers().get(0).getAssociatedPlayer(), testPlayer);
         Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.FINISHED);
     }
 
@@ -136,6 +141,7 @@ public class QuizAnswerServiceTest {
     public void addQuizAnswerToQuizQuestion_alreadyAnsweredQuestion() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
+        quizAnswer.setAssociatedPlayer(testPlayer);
         testQuestion.addReceivedAnswer(quizAnswer);
         Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -146,10 +152,10 @@ public class QuizAnswerServiceTest {
     public void calculateAndAddScore_correctAnswer() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
-
+        quizAnswer.setAssociatedPlayer(testPlayer);
         Assertions.assertEquals(testPlayer.getScore(), 0);
 
-        int score = quizAnswerService.calculateAndAddScore(testPlayer.getToken(), quizAnswer, testQuestion.getQuestionId());
+        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId());
 
         Assertions.assertTrue(score > 0);
         Assertions.assertTrue(testPlayer.getScore() > 0);
@@ -159,21 +165,13 @@ public class QuizAnswerServiceTest {
     public void calculateAndAddScore_incorrectAnswer() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption2.getAnswerOptionId());
-
+        quizAnswer.setAssociatedPlayer(testPlayer);
         Assertions.assertEquals(testPlayer.getScore(), 0);
 
-        int score = quizAnswerService.calculateAndAddScore(testPlayer.getToken(), quizAnswer, testQuestion.getQuestionId());
+        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId());
 
         Assertions.assertEquals(score, 0);
         Assertions.assertEquals(testPlayer.getScore(), 0);
-    }
-    @Test
-    public void calculateAndAddScore_invalidToken() {
-        QuizAnswer quizAnswer = new QuizAnswer();
-        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
-
-        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.calculateAndAddScore("invalidToken", quizAnswer, testQuestion.getQuestionId()));
-
     }
 
 }

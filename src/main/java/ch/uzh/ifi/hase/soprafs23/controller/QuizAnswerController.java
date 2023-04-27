@@ -33,7 +33,7 @@ public class QuizAnswerController {
         QuizAnswer addedQuizAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin, loggedInToken);
 
         // checks if the answer is correct and if so (calculates) and adds the points to the player
-        int score = quizAnswerService.calculateAndAddScore(loggedInToken, addedQuizAnswer, questionId);
+        int score = quizAnswerService.calculateAndAddScore(addedQuizAnswer, questionId);
 
         // what should it return?
         return score;

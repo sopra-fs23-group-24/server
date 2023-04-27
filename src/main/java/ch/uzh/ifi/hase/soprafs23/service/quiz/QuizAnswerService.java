@@ -89,7 +89,7 @@ public class QuizAnswerService {
 
     // the notion of speed is not yet accounted for
     // TODO : Rename this
-    public int calculateAndAddScore(String loggedInToken, QuizAnswer quizAnswer, long questionId) {
+    public int calculateAndAddScore(QuizAnswer quizAnswer, long questionId) {
         // get the picked and the correct answer
         long pickedId = quizAnswer.getPickedAnswerOptionId();
         AnswerOption chosenAnswer = answerOptionRepository.getAnswerOptionByAnswerOptionId(pickedId);
