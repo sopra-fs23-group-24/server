@@ -39,6 +39,7 @@ public class QuizAnswerService {
         this.qqRepository = qqRepository;
         this.answerOptionRepository = answerOptionRepository;
         this.playerRepository = playerRepository;
+        this.quizAnswerRepository = quizAnswerRepository;
     }
 
 
