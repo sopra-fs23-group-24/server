@@ -6,7 +6,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.DrawingPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.TextPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
@@ -24,13 +23,13 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizQuestionGeneratorTest_TEXT {
-    private Prompt textTestPrompt;
-    private PotentialQuestion potentialTextQuestionPROMPTANSWER;
-    private PotentialQuestion potentialTextQuestionPLAYER;
+public class QuizQuestionGeneratorTestDraw {
     private final List<Player> testPlayers = new ArrayList<>();
+    private final List<DrawingPromptAnswer> testDrawingAnswers = new ArrayList<>();
+    private Prompt drawTestPrompt;
+    private PotentialQuestion potentialDrawingQuestionPROMPTANSWER;
+    private PotentialQuestion potentialDrawingQuestionPLAYER;
     private QuizQuestion testQuizQuestion;
-    private final List<TextPromptAnswer> testTextAnswers = new ArrayList<>();
     private Game testGame;
     @Mock
     private QuizQuestionRepository qqRepository;
@@ -56,18 +55,18 @@ public class QuizQuestionGeneratorTest_TEXT {
         testGame.setPlayerGroup(testPlayers);
         testGame.setHostId(testPlayers.get(0).getPlayerId());
         setUpPromptAndPotentialQuestion();
-        testGame.setPromptSet(List.of(textTestPrompt));
+        testGame.setPromptSet(List.of(drawTestPrompt));
 
-        setUpTextPromptAnswers();
+        setUpDrawingPromptAnswers();
 
         Mockito.when(qqRepository.save(Mockito.any())).thenReturn(testQuizQuestion);
 
     }
 
     @Test
-    public void transformPotentialQuestionText_PLAYER() {
+    public void transformPotentialQuestionDrawing_PLAYER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionText(potentialTextQuestionPLAYER, new ArrayList<>(testTextAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionDrawing(potentialDrawingQuestionPLAYER, new ArrayList<>(testDrawingAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -80,31 +79,34 @@ public class QuizQuestionGeneratorTest_TEXT {
             );
         }
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
+        Assertions.assertEquals(generatedQuestion.getQuizQuestionText(), potentialDrawingQuestionPLAYER.getQuestionText());
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
-        Assertions.assertNull(generatedQuestion.getImageToDisplay());
+        Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
+        Assertions.assertNotNull(generatedQuestion.getImageToDisplay());
         Assertions.assertNull(generatedQuestion.getStoryToDisplay());
     }
 
     @Test
-    public void transformPotentialQuestionText_PROMPTANSWER() {
+    public void transformPotentialQuestionDrawing_PROMPANSWER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionText(potentialTextQuestionPROMPTANSWER, new ArrayList<>(testTextAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionDrawing(potentialDrawingQuestionPROMPTANSWER, new ArrayList<>(testDrawingAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
         Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 4);
         for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
-            assert (ao.getAnswerOptionText().equals(testTextAnswers.get(0).getAnswer())
-                    || ao.getAnswerOptionText().equals(testTextAnswers.get(1).getAnswer())
-                    || ao.getAnswerOptionText().equals(testTextAnswers.get(2).getAnswer())
-                    || ao.getAnswerOptionText().equals(testTextAnswers.get(3).getAnswer())
+            assert (ao.getAnswerOptionText().equals(testDrawingAnswers.get(0).getAnswerDrawing())
+                    || ao.getAnswerOptionText().equals(testDrawingAnswers.get(1).getAnswerDrawing())
+                    || ao.getAnswerOptionText().equals(testDrawingAnswers.get(2).getAnswerDrawing())
+                    || ao.getAnswerOptionText().equals(testDrawingAnswers.get(3).getAnswerDrawing())
             );
         }
+
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
@@ -112,7 +114,6 @@ public class QuizQuestionGeneratorTest_TEXT {
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
-        Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
         Assertions.assertNull(generatedQuestion.getImageToDisplay());
         Assertions.assertNull(generatedQuestion.getStoryToDisplay());
     }
@@ -160,35 +161,35 @@ public class QuizQuestionGeneratorTest_TEXT {
     }
 
     private void setUpPromptAndPotentialQuestion() {
-        textTestPrompt = new Prompt();
-        textTestPrompt.setPromptNr(999);
-        textTestPrompt.setPromptText("Answer a question.");
-        textTestPrompt.setPromptType(PromptType.TEXT);
-        Mockito.when(promptRepository.findByPromptNr(998)).thenReturn(textTestPrompt);
+        drawTestPrompt = new Prompt();
+        drawTestPrompt.setPromptNr(997);
+        drawTestPrompt.setPromptText("Draw something.");
+        drawTestPrompt.setPromptType(PromptType.DRAWING);
+        Mockito.when(promptRepository.findByPromptNr(997)).thenReturn(drawTestPrompt);
 
-        potentialTextQuestionPROMPTANSWER = new PotentialQuestion();
-        potentialTextQuestionPROMPTANSWER.setQuestionText("What is the favourite food of %s?");
-        potentialTextQuestionPROMPTANSWER.setQuestionType(QuestionType.PROMPTANSWER);
-        potentialTextQuestionPROMPTANSWER.setAssociatedPrompt(promptRepository.findByPromptNr(998));
-        potentialTextQuestionPROMPTANSWER.setRequiresTextInput(true);
-        potentialTextQuestionPROMPTANSWER.setDisplayType(AdditionalDisplayType.NONE);
+        potentialDrawingQuestionPROMPTANSWER = new PotentialQuestion();
+        potentialDrawingQuestionPROMPTANSWER.setQuestionText("Which rat was drawn by %s?");
+        potentialDrawingQuestionPROMPTANSWER.setQuestionType(QuestionType.PROMPTANSWER);
+        potentialDrawingQuestionPROMPTANSWER.setAssociatedPrompt(promptRepository.findByPromptNr(997));
+        potentialDrawingQuestionPROMPTANSWER.setRequiresTextInput(true);
+        potentialDrawingQuestionPROMPTANSWER.setDisplayType(AdditionalDisplayType.NONE);
 
-        potentialTextQuestionPLAYER = new PotentialQuestion();
-        potentialTextQuestionPLAYER.setQuestionText("Whose favourite food is %s?");
-        potentialTextQuestionPLAYER.setQuestionType(QuestionType.PLAYER);
-        potentialTextQuestionPLAYER.setAssociatedPrompt(promptRepository.findByPromptNr(998));
-        potentialTextQuestionPLAYER.setRequiresTextInput(true);
-        potentialTextQuestionPLAYER.setDisplayType(AdditionalDisplayType.NONE);
+        potentialDrawingQuestionPLAYER = new PotentialQuestion();
+        potentialDrawingQuestionPLAYER.setQuestionText("Which player drew this rat?");
+        potentialDrawingQuestionPLAYER.setQuestionType(QuestionType.PLAYER);
+        potentialDrawingQuestionPLAYER.setAssociatedPrompt(promptRepository.findByPromptNr(997));
+        potentialDrawingQuestionPLAYER.setRequiresTextInput(false);
+        potentialDrawingQuestionPLAYER.setDisplayType(AdditionalDisplayType.IMAGE);
     }
 
-    private void setUpTextPromptAnswers() {
+    private void setUpDrawingPromptAnswers() {
         for (Player player : testPlayers) {
-            TextPromptAnswer textAnswer = new TextPromptAnswer();
-            textAnswer.setAnswer("some answer from: " + player.getPlayerName());
-            textAnswer.setAssociatedPromptNr(textTestPrompt.getPromptNr());
-            textAnswer.setAssociatedGamePin(testGame.getGamePin());
-            textAnswer.setAssociatedPlayerId(player.getPlayerId());
-            testTextAnswers.add(textAnswer);
+            DrawingPromptAnswer drawAnswer = new DrawingPromptAnswer();
+            drawAnswer.setAnswerDrawing("some drawing from: " + player.getPlayerName());
+            drawAnswer.setAssociatedPromptNr(drawTestPrompt.getPromptNr());
+            drawAnswer.setAssociatedGamePin(testGame.getGamePin());
+            drawAnswer.setAssociatedPlayerId(player.getPlayerId());
+            testDrawingAnswers.add(drawAnswer);
         }
     }
 

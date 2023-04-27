@@ -3,8 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
-import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
@@ -60,7 +58,7 @@ public class GameService {
                        @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
                        @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository,
                        @Qualifier("quizQuestionRepository") QuizQuestionRepository quizQuestionRepository
-                       ) throws NoSuchAlgorithmException {
+    ) throws NoSuchAlgorithmException {
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
         this.textPromptAnswerRepository = textPromptAnswerRepository;
@@ -117,14 +115,14 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
-        if(requestedStatus == GameStatus.LOBBY){
+        if (requestedStatus == GameStatus.LOBBY) {
             gameByPin.emptyPromptSet();
             gameByPin.emptyQuizQuestions();
             quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
             drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
             textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
             trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-            for(Player player : gameByPin.getPlayerGroup()){
+            for (Player player : gameByPin.getPlayerGroup()) {
                 player.setScore(0);
             }
         }
@@ -157,14 +155,14 @@ public class GameService {
     }
 
 
-    public Game changeToNextQuestion(String gamePin, String loggedInToken){
+    public Game changeToNextQuestion(String gamePin, String loggedInToken) {
         Game gameByPin = getGameByPin(gamePin);
         Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
         if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
         gameByPin.nextQuestion();
-        if(gameByPin.nextQuestion() == null && gameByPin.getStatus() == GameStatus.QUIZ){
+        if (gameByPin.nextQuestion() == null && gameByPin.getStatus() == GameStatus.QUIZ) {
             gameByPin.setStatus(GameStatus.END);
         }
 

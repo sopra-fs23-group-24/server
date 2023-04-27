@@ -163,7 +163,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void getAllPlayersOfGame_invalidGamePin(){
+    public void getAllPlayersOfGame_invalidGamePin() {
         //TODO: test
     }
 

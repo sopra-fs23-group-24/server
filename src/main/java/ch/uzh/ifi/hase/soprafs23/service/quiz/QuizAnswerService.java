@@ -10,7 +10,6 @@ import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
-import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -26,11 +25,12 @@ public class QuizAnswerService {
     private final PlayerRepository playerRepository;
 
     private final GameRepository gameRepository;
+
     @Autowired
     public QuizAnswerService(@Qualifier("gameRepository") GameRepository gameRepository,
                              @Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository,
                              @Qualifier("answerOptionRepository") AnswerOptionRepository answerOptionRepository,
-                             @Qualifier("playerRepository") PlayerRepository playerRepository)  {
+                             @Qualifier("playerRepository") PlayerRepository playerRepository) {
         this.gameRepository = gameRepository;
         this.qqRepository = qqRepository;
         this.answerOptionRepository = answerOptionRepository;
@@ -39,7 +39,7 @@ public class QuizAnswerService {
 
 
     // return value is never used
-    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin, String loggedInToken){
+    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin, String loggedInToken) {
         Game gameByPin = gameRepository.findByGamePin(gamePin);
         if (gameByPin == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
@@ -54,10 +54,10 @@ public class QuizAnswerService {
 
         // check if already answered
         QuizQuestion questionById = qqRepository.findByQuestionId(quizQuestionId);
-        for(QuizAnswer answer : questionById.getReceivedAnswers()){
-           if(answer.getAssociatedPlayer() == newQuizAnswer.getAssociatedPlayer()){
-               throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This player already answered this question.");
-           }
+        for (QuizAnswer answer : questionById.getReceivedAnswers()) {
+            if (answer.getAssociatedPlayer() == newQuizAnswer.getAssociatedPlayer()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This player already answered this question.");
+            }
         }
         // add and save answer
         questionById.addReceivedAnswer(newQuizAnswer);
@@ -67,10 +67,10 @@ public class QuizAnswerService {
         // check if all players have answered a question
 
         List<Player> allPlayersOfGame = gameByPin.getPlayerGroup();
-        for(QuizAnswer answer : questionById.getReceivedAnswers()){
+        for (QuizAnswer answer : questionById.getReceivedAnswers()) {
             allPlayersOfGame.remove(answer.getAssociatedPlayer());
         }
-        if(allPlayersOfGame.isEmpty()){
+        if (allPlayersOfGame.isEmpty()) {
             questionById.setQuestionStatus(CompletionStatus.FINISHED);
             qqRepository.save(questionById);
             qqRepository.flush();

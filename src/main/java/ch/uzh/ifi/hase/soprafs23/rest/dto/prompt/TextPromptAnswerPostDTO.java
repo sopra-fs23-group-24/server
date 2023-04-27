@@ -1,9 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto.prompt;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 public class TextPromptAnswerPostDTO {
 
     private int associatedPromptNr;

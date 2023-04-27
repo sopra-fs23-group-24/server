@@ -9,7 +9,8 @@ public class PromptPostDTO {
         return textNr;
     }
 
-    public void setTextNr(Integer textNr) {this.textNr = textNr;
+    public void setTextNr(Integer textNr) {
+        this.textNr = textNr;
     }
 
     public Integer getTruefalseNr() {
@@ -24,6 +25,7 @@ public class PromptPostDTO {
         return drawingNr;
     }
 
-    public void setDrawingNr(Integer drawingNr) {this.drawingNr = drawingNr;
+    public void setDrawingNr(Integer drawingNr) {
+        this.drawingNr = drawingNr;
     }
 }

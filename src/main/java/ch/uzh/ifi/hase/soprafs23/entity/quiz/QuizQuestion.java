@@ -6,7 +6,8 @@ import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // is the whole question, has AnswerOptions, and a correct one
 @Entity
@@ -25,7 +26,7 @@ public class QuizQuestion implements Serializable {
     @Column(nullable = false)
     private String quizQuestionText;
 
-    @Column (columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String imageToDisplay = null;
 
     @Column
@@ -128,19 +129,19 @@ public class QuizQuestion implements Serializable {
         this.receivedAnswers = receivedAnswers;
     }
 
-    public void addAnswerOption(AnswerOption option){
+    public void addAnswerOption(AnswerOption option) {
         this.answerOptions.add(option);
     }
 
-    public List<String> getAnswerOptionStrings(){
+    public List<String> getAnswerOptionStrings() {
         List<String> allAnswerOptionTexts = new ArrayList<>();
-        for(AnswerOption answerOption : answerOptions){
+        for (AnswerOption answerOption : answerOptions) {
             allAnswerOptionTexts.add(answerOption.getAnswerOptionText());
         }
         return allAnswerOptionTexts;
     }
 
-    public void addReceivedAnswer(QuizAnswer answer){
+    public void addReceivedAnswer(QuizAnswer answer) {
         receivedAnswers.add(answer);
     }
 }

@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity.quiz;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -42,7 +41,6 @@ public class QuizAnswer implements Serializable {
     public void setQuizAnswerId(Long quizAnswerId) {
         this.quizAnswerId = quizAnswerId;
     }
-
 
 
     public Player getAssociatedPlayer() {

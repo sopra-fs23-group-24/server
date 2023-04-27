@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -108,7 +107,7 @@ public class Game implements Serializable {
         promptSet.addAll(newPrompts);
     }
 
-    public void emptyPromptSet(){
+    public void emptyPromptSet() {
         promptSet = new ArrayList<>();
     }
 
@@ -120,9 +119,11 @@ public class Game implements Serializable {
         this.quizQuestionSet = quizQuestionSet;
     }
 
-    public void addQuizQuestions(List<QuizQuestion> newQuestions){quizQuestionSet.addAll(newQuestions);}
+    public void addQuizQuestions(List<QuizQuestion> newQuestions) {
+        quizQuestionSet.addAll(newQuestions);
+    }
 
-    public void emptyQuizQuestions(){
+    public void emptyQuizQuestions() {
         currentQuestion = null;
         quizQuestionSet = new ArrayList<>();
     }
@@ -135,15 +136,16 @@ public class Game implements Serializable {
         this.currentQuestion = currentQuestion;
     }
 
-    public QuizQuestion nextQuestion(){
-        if(currentQuestion == null){
+    public QuizQuestion nextQuestion() {
+        if (currentQuestion == null) {
             currentQuestion = quizQuestionSet.get(0);
             return currentQuestion;
         }
         int currentIndex = quizQuestionSet.indexOf(currentQuestion);
-        if(currentIndex + 1 < quizQuestionSet.size()){
+        if (currentIndex + 1 < quizQuestionSet.size()) {
             currentQuestion = quizQuestionSet.get(currentIndex + 1);
-        }else{
+        }
+        else {
             currentQuestion = null;
         }
         return currentQuestion;

@@ -12,7 +12,6 @@ import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
-import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PromptAnswerServiceTest {
     private Game testGame;
@@ -46,6 +45,7 @@ class PromptAnswerServiceTest {
 
     @InjectMocks
     private PromptAnswerService promptAnswerService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -95,14 +95,17 @@ class PromptAnswerServiceTest {
         Assertions.assertEquals(savedAnswer.getAssociatedGamePin(), testGame.getGamePin());
         Mockito.verify(textPromptAnswerRepository, Mockito.times(1)).save(Mockito.any());
     }
+
     @Test
     void saveTextPromptAnswer_invalidPin() {
         assertThrows(ResponseStatusException.class, () -> promptAnswerService.saveTextPromptAnswer(testTextPromptAnswer, testPlayer.getToken(), "invalidPin"));
     }
+
     @Test
     void saveTextPromptAnswer_invalidToken() {
         assertThrows(ResponseStatusException.class, () -> promptAnswerService.saveTextPromptAnswer(testTextPromptAnswer, "invalidToken", testGame.getGamePin()));
     }
+
     @Test
     void saveTextPromptAnswer_emptyAnswer() {
         testTextPromptAnswer.setAnswer("");
@@ -120,14 +123,17 @@ class PromptAnswerServiceTest {
         Assertions.assertEquals(savedAnswer.getAssociatedGamePin(), testGame.getGamePin());
         Mockito.verify(trueFalsePromptAnswerRepository, Mockito.times(1)).save(Mockito.any());
     }
+
     @Test
     void saveTrueFalsePromptAnswer_invalidPin() {
         assertThrows(ResponseStatusException.class, () -> promptAnswerService.saveTrueFalsePromptAnswer(testTFPromptAnswer, testPlayer.getToken(), "invalidPin"));
     }
+
     @Test
     void saveTrueFalsePromptAnswer_invalidToken() {
         assertThrows(ResponseStatusException.class, () -> promptAnswerService.saveTrueFalsePromptAnswer(testTFPromptAnswer, "invalidToken", testGame.getGamePin()));
     }
+
     @Test
     void saveTrueFalsePromptAnswer_emptyAnswer() {
         testTFPromptAnswer.setAnswerText("");
@@ -145,14 +151,17 @@ class PromptAnswerServiceTest {
         Mockito.verify(drawingPromptAnswerRepository, Mockito.times(1)).save(Mockito.any());
 
     }
+
     @Test
     void saveDrawingPromptAnswer_invalidPin() {
         assertThrows(ResponseStatusException.class, () -> promptAnswerService.saveDrawingPromptAnswer(testDrawingPromptAnswer, testPlayer.getToken(), "invalidPin"));
     }
+
     @Test
     void saveDrawingPromptAnswer_invalidToken() {
         assertThrows(ResponseStatusException.class, () -> promptAnswerService.saveDrawingPromptAnswer(testDrawingPromptAnswer, "invalidToken", testGame.getGamePin()));
     }
+
     @Test
     void saveDrawingPromptAnswer_emptyAnswer() {
         testDrawingPromptAnswer.setAnswerDrawing("");

@@ -27,7 +27,7 @@ public class PromptController {
     @GetMapping("/prompts")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<PromptGetDTO> getAllPrompts(){
+    public List<PromptGetDTO> getAllPrompts() {
         List<Prompt> allPrompts = promptService.getPrompts();
 
         List<PromptGetDTO> promptsGetDTOs = new ArrayList<>();
@@ -57,7 +57,7 @@ public class PromptController {
     @PostMapping("/games/{pin}/prompts")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public List<PromptGetDTO> setPromptsForGame(@RequestBody PromptPostDTO promptPostDTO, @PathVariable ("pin") String gamePin){
+    public List<PromptGetDTO> setPromptsForGame(@RequestBody PromptPostDTO promptPostDTO, @PathVariable("pin") String gamePin) {
 
         List<Prompt> allPrompts = promptService.pickPrompts(promptPostDTO, gamePin);
 

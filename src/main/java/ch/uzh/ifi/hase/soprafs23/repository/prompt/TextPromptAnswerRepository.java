@@ -11,10 +11,9 @@ import java.util.List;
 public interface TextPromptAnswerRepository extends JpaRepository<TextPromptAnswer, Long> {
 
 
-    List<TextPromptAnswer> findAllByAssociatedGamePin(String pin);
-
     TextPromptAnswer findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(long id, int promptNr);
 
     List<TextPromptAnswer> findAllByAssociatedGamePinAndAssociatedPromptNr(String pin, int promptNr);
+
     void deleteAllByAssociatedGamePin(String gamePin);
 }

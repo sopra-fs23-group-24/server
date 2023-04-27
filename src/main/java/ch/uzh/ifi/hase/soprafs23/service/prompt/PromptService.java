@@ -12,7 +12,6 @@ import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptPostDTO;
-import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,12 +130,13 @@ public class PromptService {
 
         return gameByPin;
     }
+
     /**
      * set up functions
      */
 
     private void initialisePromptRepository() throws PromptSetupException, IOException {
-        try{
+        try {
             input = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
             String line;
             while ((line = input.readLine()) != null) {
@@ -156,7 +156,8 @@ public class PromptService {
         }
         catch (IOException e) {
             throw new PromptSetupException("Could not find file for prompts.");
-        }finally {
+        }
+        finally {
             input.close();
         }
 
@@ -186,9 +187,11 @@ public class PromptService {
                     throw new PromptSetupException("Prompt is missing a potential question!: " + prompt.getPromptNr().toString());
                 }
             }
-        }catch(IOException e){
+        }
+        catch (IOException e) {
             throw new PromptSetupException("Could not find file for potential questions.");
-        }finally {
+        }
+        finally {
             input.close();
         }
     }

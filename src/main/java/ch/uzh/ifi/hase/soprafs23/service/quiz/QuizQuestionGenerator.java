@@ -16,8 +16,6 @@ import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -42,8 +40,6 @@ import java.util.Random;
 @Service
 @Transactional
 public class QuizQuestionGenerator {
-
-    private final Logger log = LoggerFactory.getLogger(QuizQuestionGenerator.class);
     private final QuizQuestionRepository qqRepository;
     private final PotentialQuestionRepository pqRepository;
     private final TextPromptAnswerRepository textPromptAnswerRepository;

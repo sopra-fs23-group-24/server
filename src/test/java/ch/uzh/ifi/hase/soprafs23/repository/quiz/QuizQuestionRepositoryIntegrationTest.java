@@ -59,7 +59,7 @@ public class QuizQuestionRepositoryIntegrationTest {
     }
 
     @Test
-    public void findAllByAssociatedGamePin_success(){
+    public void findAllByAssociatedGamePin_success() {
         List<QuizQuestion> foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
 
         Assertions.assertEquals(foundQuestions.size(), 1);
@@ -67,7 +67,7 @@ public class QuizQuestionRepositoryIntegrationTest {
     }
 
     @Test
-    public void deleteAllByAssociatedGamePin_success(){
+    public void deleteAllByAssociatedGamePin_success() {
         List<QuizQuestion> foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
 
         Assertions.assertEquals(foundQuestions.size(), 1);
@@ -78,7 +78,6 @@ public class QuizQuestionRepositoryIntegrationTest {
 
         Assertions.assertEquals(foundQuestions.size(), 0);
     }
-
 
 
 }

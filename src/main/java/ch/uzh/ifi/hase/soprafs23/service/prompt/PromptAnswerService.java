@@ -2,20 +2,15 @@ package ch.uzh.ifi.hase.soprafs23.service.prompt;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
-import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
-import ch.uzh.ifi.hase.soprafs23.entity.*;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.*;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
-import ch.uzh.ifi.hase.soprafs23.service.GameService;
-import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionGenerator;
-import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +28,10 @@ public class PromptAnswerService {
     private final Logger log = LoggerFactory.getLogger(PromptAnswerService.class);
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
-    private QuizQuestionGenerator quizQuestionGenerator;
     private final TextPromptAnswerRepository textPromptAnswerRepository;
     private final TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
     private final DrawingPromptAnswerRepository drawingPromptAnswerRepository;
+    private QuizQuestionGenerator quizQuestionGenerator;
 
 
     // only one can have @Autowired - what does that do, and does it work like this with the two constructors?
@@ -48,7 +43,7 @@ public class PromptAnswerService {
                                @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
                                @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository,
                                @Qualifier("gameRepository") GameRepository gameRepository,
-                               @Qualifier("playerRepository") PlayerRepository playerRepository){
+                               @Qualifier("playerRepository") PlayerRepository playerRepository) {
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
         this.textPromptAnswerRepository = textPromptAnswerRepository;
@@ -63,7 +58,7 @@ public class PromptAnswerService {
 
 
     public TextPromptAnswer saveTextPromptAnswer(TextPromptAnswer answer, String playerToken, String gamePin) {
-        Game foundGame = findGameByPin(gamePin);
+        findGameByPin(gamePin);
         answer.setAssociatedGamePin(gamePin);
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
@@ -114,43 +109,6 @@ public class PromptAnswerService {
         return answer;
     }
 
-    /*
-    // just so that we can test generating quizQuestions in postman
-    public void mockPromptAnswersForGame(String gamePin){
-        Game currentGame = findGameByPin(gamePin);
-        for(Player player : currentGame.getPlayerGroup()){
-            for(Prompt prompt : currentGame.getPromptSet()){
-                if(prompt.getPromptType() == PromptType.DRAWING){
-                    DrawingPromptAnswer drawAnswer = new DrawingPromptAnswer();
-                    drawAnswer.setAnswerDrawing("some drawing for " + player.getPlayerName());
-                    drawAnswer.setAssociatedPromptNr(prompt.getPromptNr());
-                    DrawingPromptAnswer saved = saveDrawingPromptAnswer(drawAnswer, player.getToken(), gamePin);
-                    System.out.println("Saved PromptAnswer '" + saved.getDrawingPromptAnswerId() + "' for player '" + saved.getAssociatedPlayerId() + "' with content '" + saved.getAnswerDrawing() + "'");
-                }else if(prompt.getPromptType() == PromptType.TEXT){
-                    TextPromptAnswer textAnswer = new TextPromptAnswer();
-                    textAnswer.setAnswer("some answer from " + player.getPlayerName());
-                    textAnswer.setAssociatedPromptNr(prompt.getPromptNr());
-                    TextPromptAnswer saved = saveTextPromptAnswer(textAnswer, player.getToken(), gamePin);
-                    System.out.println("Saved PromptAnswer '" + saved.getTextPromptAnswerId() + "' for player '" + saved.getAssociatedPlayerId() + "' with content '" + saved.getAnswer() + "'");
-                }else{
-                    TrueFalsePromptAnswer tfAnswer = new TrueFalsePromptAnswer();
-                    tfAnswer.setAnswerText("some story from " + player.getPlayerName());
-                    if(Math.random() > 0.5){
-                        tfAnswer.setAnswerBoolean(true);
-                    }else{
-                        tfAnswer.setAnswerBoolean(false);
-                    }
-                    tfAnswer.setAssociatedPromptNr(prompt.getPromptNr());
-                    TrueFalsePromptAnswer saved = saveTrueFalsePromptAnswer(tfAnswer, player.getToken(), gamePin);
-                    System.out.println("Saved PromptAnswer '" + saved.getTrueFalsePromptAnswerId() + "' for player '" + saved.getAssociatedPlayerId() + "' with content '" + saved.getAnswerText() + "' which is set to '" + saved.getAnswerBoolean() + "'");
-                }
-            }
-        }
-    }
-
-     */
-
-
 
     // check if all users have answered all prompts
     // change game status below in a separate method
@@ -162,24 +120,18 @@ public class PromptAnswerService {
 
         for (Player player : players) {
             Long playerId = player.getPlayerId();
-            for(Prompt prompt : prompts) {
+            for (Prompt prompt : prompts) {
                 PromptType type = prompt.getPromptType();
                 int promptNr = prompt.getPromptNr();
                 PromptAnswer found = null;
                 // TODO: maybe refactor to use overloading instead of switch statement
                 switch (type) {
-                    case TEXT -> {
-                        found = textPromptAnswerRepository
-                                .findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
-                    }
-                    case DRAWING -> {
-                        found = drawingPromptAnswerRepository
-                                .findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
-                    }
-                    case TRUEFALSE -> {
-                        found = trueFalsePromptAnswerRepository
-                                .findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
-                    }
+                    case TEXT -> found = textPromptAnswerRepository
+                            .findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
+                    case DRAWING -> found = drawingPromptAnswerRepository
+                            .findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
+                    case TRUEFALSE -> found = trueFalsePromptAnswerRepository
+                            .findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
 
                 }
                 if (found == null) {
@@ -193,7 +145,7 @@ public class PromptAnswerService {
     // game controller method
     public Boolean changeFromPromptAnsweringToQuizStage(String gamePin) {
 
-        if(haveAllPlayersAnsweredAllPrompts(gamePin)) {
+        if (haveAllPlayersAnsweredAllPrompts(gamePin)) {
             System.out.println("Deemed that all players have answered all prompts - will now change GameStatus");
             // change Status to Quiz
             findGameByPin(gamePin).setStatus(GameStatus.QUIZ);
@@ -203,12 +155,12 @@ public class PromptAnswerService {
             return true;
         }
         System.out.println("not all prompts answered by all players, continue");
-       //return gameService.getGameByPin(gamePin);
+        //return gameService.getGameByPin(gamePin);
         return false;
     }
 
 
-    private Game findGameByPin(String gamePin){
+    private Game findGameByPin(String gamePin) {
         Game foundGame = gameRepository.findByGamePin(gamePin);
         if (foundGame == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");

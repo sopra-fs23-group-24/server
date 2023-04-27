@@ -70,7 +70,7 @@ public class GameController {
     @PutMapping("/games/{pin}/quizQuestions")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO requestNextQuizQuestion(@PathVariable("pin") String gamePin, @RequestHeader("playerToken") String loggedInToken){
+    public GameGetDTO requestNextQuizQuestion(@PathVariable("pin") String gamePin, @RequestHeader("playerToken") String loggedInToken) {
         Game updatedGame = gameService.changeToNextQuestion(gamePin, loggedInToken);
 
         return convertGameToDTO(updatedGame);
@@ -85,10 +85,10 @@ public class GameController {
         return "Deleted game successfully";
     }
 
-    private GameGetDTO convertGameToDTO(Game game){
+    private GameGetDTO convertGameToDTO(Game game) {
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertToGameGetDTO(game);
         gameGetDTO.setCurrentQuestion(DTOMapper.INSTANCE.convertToQuizQuestionGetDTO(game.getCurrentQuestion()));
-        if(game.getCurrentQuestion() != null && game.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED){
+        if (game.getCurrentQuestion() != null && game.getCurrentQuestion().getQuestionStatus() == CompletionStatus.NOT_FINISHED) {
             gameGetDTO.getCurrentQuestion().setCorrectAnswer(null);
         }
         return gameGetDTO;

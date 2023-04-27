@@ -1,33 +1,25 @@
 package ch.uzh.ifi.hase.soprafs23.service.prompt;
 
-import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
-import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptPostDTO;
-import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class PromptServiceTest {
     private Prompt tfTestPrompt;
@@ -43,7 +35,7 @@ public class PromptServiceTest {
     private GameRepository gameRepository;
 
     @Mock
-    private PotentialQuestionRepository pqRepository;
+    private PotentialQuestionRepository potentialQuestionRepository;
 
     @InjectMocks
     private PromptService promptService;
@@ -178,14 +170,4 @@ public class PromptServiceTest {
         assertThrows(ResponseStatusException.class, () -> promptService.pickPrompts(testDTO, testGame.getGamePin()));
     }
 
-    /**
-     * Setup functions tests
-     */
-    //all private
-
-
-    /**
-     * Helper functions tests
-     */
-    //all private
 }

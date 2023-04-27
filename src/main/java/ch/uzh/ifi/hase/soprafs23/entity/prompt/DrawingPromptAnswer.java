@@ -2,8 +2,8 @@ package ch.uzh.ifi.hase.soprafs23.entity.prompt;
 
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.io.Serial;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "DRAWINGPROMPTANSWER")

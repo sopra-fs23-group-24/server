@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.entity.prompt;
 
 import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 
 import javax.persistence.*;
 import java.io.Serial;

@@ -87,7 +87,7 @@ public class PlayerRepositoryIntegrationTest {
     }
 
     @Test
-    public void findByPlayerNameAndAssociatedGamePin(){
+    public void findByPlayerNameAndAssociatedGamePin() {
         //todo: test
     }
 

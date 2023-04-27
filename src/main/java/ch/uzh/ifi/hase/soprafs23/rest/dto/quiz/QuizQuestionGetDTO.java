@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto.quiz;
 
 import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
-import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 
 import java.util.List;
 

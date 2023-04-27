@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * User Service
@@ -61,7 +64,7 @@ public class PlayerService {
         newPlayer.setToken(UUID.randomUUID().toString());
         Player playerByUsernameAndPin = playerRepository.findByPlayerNameAndAssociatedGamePin(newPlayer.getPlayerName(), newPlayer.getAssociatedGamePin());
 
-        if(playerByUsernameAndPin != null){
+        if (playerByUsernameAndPin != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There already is a player with this username in the game.");
         }
 
@@ -150,7 +153,7 @@ public class PlayerService {
     }
 
     // sorts the list of players, and returns it
-    public List<Player> sortPlayersByScore (List<Player> players) {
+    public List<Player> sortPlayersByScore(List<Player> players) {
         players.sort(Comparator.comparingInt(Player::getScore).reversed()); // e.g. 20, 10, 0.
         return players;
     }
@@ -174,6 +177,7 @@ public class PlayerService {
         }
         return player;
     }
+
     private boolean checkIfHost(String gamePin, long userId) {
         return gameRepository.findByGamePin((gamePin)).getHostId() == userId;
     }

@@ -5,21 +5,18 @@ import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PlayerServiceTest {
     private Player testPlayer;
@@ -35,11 +32,6 @@ public class PlayerServiceTest {
     @InjectMocks
     private PlayerService playerService;
 
-    /*@Mock
-    private GameRepository gameRepository;
-
-    @InjectMocks
-    private GameService gameService;*/
 
     @BeforeEach
     public void setup() {
@@ -84,9 +76,9 @@ public class PlayerServiceTest {
 
     // score must either not be declared or not set other than 0 in the setup
     @Test
-    public void getScoreOfAllPlayersFromGame(){
+    public void getScoreOfAllPlayersFromGame() {
         List<Player> allPlayers = playerService.getPlayersWithPin(testPlayer.getAssociatedGamePin());
-        for(Player player : allPlayers) {
+        for (Player player : allPlayers) {
             assert player.getScore() == 0;
         }
     }
@@ -99,7 +91,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void createPlayerAndAddToGame_success(){
+    public void createPlayerAndAddToGame_success() {
         Player newPlayer = new Player();
         newPlayer.setPlayerName("name");
         newPlayer.setHost(false);
@@ -115,7 +107,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void createPlayerAndAddToGame_invalidGamePin(){
+    public void createPlayerAndAddToGame_invalidGamePin() {
         Player newPlayer = new Player();
         newPlayer.setPlayerName("name");
         newPlayer.setHost(false);
@@ -127,7 +119,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void createPlayerAndAddToGame_notInLobby(){
+    public void createPlayerAndAddToGame_notInLobby() {
         Player newPlayer = new Player();
         newPlayer.setPlayerName("name");
         newPlayer.setHost(false);
@@ -139,7 +131,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void createPlayerAndAddToGame_alreadyHasHost(){
+    public void createPlayerAndAddToGame_alreadyHasHost() {
         Player newPlayer = new Player();
         newPlayer.setPlayerName("name");
         newPlayer.setHost(true);
@@ -151,7 +143,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void createPlayerAndAddToGame_duplicateUsername(){
+    public void createPlayerAndAddToGame_duplicateUsername() {
         Player newPlayer = new Player();
         newPlayer.setPlayerName("name");
         newPlayer.setHost(true);
@@ -162,7 +154,6 @@ public class PlayerServiceTest {
 
         assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(newPlayer));
     }
-
 
 
 }

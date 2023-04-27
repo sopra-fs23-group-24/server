@@ -6,11 +6,9 @@ import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,7 +25,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -102,7 +98,7 @@ public class GameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
                 .andExpect(jsonPath("$.status", is(game.getStatus().toString())));
-                //.andExpect(jsonPath("$.currentQuestion", is(null)));
+        //.andExpect(jsonPath("$.currentQuestion", is(null)));
     }
 
     @Test
@@ -162,7 +158,7 @@ public class GameControllerTest {
                 .andExpect(jsonPath("$.gamePin", is(game.getGamePin())))
                 .andExpect(jsonPath("$.status", is(game.getStatus().toString())))
                 .andExpect(jsonPath("$.currentQuestion.quizQuestionText", is(testQuestion.getQuizQuestionText())));
-                //.andExpect(jsonPath("$.currentQuestion.correctAnswer", is(null)));
+        //.andExpect(jsonPath("$.currentQuestion.correctAnswer", is(null)));
     }
 
     @Test
@@ -229,6 +225,7 @@ public class GameControllerTest {
         mockMvc.perform(putRequest)
                 .andExpect(status().isUnauthorized());
     }
+
     @Test
     public void requestNextQuizQuestion_success() throws Exception {
         Game game = new Game();
@@ -300,7 +297,6 @@ public class GameControllerTest {
         mockMvc.perform(deleteRequest)
                 .andExpect(status().isUnauthorized());
     }
-
 
 
     private String asJsonString(final Object object) {

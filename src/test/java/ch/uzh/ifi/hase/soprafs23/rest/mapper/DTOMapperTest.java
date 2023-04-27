@@ -52,8 +52,9 @@ public class DTOMapperTest {
         assertEquals(playerPostDTO.getPlayerName(), player.getPlayerName());
         assertEquals(playerPostDTO.isHost(), player.isHost());
     }
+
     @Test
-    public void convertToPlayerGetDTO_fromPlayer_success(){
+    public void convertToPlayerGetDTO_fromPlayer_success() {
         Player player = new Player();
         player.setPlayerName("test");
         player.setPlayerId(1L);
@@ -64,8 +65,9 @@ public class DTOMapperTest {
         assertEquals(playerGetDTO.getScore(), player.getScore());
         assertEquals(playerGetDTO.getPlayerId(), player.getPlayerId());
     }
+
     @Test
-    public void convertFromPlayerPutDTO_toPlayer_success(){
+    public void convertFromPlayerPutDTO_toPlayer_success() {
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("test");
 
@@ -85,6 +87,7 @@ public class DTOMapperTest {
         assertEquals(testPrompt.getPromptType(), getDTO.getPromptType());
         assertEquals(testPrompt.getPromptText(), getDTO.getPromptText());
     }
+
     @Test
     public void convertFromTextPromptAnswerDTO_toTextPromptAnswer_success() {
         //todo: test
@@ -101,12 +104,12 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertToQuizQuestionGetDTO_fromQuizQuestion_success(){
+    public void convertToQuizQuestionGetDTO_fromQuizQuestion_success() {
         //todo: test
     }
 
     @Test
-    public void convertFromQuizAnswerPostDTO_toQuizAnswer_success(){
+    public void convertFromQuizAnswerPostDTO_toQuizAnswer_success() {
         //todo: test
     }
 

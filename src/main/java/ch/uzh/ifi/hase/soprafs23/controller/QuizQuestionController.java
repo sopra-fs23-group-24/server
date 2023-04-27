@@ -27,7 +27,7 @@ public class QuizQuestionController {
     @GetMapping("/quizQuestions")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<QuizQuestionGetDTO> getAllQuizQuestions(){
+    public List<QuizQuestionGetDTO> getAllQuizQuestions() {
         List<QuizQuestion> allQuizQuestions = quizQuestionService.getQuizQuestions();
 
         List<QuizQuestionGetDTO> quizQuestionGetDTOS = new ArrayList<>();
@@ -42,7 +42,7 @@ public class QuizQuestionController {
     @GetMapping("/games/{pin}/quizQuestions")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<QuizQuestionGetDTO> getAllQuizQuestionsOfGame(@PathVariable("pin") String gamePin){
+    public List<QuizQuestionGetDTO> getAllQuizQuestionsOfGame(@PathVariable("pin") String gamePin) {
         List<QuizQuestion> allQuizQuestions = quizQuestionService.getQuizQuestionsOfGame(gamePin);
 
         List<QuizQuestionGetDTO> quizQuestionGetDTOS = new ArrayList<>();

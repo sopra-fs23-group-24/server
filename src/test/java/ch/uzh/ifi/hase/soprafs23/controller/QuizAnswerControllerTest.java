@@ -4,9 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizAnswerPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizAnswerService;
-import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +43,7 @@ class QuizAnswerControllerTest {
         testPlayer.setToken("1");
         testPlayer.setPlayerId(1L);
     }
+
     @Test
     public void postQuizAnswer_success() throws Exception {
         // dto
@@ -85,9 +84,10 @@ class QuizAnswerControllerTest {
     }
 
     @Test
-    public void postQuizAnswer_failureOfSomeKind(){
+    public void postQuizAnswer_failureOfSomeKind() {
         //TODO: test
     }
+
     private String asJsonString(final Object object) {
         try {
             return new ObjectMapper().writeValueAsString(object);

@@ -5,12 +5,9 @@ import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptPostDTO;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
-import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +41,7 @@ public class PromptServiceIntegrationTest {
     private PromptService promptService;
 
     @BeforeEach
-    private void setup(){
+    public void setup() {
         gameRepository.deleteAll();
 
         testGame = new Game();
@@ -55,12 +52,12 @@ public class PromptServiceIntegrationTest {
     }
 
     @Test
-    public void getPrompts(){
+    public void getPrompts() {
         Assertions.assertTrue(promptRepository.findAll().size() > 0);
     }
 
     @Test
-    public void pickPrompts_success(){
+    public void pickPrompts_success() {
 
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
@@ -80,7 +77,7 @@ public class PromptServiceIntegrationTest {
     }
 
     @Test
-    public void getPromptsOfGame_success(){
+    public void getPromptsOfGame_success() {
         Prompt tfTestPrompt = new Prompt();
         tfTestPrompt.setPromptNr(999);
         tfTestPrompt.setPromptText("Tell a story");
@@ -113,8 +110,8 @@ public class PromptServiceIntegrationTest {
         List<Prompt> foundPrompts = promptService.getPromptsOfGame(testGame.getGamePin());
         Assertions.assertEquals(foundPrompts.size(), 3);
 
-        for(Prompt p : foundPrompts){
-            assert(Objects.equals(p.getPromptText(), tfTestPrompt.getPromptText()) || Objects.equals(p.getPromptText(), drawTestPrompt.getPromptText()) || Objects.equals(p.getPromptText(), textTestPrompt.getPromptText()));
+        for (Prompt p : foundPrompts) {
+            assert (Objects.equals(p.getPromptText(), tfTestPrompt.getPromptText()) || Objects.equals(p.getPromptText(), drawTestPrompt.getPromptText()) || Objects.equals(p.getPromptText(), textTestPrompt.getPromptText()));
         }
     }
 

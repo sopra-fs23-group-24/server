@@ -1,8 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.entity.quiz;
 
-import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
-import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
-
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;

@@ -1,17 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.PotentialQuestionRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizAnswerRepository;
-import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
-import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
-import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizAnswerService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -23,6 +12,5 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 @SpringBootTest
 public class QuizAnswerServiceIntegrationTest {
-
-
+    //TODO: test
 }

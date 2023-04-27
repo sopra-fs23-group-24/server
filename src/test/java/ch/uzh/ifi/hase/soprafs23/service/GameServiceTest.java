@@ -1,10 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
-import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
@@ -17,10 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,10 +30,13 @@ public class GameServiceTest {
     private GameRepository gameRepository;
     @Mock
     private PlayerRepository playerRepository;
+
     @Mock
     private DrawingPromptAnswerRepository drawingPromptAnswerRepository;
+
     @Mock
     private TextPromptAnswerRepository textPromptAnswerRepository;
+
     @Mock
     private TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
 
@@ -105,7 +104,7 @@ public class GameServiceTest {
 
 
     @Test
-    public void changeGameStatus_success(){
+    public void changeGameStatus_success() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -118,7 +117,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeGameStatus_invalidToken(){
+    public void changeGameStatus_invalidToken() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -129,7 +128,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeGameStatus_notHost(){
+    public void changeGameStatus_notHost() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -143,29 +142,29 @@ public class GameServiceTest {
     }
 
     @Test
-    public void deleteGameByPin_success(){
+    public void deleteGameByPin_success() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
 
         Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(testHost);
 
-        Game deletedGame = gameService.deleteGameByPin(testGame.getGamePin(), testHost.getToken());
+        gameService.deleteGameByPin(testGame.getGamePin(), testHost.getToken());
     }
 
     @Test
-    public void deleteGameByPin_invalidToken(){
+    public void deleteGameByPin_invalidToken() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
 
         Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(null);
 
-        assertThrows(ResponseStatusException.class, () -> gameService.deleteGameByPin( testGame.getGamePin(), testHost.getToken()));
+        assertThrows(ResponseStatusException.class, () -> gameService.deleteGameByPin(testGame.getGamePin(), testHost.getToken()));
     }
 
     @Test
-    public void deleteGameByPin_notHost(){
+    public void deleteGameByPin_notHost() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -179,7 +178,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeToNextQuestion_success_endGame(){
+    public void changeToNextQuestion_success_endGame() {
         testGame.setStatus(GameStatus.QUIZ);
         testGame.setCurrentQuestion(new QuizQuestion());
         testGame.setQuizQuestionSet(List.of(new QuizQuestion()));
@@ -190,7 +189,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeToNextQuestion_notHost(){
+    public void changeToNextQuestion_notHost() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");

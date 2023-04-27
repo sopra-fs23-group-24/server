@@ -1,8 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +22,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,7 +37,7 @@ class QuizQuestionControllerTest {
     private QuizQuestion exampleQuizQuestion;
 
     @BeforeEach
-    private void setup(){
+    public void setup() {
         exampleQuizQuestion = new QuizQuestion();
         exampleQuizQuestion.setQuestionStatus(CompletionStatus.NOT_FINISHED);
         exampleQuizQuestion.setQuizQuestionText("test question");

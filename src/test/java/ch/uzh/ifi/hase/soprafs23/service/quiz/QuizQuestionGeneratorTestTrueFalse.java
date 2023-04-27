@@ -3,9 +3,9 @@ package ch.uzh.ifi.hase.soprafs23.service.quiz;
 import ch.uzh.ifi.hase.soprafs23.constant.*;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.DrawingPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
+import ch.uzh.ifi.hase.soprafs23.entity.prompt.TrueFalsePromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
@@ -23,13 +23,13 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizQuestionGeneratorTest_DRAW {
-    private Prompt drawTestPrompt;
-    private PotentialQuestion potentialDrawingQuestionPROMPTANSWER;
-    private PotentialQuestion potentialDrawingQuestionPLAYER;
+public class QuizQuestionGeneratorTestTrueFalse {
     private final List<Player> testPlayers = new ArrayList<>();
+    private Prompt tfPrompt;
+    private PotentialQuestion potentialTFQuestionBOOLEAN;
+    private PotentialQuestion potentialTFQuestionPLAYER;
     private QuizQuestion testQuizQuestion;
-    private final List<DrawingPromptAnswer> testDrawingAnswers = new ArrayList<>();
+    private List<TrueFalsePromptAnswer> testTrueFalseAnswers = new ArrayList<>();
     private Game testGame;
     @Mock
     private QuizQuestionRepository qqRepository;
@@ -39,7 +39,6 @@ public class QuizQuestionGeneratorTest_DRAW {
     private PromptRepository promptRepository;
     @Mock
     private AnswerOptionRepository answerOptionRepository;
-
     @InjectMocks
     private QuizQuestionGenerator quizQuestionGenerator;
 
@@ -55,7 +54,7 @@ public class QuizQuestionGeneratorTest_DRAW {
         testGame.setPlayerGroup(testPlayers);
         testGame.setHostId(testPlayers.get(0).getPlayerId());
         setUpPromptAndPotentialQuestion();
-        testGame.setPromptSet(List.of(drawTestPrompt));
+        testGame.setPromptSet(List.of(tfPrompt));
 
         setUpDrawingPromptAnswers();
 
@@ -64,9 +63,9 @@ public class QuizQuestionGeneratorTest_DRAW {
     }
 
     @Test
-    public void transformPotentialQuestionDrawing_PLAYER() {
+    public void transformPotentialQuestionTF_PLAYER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionDrawing(potentialDrawingQuestionPLAYER, new ArrayList<>(testDrawingAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionPLAYER, new ArrayList<>(testTrueFalseAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -79,35 +78,6 @@ public class QuizQuestionGeneratorTest_DRAW {
             );
         }
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
-        Assertions.assertEquals(generatedQuestion.getQuizQuestionText(), potentialDrawingQuestionPLAYER.getQuestionText());
-
-        Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
-        Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
-
-        Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
-
-        Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
-        Assertions.assertNotNull(generatedQuestion.getImageToDisplay());
-        Assertions.assertNull(generatedQuestion.getStoryToDisplay());
-    }
-
-    @Test
-    public void transformPotentialQuestionDrawing_PROMPANSWER() {
-
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionDrawing(potentialDrawingQuestionPROMPTANSWER, new ArrayList<>(testDrawingAnswers));
-
-        Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
-
-        Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 4);
-        for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
-            assert (ao.getAnswerOptionText().equals(testDrawingAnswers.get(0).getAnswerDrawing())
-                    || ao.getAnswerOptionText().equals(testDrawingAnswers.get(1).getAnswerDrawing())
-                    || ao.getAnswerOptionText().equals(testDrawingAnswers.get(2).getAnswerDrawing())
-                    || ao.getAnswerOptionText().equals(testDrawingAnswers.get(3).getAnswerDrawing())
-            );
-        }
-
-        Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
@@ -115,7 +85,38 @@ public class QuizQuestionGeneratorTest_DRAW {
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
         Assertions.assertNull(generatedQuestion.getImageToDisplay());
-        Assertions.assertNull(generatedQuestion.getStoryToDisplay());
+        Assertions.assertNotNull(generatedQuestion.getStoryToDisplay());
+    }
+
+    @Test
+    public void transformPotentialQuestionTF_PLAYER_noTrueStories() {
+        setUpDrawingPromptAnswers_allFalse();
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionPLAYER, new ArrayList<>(testTrueFalseAnswers));
+        Assertions.assertNull(generatedQuestion);
+    }
+
+    @Test
+    public void transformPotentialQuestionTF_BOOLEAN() {
+
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionBOOLEAN, new ArrayList<>(testTrueFalseAnswers));
+
+        Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+
+        Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 2);
+        for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
+            assert (ao.getAnswerOptionText().equals("true")
+                    || ao.getAnswerOptionText().equals("false")
+            );
+        }
+
+        Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
+        Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
+
+        Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
+
+        Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
+        Assertions.assertNull(generatedQuestion.getImageToDisplay());
+        Assertions.assertNotNull(generatedQuestion.getStoryToDisplay());
     }
 
 
@@ -161,36 +162,51 @@ public class QuizQuestionGeneratorTest_DRAW {
     }
 
     private void setUpPromptAndPotentialQuestion() {
-        drawTestPrompt = new Prompt();
-        drawTestPrompt.setPromptNr(997);
-        drawTestPrompt.setPromptText("Draw something.");
-        drawTestPrompt.setPromptType(PromptType.DRAWING);
-        Mockito.when(promptRepository.findByPromptNr(997)).thenReturn(drawTestPrompt);
+        tfPrompt = new Prompt();
+        tfPrompt.setPromptNr(999);
+        tfPrompt.setPromptText("Tell a story.");
+        tfPrompt.setPromptType(PromptType.TRUEFALSE);
+        Mockito.when(promptRepository.findByPromptNr(999)).thenReturn(tfPrompt);
 
-        potentialDrawingQuestionPROMPTANSWER = new PotentialQuestion();
-        potentialDrawingQuestionPROMPTANSWER.setQuestionText("Which rat was drawn by %s?");
-        potentialDrawingQuestionPROMPTANSWER.setQuestionType(QuestionType.PROMPTANSWER);
-        potentialDrawingQuestionPROMPTANSWER.setAssociatedPrompt(promptRepository.findByPromptNr(997));
-        potentialDrawingQuestionPROMPTANSWER.setRequiresTextInput(true);
-        potentialDrawingQuestionPROMPTANSWER.setDisplayType(AdditionalDisplayType.NONE);
+        potentialTFQuestionBOOLEAN = new PotentialQuestion();
+        potentialTFQuestionBOOLEAN.setQuestionText("Is the following story by %s about their last holiday true or false?");
+        potentialTFQuestionBOOLEAN.setQuestionType(QuestionType.BOOLEAN);
+        potentialTFQuestionBOOLEAN.setAssociatedPrompt(promptRepository.findByPromptNr(999));
+        potentialTFQuestionBOOLEAN.setRequiresTextInput(true);
+        potentialTFQuestionBOOLEAN.setDisplayType(AdditionalDisplayType.TEXT);
 
-        potentialDrawingQuestionPLAYER = new PotentialQuestion();
-        potentialDrawingQuestionPLAYER.setQuestionText("Which player drew this rat?");
-        potentialDrawingQuestionPLAYER.setQuestionType(QuestionType.PLAYER);
-        potentialDrawingQuestionPLAYER.setAssociatedPrompt(promptRepository.findByPromptNr(997));
-        potentialDrawingQuestionPLAYER.setRequiresTextInput(false);
-        potentialDrawingQuestionPLAYER.setDisplayType(AdditionalDisplayType.IMAGE);
+        potentialTFQuestionPLAYER = new PotentialQuestion();
+        potentialTFQuestionPLAYER.setQuestionText("Which player told this true story about their last holiday?");
+        potentialTFQuestionPLAYER.setQuestionType(QuestionType.PLAYER);
+        potentialTFQuestionPLAYER.setAssociatedPrompt(promptRepository.findByPromptNr(999));
+        potentialTFQuestionPLAYER.setRequiresTextInput(false);
+        potentialTFQuestionPLAYER.setDisplayType(AdditionalDisplayType.TEXT);
     }
 
     private void setUpDrawingPromptAnswers() {
         for (Player player : testPlayers) {
-            DrawingPromptAnswer drawAnswer = new DrawingPromptAnswer();
-            drawAnswer.setAnswerDrawing("some drawing from: " + player.getPlayerName());
-            drawAnswer.setAssociatedPromptNr(drawTestPrompt.getPromptNr());
-            drawAnswer.setAssociatedGamePin(testGame.getGamePin());
-            drawAnswer.setAssociatedPlayerId(player.getPlayerId());
-            testDrawingAnswers.add(drawAnswer);
+            TrueFalsePromptAnswer tfAnswer = new TrueFalsePromptAnswer();
+            tfAnswer.setAnswerText("some story from: " + player.getPlayerName());
+            tfAnswer.setAnswerBoolean(true);
+            tfAnswer.setAssociatedPromptNr(tfPrompt.getPromptNr());
+            tfAnswer.setAssociatedGamePin(testGame.getGamePin());
+            tfAnswer.setAssociatedPlayerId(player.getPlayerId());
+            testTrueFalseAnswers.add(tfAnswer);
         }
     }
+
+    private void setUpDrawingPromptAnswers_allFalse() {
+        testTrueFalseAnswers = new ArrayList<>();
+        for (Player player : testPlayers) {
+            TrueFalsePromptAnswer tfAnswer = new TrueFalsePromptAnswer();
+            tfAnswer.setAnswerText("some story from: " + player.getPlayerName());
+            tfAnswer.setAnswerBoolean(false);
+            tfAnswer.setAssociatedPromptNr(tfPrompt.getPromptNr());
+            tfAnswer.setAssociatedGamePin(testGame.getGamePin());
+            tfAnswer.setAssociatedPlayerId(player.getPlayerId());
+            testTrueFalseAnswers.add(tfAnswer);
+        }
+    }
+
 
 }
