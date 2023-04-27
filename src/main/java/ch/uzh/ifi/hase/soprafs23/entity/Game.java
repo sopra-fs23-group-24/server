@@ -125,7 +125,8 @@ public class Game implements Serializable {
 
     public void emptyQuizQuestions() {
         currentQuestion = null;
-        quizQuestionSet = new ArrayList<>();
+        List<QuizQuestion> copyOfQuizQuestionSet = new ArrayList<>(quizQuestionSet);
+        quizQuestionSet.removeAll(copyOfQuizQuestionSet);
     }
 
     public QuizQuestion getCurrentQuestion() {

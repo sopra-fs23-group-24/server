@@ -75,12 +75,13 @@ public class QuizAnswerService {
         // check if all players have answered a question
 
         List<Player> allPlayersOfGame = new ArrayList<>(gameByPin.getPlayerGroup());
+        System.out.println("");
         for (QuizAnswer answer : questionById.getReceivedAnswers()) {
             allPlayersOfGame.remove(answer.getAssociatedPlayer());
         }
         if (allPlayersOfGame.isEmpty()) {
             questionById.setQuestionStatus(CompletionStatus.FINISHED);
-            questionById = qqRepository.save(questionById);
+            qqRepository.save(questionById);
             qqRepository.flush();
         }
 
