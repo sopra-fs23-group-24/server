@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,13 +67,17 @@ public class QuizAnswerService {
 
         // check if all players have answered a question
 
-        List<Player> allPlayersOfGame = gameByPin.getPlayerGroup();
+        List<Player> allPlayersOfGame = new ArrayList<>(gameByPin.getPlayerGroup());
+        System.out.println("Number of Players: " + allPlayersOfGame.size());
         for (QuizAnswer answer : questionById.getReceivedAnswers()) {
+            System.out.println("Answer received for player: " + answer.getAssociatedPlayer());
             allPlayersOfGame.remove(answer.getAssociatedPlayer());
         }
+        System.out.println("Number of Players left: " + allPlayersOfGame.size());
         if (allPlayersOfGame.isEmpty()) {
+            System.out.println("setting question status to finished");
             questionById.setQuestionStatus(CompletionStatus.FINISHED);
-            qqRepository.save(questionById);
+            questionById = qqRepository.save(questionById);
             qqRepository.flush();
         }
 
