@@ -30,10 +30,10 @@ public class QuizAnswerController {
         QuizAnswer quizAnswer = DTOMapper.INSTANCE.convertFromQuizAnswerPostDTO(clientAnswer);
 
         // adds answer to question and checks if Question is answered by everyone
-        quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin, loggedInToken);
+        QuizAnswer addedQuizAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin, loggedInToken);
 
         // checks if the answer is correct and if so (calculates) and adds the points to the player
-        int score = quizAnswerService.calculateAndAddScore(loggedInToken, quizAnswer, questionId);
+        int score = quizAnswerService.calculateAndAddScore(loggedInToken, addedQuizAnswer, questionId);
 
         // what should it return?
         return score;

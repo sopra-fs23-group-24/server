@@ -101,7 +101,6 @@ public class PlayerService {
         log.debug("Added to game: {}", joinedGame);
         return joinedGame;
     }
-
     //TODO: test Integration?
     public Player changePlayerUsername(Player newPlayerInfo, String loggedInPlayerToken) {
         Player playerById = playerRepository.findByPlayerId(newPlayerInfo.getPlayerId());
