@@ -35,10 +35,8 @@ public class PromptAnswerController {
         TextPromptAnswer answer = DTOMapper.INSTANCE.convertFromTextPromptAnswerPostDTO(clientAnswer);
         // save
         TextPromptAnswer successfulSave = promptAnswerService.saveTextPromptAnswer(answer, loggedInToken, gamePin);
-        System.out.print("TextPromptAnswer saved");
         // "game controller" method
         Boolean canChangeToQuizStage = promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
-        System.out.printf("Game is changing to Quiz stage: %s", canChangeToQuizStage);
 
         return successfulSave;
     }
@@ -51,14 +49,10 @@ public class PromptAnswerController {
                                                            @PathVariable("pin") String gamePin) {
         // convert
         TrueFalsePromptAnswer answer = DTOMapper.INSTANCE.convertFromTrueFalsePromptAnswerPostDTO(clientAnswer);
-        System.out.println("answer: " + answer);
         // save
         TrueFalsePromptAnswer successfulSave = promptAnswerService.saveTrueFalsePromptAnswer(answer, loggedInToken, gamePin);
-        System.out.print("TrueFalseAnswer saved");
         // "game controller" method
         Boolean canChangeToQuizStage = promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
-        System.out.printf("Game is changing to Quiz stage: %s", canChangeToQuizStage);
-
         return successfulSave;
     }
 
@@ -73,10 +67,8 @@ public class PromptAnswerController {
         DrawingPromptAnswer answer = DTOMapper.INSTANCE.convertFromDrawingPromptAnswerPostDTO(clientAnswer);
         // save
         DrawingPromptAnswer successfulSave = promptAnswerService.saveDrawingPromptAnswer(answer, loggedInToken, gamePin);
-        System.out.print("DrawingPromptAnswer saved");
         // "game controller" method
         Boolean canChangeToQuizStage = promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
-        System.out.printf("Game is changing to Quiz stage: %s", canChangeToQuizStage);
 
         return successfulSave;
     }

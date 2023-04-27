@@ -87,12 +87,24 @@ public class QuizQuestionGenerator {
 
         for (Prompt prompt : gameByPin.getPromptSet()) {
             createdQuestions.addAll(generateQuizQuestions(prompt, gameByPin));
+            System.out.println("Added a new quiz questions, current length: " + createdQuestions.size());
         }
+        int i = 1;
+        for(QuizQuestion qq : createdQuestions){
+            System.out.println("question nr " + i + ":  " + qq.getQuizQuestionText());
+            i++;
+        }
+        System.out.println("Total nr of questions generated: " + createdQuestions.size());
         Collections.shuffle(createdQuestions);
+        System.out.println("Total nr of questions after shuffle: " + createdQuestions.size());
 
         gameByPin.addQuizQuestions(createdQuestions);
         gameByPin.nextQuestion();
-        // gameByPin.setStatus(GameStatus.QUIZ);
+
+        gameRepository.save(gameByPin);
+        gameRepository.flush();
+
+        System.out.println("Total nr of questions after adding: " + gameByPin.getQuizQuestionSet().size());
 
         return createdQuestions;
     }
@@ -121,6 +133,13 @@ public class QuizQuestionGenerator {
             }
             if (createdQuestion == null) {
                 continue;
+            }
+
+            //avoid having the exact same question twice
+            for(QuizQuestion q : createdQuestions){
+                if(q.getQuizQuestionText().equals(createdQuestion.getQuizQuestionText()) && q.getCorrectAnswer() == createdQuestion.getCorrectAnswer()){
+                    continue;
+                }
             }
             createdQuestion.setAssociatedGamePin(game.getGamePin());
             createdQuestion.setAssociatedPrompt(prompt);
