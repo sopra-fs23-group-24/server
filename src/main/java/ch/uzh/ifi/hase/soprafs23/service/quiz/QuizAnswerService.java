@@ -9,7 +9,9 @@ import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
+import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -26,12 +28,13 @@ public class QuizAnswerService {
     private final PlayerRepository playerRepository;
 
     private final GameRepository gameRepository;
-
+    private final QuizAnswerRepository quizAnswerRepository;
     @Autowired
     public QuizAnswerService(@Qualifier("gameRepository") GameRepository gameRepository,
                              @Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository,
                              @Qualifier("answerOptionRepository") AnswerOptionRepository answerOptionRepository,
-                             @Qualifier("playerRepository") PlayerRepository playerRepository) {
+                             @Qualifier("playerRepository") PlayerRepository playerRepository,
+                             @Qualifier("quizAnswerRepository") QuizAnswerRepository quizAnswerRepository)  {
         this.gameRepository = gameRepository;
         this.qqRepository = qqRepository;
         this.answerOptionRepository = answerOptionRepository;
@@ -40,7 +43,7 @@ public class QuizAnswerService {
 
 
     // return value is never used
-    public QuizQuestion addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin, String loggedInToken) {
+    public QuizAnswer addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, long quizQuestionId, String gamePin, String loggedInToken){
         Game gameByPin = gameRepository.findByGamePin(gamePin);
         if (gameByPin == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
@@ -61,6 +64,9 @@ public class QuizAnswerService {
             }
         }
         // add and save answer
+        newQuizAnswer = quizAnswerRepository.save(newQuizAnswer);
+        quizAnswerRepository.flush();
+
         questionById.addReceivedAnswer(newQuizAnswer);
         qqRepository.save(questionById);
         qqRepository.flush();
@@ -81,30 +87,25 @@ public class QuizAnswerService {
             qqRepository.flush();
         }
 
-        return questionById;
+        return newQuizAnswer;
     }
 
 
     // the notion of speed is not yet accounted for
     // TODO : Rename this
-    public int calculateAndAddScore(String loggedInToken, QuizAnswer quizAnswer, long questionId) {
+    public int calculateAndAddScore(QuizAnswer quizAnswer, long questionId) {
         // get the picked and the correct answer
         long pickedId = quizAnswer.getPickedAnswerOptionId();
         AnswerOption chosenAnswer = answerOptionRepository.getAnswerOptionByAnswerOptionId(pickedId);
         AnswerOption correctAnswer = qqRepository.findByQuestionId(questionId).getCorrectAnswer();
-
-        // set the player
-        Player player = playerRepository.findByToken(loggedInToken);
-        if (player == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
-        }
-        quizAnswer.setAssociatedPlayer(player);
 
         int score = 0;
         if (chosenAnswer.equals(correctAnswer)) {
             score = 10;
             // add points to player
             quizAnswer.getAssociatedPlayer().addPoints(score);
+            playerRepository.save(quizAnswer.getAssociatedPlayer());
+            playerRepository.flush();
         }
         return score; // either 0 or 10
 

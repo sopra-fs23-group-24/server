@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizAnswerService;
+import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizQuestionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +30,13 @@ public class QuizAnswerController {
         QuizAnswer quizAnswer = DTOMapper.INSTANCE.convertFromQuizAnswerPostDTO(clientAnswer);
 
         // adds answer to question and checks if Question is answered by everyone
-        quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin, loggedInToken);
+        QuizAnswer addedQuizAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin, loggedInToken);
 
         // checks if the answer is correct and if so (calculates) and adds the points to the player
+        int score = quizAnswerService.calculateAndAddScore(addedQuizAnswer, questionId);
 
         // what should it return?
-        return quizAnswerService.calculateAndAddScore(loggedInToken, quizAnswer, questionId);
+        return score;
     }
 
     // more mappings?
