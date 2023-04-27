@@ -23,7 +23,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizQuestionGeneratorTestDraw {
+public class QuizQuestionGeneratorDrawTest {
     private final List<Player> testPlayers = new ArrayList<>();
     private final List<DrawingPromptAnswer> testDrawingAnswers = new ArrayList<>();
     private Prompt drawTestPrompt;
