@@ -129,7 +129,7 @@ public class QuizQuestionGenerator {
                 continue;
             }
 
-            //avoid having the exact same question twice
+            //TODO: avoid double questions
             for(QuizQuestion q : createdQuestions){
                 if(q.getQuizQuestionText().equals(createdQuestion.getQuizQuestionText()) && q.getCorrectAnswer() == createdQuestion.getCorrectAnswer()){
                     continue;
