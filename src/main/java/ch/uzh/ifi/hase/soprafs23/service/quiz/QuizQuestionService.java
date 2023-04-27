@@ -56,11 +56,7 @@ public class QuizQuestionService {
         if (gameByPin == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
         }
-        return gameByPin.getQuizQuestionSet();
+        return qqRepository.findAllByAssociatedGamePin(gamePin);
     }
-
-
-
-    // TODO: a method to check if a QuizQuestion is finished. (right?)
 
 }

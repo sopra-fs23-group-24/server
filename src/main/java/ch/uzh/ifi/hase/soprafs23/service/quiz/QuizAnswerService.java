@@ -57,7 +57,7 @@ public class QuizAnswerService {
         newQuizAnswer.setAssociatedPlayer(player);
 
         // check if already answered
-        QuizQuestion questionById = qqRepository.getOne(quizQuestionId);
+        QuizQuestion questionById = qqRepository.findByQuestionId(quizQuestionId);
         for(QuizAnswer answer : questionById.getReceivedAnswers()){
            if(answer.getAssociatedPlayer() == newQuizAnswer.getAssociatedPlayer()){
                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This player already answered this question.");
@@ -93,7 +93,7 @@ public class QuizAnswerService {
         // get the picked and the correct answer
         long pickedId = quizAnswer.getPickedAnswerOptionId();
         AnswerOption chosenAnswer = answerOptionRepository.getAnswerOptionByAnswerOptionId(pickedId);
-        AnswerOption correctAnswer = qqRepository.getOne(questionId).getCorrectAnswer();
+        AnswerOption correctAnswer = qqRepository.findByQuestionId(questionId).getCorrectAnswer();
 
         int score = 0;
         if (chosenAnswer.equals(correctAnswer)) {

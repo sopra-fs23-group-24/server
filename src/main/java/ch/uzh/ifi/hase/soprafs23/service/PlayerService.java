@@ -76,7 +76,7 @@ public class PlayerService {
         return newPlayer;
     }
 
-    public Game addPlayerToGame(Player newPlayer) {
+    private Game addPlayerToGame(Player newPlayer) {
 
         Game joinedGame = gameRepository.findByGamePin(newPlayer.getAssociatedGamePin());
         if (joinedGame == null) {
@@ -101,7 +101,7 @@ public class PlayerService {
         log.debug("Added to game: {}", joinedGame);
         return joinedGame;
     }
-    //TODO: test Integration?
+
     public Player changePlayerUsername(Player newPlayerInfo, String loggedInPlayerToken) {
         Player playerById = playerRepository.findByPlayerId(newPlayerInfo.getPlayerId());
         Player loggedInPlayer = playerRepository.findByToken(loggedInPlayerToken);
@@ -159,9 +159,7 @@ public class PlayerService {
     /**
      * Helper functions
      */
-
-    // TODO: use this method when a getById call is needed - instead of using individual calls - if possible.
-    public Player getById(long id) {
+    private Player getById(long id) {
         Optional<Player> player = playerRepository.findById(id);
         if (player.isPresent()) {
             return player.get();
@@ -169,14 +167,14 @@ public class PlayerService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this id found.");
     }
 
-    public Player getByToken(String token) {
+    private Player getByToken(String token) {
         Player player = playerRepository.findByToken(token);
         if (player == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
         }
         return player;
     }
-    public boolean checkIfHost(String gamePin, long userId) {
+    private boolean checkIfHost(String gamePin, long userId) {
         return gameRepository.findByGamePin((gamePin)).getHostId() == userId;
     }
 

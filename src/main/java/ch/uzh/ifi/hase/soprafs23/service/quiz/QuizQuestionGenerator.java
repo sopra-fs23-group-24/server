@@ -101,10 +101,8 @@ public class QuizQuestionGenerator {
         return createdQuestions;
     }
 
-    public List<QuizQuestion> generateQuizQuestions(Prompt prompt, Game game) {
+    private List<QuizQuestion> generateQuizQuestions(Prompt prompt, Game game) {
         assert game != null;
-
-        System.out.println("started generating questions");
 
         List<QuizQuestion> createdQuestions = new ArrayList<>();
         List<PotentialQuestion> potentialQuestions = pqRepository.findAllByAssociatedPrompt(prompt);
@@ -131,16 +129,12 @@ public class QuizQuestionGenerator {
             createdQuestion.setAssociatedGamePin(game.getGamePin());
             createdQuestion.setAssociatedPrompt(prompt);
             createdQuestions.add(createdQuestion);
-            // does not reach this point
-            System.out.println("Created a question: " + createdQuestion.getQuestionId());
         }
-
-        System.out.println("returning generated questions");
 
         return createdQuestions;
     }
 
-    private QuizQuestion transformPotentialQuestionDrawing(PotentialQuestion pq, List<DrawingPromptAnswer> allAnswers) {
+    public QuizQuestion transformPotentialQuestionDrawing(PotentialQuestion pq, List<DrawingPromptAnswer> allAnswers) {
         QuizQuestion newQuestion = new QuizQuestion();
 
         //picked pq will ask which player drawing is from
@@ -223,7 +217,7 @@ public class QuizQuestionGenerator {
         return newQuestion;
     }
 
-    private QuizQuestion transformPotentialQuestionText(PotentialQuestion pq, List<TextPromptAnswer> allAnswers) {
+    public QuizQuestion transformPotentialQuestionText(PotentialQuestion pq, List<TextPromptAnswer> allAnswers) {
         QuizQuestion newQuestion = new QuizQuestion();
 
         //picked pq will ask which player answer is from
@@ -302,7 +296,7 @@ public class QuizQuestionGenerator {
         return newQuestion;
     }
 
-    private QuizQuestion transformPotentialQuestionTF(PotentialQuestion pq, List<TrueFalsePromptAnswer> allAnswers) {
+    public QuizQuestion transformPotentialQuestionTF(PotentialQuestion pq, List<TrueFalsePromptAnswer> allAnswers) {
         QuizQuestion newQuestion = new QuizQuestion();
 
         //picked pq will ask which player story is from
@@ -389,6 +383,7 @@ public class QuizQuestionGenerator {
             else {
                 newAnswerOption.setAnswerOptionText("true");
             }
+            newQuestion.addAnswerOption(newAnswerOption);
 
             answerOptionRepository.save(newAnswerOption);
             answerOptionRepository.flush();
@@ -399,25 +394,4 @@ public class QuizQuestionGenerator {
         return newQuestion;
     }
 
-    /*
-    StringBuilder outputString = new StringBuilder();
-        if (pq.isRequiresTextInput()) {
-            if (pq.getQuestionType() == QuestionType.PLAYER) {
-                outputString.append(String.format(pq.getQuestionText(), "PROMPT INPUT"));
-            }
-            else {
-                outputString.append(String.format(pq.getQuestionText(), "USERNAME"));
-            }
-        }
-        else {
-            outputString.append(pq.getQuestionText());
-        }
-        if (pq.getDisplayType() == AdditionalDisplayType.IMAGE) {
-            outputString.append(" ---- SHOW IMAGE TO GUESS");
-        }
-        else if (pq.getDisplayType() == AdditionalDisplayType.TEXT) {
-            outputString.append(" ---- SHOW A TEXT");
-        }
-        System.out.println(outputString);
-     */
 }
