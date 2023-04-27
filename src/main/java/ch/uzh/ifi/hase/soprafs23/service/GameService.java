@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
@@ -101,9 +102,6 @@ public class GameService {
     //TODO: test Integration?
     //TODO: test Service
     public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken) {
-        System.out.println(requestedStatus);
-        //GameStatus newStatus = GameStatus.transformToStatus(requestedStatus);
-
 
         Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
         if (loggedInPlayer == null) {
@@ -161,10 +159,12 @@ public class GameService {
         if (!checkIfHost(gameByPin, loggedInPlayer.getPlayerId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
-        gameByPin.nextQuestion();
-        if (gameByPin.nextQuestion() == null && gameByPin.getStatus() == GameStatus.QUIZ) {
+        QuizQuestion currentQuestion = gameByPin.nextQuestion();
+        if (currentQuestion == null && gameByPin.getStatus() == GameStatus.QUIZ) {
             gameByPin.setStatus(GameStatus.END);
         }
+        gameByPin = gameRepository.save(gameByPin);
+        gameRepository.flush();
 
         return gameByPin;
     }

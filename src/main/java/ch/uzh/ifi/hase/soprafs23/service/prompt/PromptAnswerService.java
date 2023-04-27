@@ -146,7 +146,6 @@ public class PromptAnswerService {
     public Boolean changeFromPromptAnsweringToQuizStage(String gamePin) {
 
         if (haveAllPlayersAnsweredAllPrompts(gamePin)) {
-            System.out.println("Deemed that all players have answered all prompts - will now change GameStatus");
             // change Status to Quiz
             findGameByPin(gamePin).setStatus(GameStatus.QUIZ);
 
@@ -154,7 +153,6 @@ public class PromptAnswerService {
             quizQuestionGenerator.createQuizQuestions(gamePin);
             return true;
         }
-        System.out.println("not all prompts answered by all players, continue");
         //return gameService.getGameByPin(gamePin);
         return false;
     }

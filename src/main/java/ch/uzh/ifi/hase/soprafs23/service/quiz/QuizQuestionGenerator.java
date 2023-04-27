@@ -16,6 +16,9 @@ import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
+import ch.uzh.ifi.hase.soprafs23.service.GameService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -40,6 +43,7 @@ import java.util.Random;
 @Service
 @Transactional
 public class QuizQuestionGenerator {
+    private final Logger log = LoggerFactory.getLogger(GameService.class);
     private final QuizQuestionRepository qqRepository;
     private final PotentialQuestionRepository pqRepository;
     private final TextPromptAnswerRepository textPromptAnswerRepository;
@@ -87,24 +91,14 @@ public class QuizQuestionGenerator {
 
         for (Prompt prompt : gameByPin.getPromptSet()) {
             createdQuestions.addAll(generateQuizQuestions(prompt, gameByPin));
-            System.out.println("Added a new quiz questions, current length: " + createdQuestions.size());
         }
-        int i = 1;
-        for(QuizQuestion qq : createdQuestions){
-            System.out.println("question nr " + i + ":  " + qq.getQuizQuestionText());
-            i++;
-        }
-        System.out.println("Total nr of questions generated: " + createdQuestions.size());
         Collections.shuffle(createdQuestions);
-        System.out.println("Total nr of questions after shuffle: " + createdQuestions.size());
 
         gameByPin.addQuizQuestions(createdQuestions);
         gameByPin.nextQuestion();
 
         gameRepository.save(gameByPin);
         gameRepository.flush();
-
-        System.out.println("Total nr of questions after adding: " + gameByPin.getQuizQuestionSet().size());
 
         return createdQuestions;
     }
@@ -154,7 +148,7 @@ public class QuizQuestionGenerator {
 
         //picked pq will ask which player drawing is from
         if (pq.getQuestionType() == QuestionType.PLAYER) {
-            System.out.println("Drawing question - Player");
+            log.debug("Drawing question - Player");
             newQuestion.setQuizQuestionText(pq.getQuestionText());
 
             DrawingPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
@@ -163,7 +157,7 @@ public class QuizQuestionGenerator {
             if (pq.getDisplayType() == AdditionalDisplayType.IMAGE) {
                 newQuestion.setImageToDisplay(selectedCorrectPromptAnswer.getAnswerDrawing());
             }
-            System.out.println("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getImageToDisplay());
+            log.debug("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getImageToDisplay());
 
             // set and save the correct answer option, and add this option to the question
             AnswerOption correctAnswer = new AnswerOption();
@@ -195,7 +189,7 @@ public class QuizQuestionGenerator {
 
         //picked pq will ask which drawing is from a specific player
         else if (pq.getQuestionType() == QuestionType.PROMPTANSWER) {
-            System.out.println("Drawing question - Promptanswer");
+            log.debug("Drawing question - Promptanswer");
             DrawingPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
             Player correctAnswerPlayer = playerRepository.findByPlayerId(selectedCorrectPromptAnswer.getAssociatedPlayerId());
 
@@ -205,7 +199,7 @@ public class QuizQuestionGenerator {
             else {
                 newQuestion.setQuizQuestionText(pq.getQuestionText());
             }
-            System.out.println("Set Question text to: " + newQuestion.getQuizQuestionText());
+            log.debug("Set Question text to: " + newQuestion.getQuizQuestionText());
 
             AnswerOption correctAnswer = new AnswerOption();
             correctAnswer.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswerDrawing());
@@ -240,7 +234,7 @@ public class QuizQuestionGenerator {
         //picked pq will ask which player answer is from
         if (pq.getQuestionType() == QuestionType.PLAYER) {
 
-            System.out.println("Text question - Player");
+            log.debug("Text question - Player");
             TextPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
             Player correctAnswerPlayer = playerRepository.findByPlayerId(selectedCorrectPromptAnswer.getAssociatedPlayerId());
 
@@ -250,7 +244,7 @@ public class QuizQuestionGenerator {
             else {
                 newQuestion.setQuizQuestionText(pq.getQuestionText());
             }
-            System.out.println("Set Question text to: " + newQuestion.getQuizQuestionText());
+            log.debug("Set Question text to: " + newQuestion.getQuizQuestionText());
 
             AnswerOption correctAnswer = new AnswerOption();
             correctAnswer.setAnswerOptionText(correctAnswerPlayer.getPlayerName());
@@ -276,7 +270,7 @@ public class QuizQuestionGenerator {
 
         //picked pq will ask which answer is from a specific player
         else if (pq.getQuestionType() == QuestionType.PROMPTANSWER) {
-            System.out.println("Text question - Promptanswer");
+            log.debug("Text question - Promptanswer");
             TextPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
             Player correctAnswerPlayer = playerRepository.findByPlayerId(selectedCorrectPromptAnswer.getAssociatedPlayerId());
 
@@ -286,7 +280,7 @@ public class QuizQuestionGenerator {
             else {
                 newQuestion.setQuizQuestionText(pq.getQuestionText());
             }
-            System.out.println("Set Question text to: " + newQuestion.getQuizQuestionText());
+            log.debug("Set Question text to: " + newQuestion.getQuizQuestionText());
 
             AnswerOption correctAnswer = new AnswerOption();
             correctAnswer.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswer());
@@ -319,7 +313,7 @@ public class QuizQuestionGenerator {
 
         //picked pq will ask which player story is from
         if (pq.getQuestionType() == QuestionType.PLAYER) {
-            System.out.println("tf question - Player");
+            log.debug("tf question - Player");
 
             List<TrueFalsePromptAnswer> allAnswersCopy = new ArrayList<>(allAnswers);
             TrueFalsePromptAnswer selectedCorrectPromptAnswer = null;
@@ -342,7 +336,7 @@ public class QuizQuestionGenerator {
                 newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
             }
 
-            System.out.println("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getStoryToDisplay());
+            log.debug("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getStoryToDisplay());
 
             AnswerOption correctAnswer = new AnswerOption();
             correctAnswer.setAnswerOptionText(correctAnswerPlayer.getPlayerName());
@@ -367,7 +361,7 @@ public class QuizQuestionGenerator {
 
         //picked pq will ask whether story by specific user is true
         else if (pq.getQuestionType() == QuestionType.BOOLEAN) {
-            System.out.println("Drawing question - Boolean");
+            log.debug("Drawing question - Boolean");
 
             TrueFalsePromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
             Player correctAnswerPlayer = playerRepository.findByPlayerId(selectedCorrectPromptAnswer.getAssociatedPlayerId());
@@ -384,7 +378,7 @@ public class QuizQuestionGenerator {
                 newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
             }
 
-            System.out.println("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getStoryToDisplay());
+            log.debug("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getStoryToDisplay());
 
             AnswerOption correctAnswer = new AnswerOption();
             correctAnswer.setAnswerOptionText(selectedCorrectPromptAnswer.getAnswerBoolean().toString());
