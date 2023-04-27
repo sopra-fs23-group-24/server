@@ -101,6 +101,8 @@ public class QuizAnswerServiceTest {
 
         Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
+        Mockito.when(quizQuestionRepository.save(Mockito.any())).thenReturn(testQuestion);
+
         QuizQuestion updatedQuestion = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), testPlayer.getToken());
 
         Assertions.assertEquals(updatedQuestion.getReceivedAnswers().size(), 1);
