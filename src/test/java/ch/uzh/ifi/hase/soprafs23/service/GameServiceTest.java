@@ -180,12 +180,14 @@ public class GameServiceTest {
     @Test
     public void changeToNextQuestion_success_endGame() {
         testGame.setStatus(GameStatus.QUIZ);
-        testGame.setCurrentQuestion(new QuizQuestion());
         testGame.setQuizQuestionSet(List.of(new QuizQuestion()));
+        testGame.setCurrentQuestion(null);
 
         Game returnedGame = gameService.changeToNextQuestion(testGame.getGamePin(), testPlayer.getToken());
-        assertEquals(returnedGame.getStatus(), GameStatus.END);
+        assertEquals(returnedGame.getStatus(), GameStatus.QUIZ);
 
+        returnedGame = gameService.changeToNextQuestion(testGame.getGamePin(), testPlayer.getToken());
+        assertEquals(returnedGame.getStatus(), GameStatus.END);
     }
 
     @Test
