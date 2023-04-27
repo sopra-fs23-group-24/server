@@ -61,13 +61,14 @@ class QuizAnswerControllerTest {
 
         // quizQuestion we want to get
         QuizQuestion quizQuestion = new QuizQuestion();
+
         // set quizAnswer
         quizQuestion.addReceivedAnswer(quizAnswer);
 
         //
         given(quizAnswerService.addQuizAnswerToQuizQuestion(Mockito.any(), Mockito.anyLong(),
                 Mockito.anyString(), Mockito.anyString()))
-                .willReturn(quizQuestion);
+                .willReturn(quizAnswer);
 
         // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/quiz-questions/80/answers")
