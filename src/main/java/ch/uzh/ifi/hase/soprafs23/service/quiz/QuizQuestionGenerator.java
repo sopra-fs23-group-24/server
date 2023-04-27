@@ -208,6 +208,8 @@ public class QuizQuestionGenerator {
             }
         }
 
+        shuffleQuizAnswers(newQuestion);
+
         qqRepository.save(newQuestion);
         qqRepository.flush();
         return newQuestion;
@@ -287,6 +289,7 @@ public class QuizQuestionGenerator {
             }
         }
 
+        shuffleQuizAnswers(newQuestion);
         qqRepository.save(newQuestion);
         qqRepository.flush();
         return newQuestion;
@@ -384,10 +387,17 @@ public class QuizQuestionGenerator {
             answerOptionRepository.save(newAnswerOption);
             answerOptionRepository.flush();
         }
+        shuffleQuizAnswers(newQuestion);
 
         qqRepository.save(newQuestion);
         qqRepository.flush();
         return newQuestion;
+    }
+
+    private void shuffleQuizAnswers(QuizQuestion quizQuestionToShuffle) {
+
+        Collections.shuffle(quizQuestionToShuffle.getAnswerOptions());
+
     }
 
 }
