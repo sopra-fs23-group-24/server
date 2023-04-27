@@ -28,6 +28,8 @@ public class QuizQuestionGeneratorTestTrueFalse {
     private Prompt tfPrompt;
     private PotentialQuestion potentialTFQuestionBOOLEAN;
     private PotentialQuestion potentialTFQuestionPLAYER;
+
+    // is needed to run
     private QuizQuestion testQuizQuestion;
     private List<TrueFalsePromptAnswer> testTrueFalseAnswers = new ArrayList<>();
     private Game testGame;
@@ -37,6 +39,8 @@ public class QuizQuestionGeneratorTestTrueFalse {
     private PlayerRepository playerRepository;
     @Mock
     private PromptRepository promptRepository;
+
+    // is needed to run
     @Mock
     private AnswerOptionRepository answerOptionRepository;
     @InjectMocks
@@ -56,7 +60,7 @@ public class QuizQuestionGeneratorTestTrueFalse {
         setUpPromptAndPotentialQuestion();
         testGame.setPromptSet(List.of(tfPrompt));
 
-        setUpDrawingPromptAnswers();
+        setUpTFPromptAnswers();
 
         Mockito.when(qqRepository.save(Mockito.any())).thenReturn(testQuizQuestion);
 
@@ -65,7 +69,8 @@ public class QuizQuestionGeneratorTestTrueFalse {
     @Test
     public void transformPotentialQuestionTF_PLAYER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionPLAYER, new ArrayList<>(testTrueFalseAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionPLAYER,
+                                            new ArrayList<>(testTrueFalseAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -77,12 +82,13 @@ public class QuizQuestionGeneratorTestTrueFalse {
                     || ao.getAnswerOptionText().equals(testPlayers.get(3).getPlayerName())
             );
         }
-        Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
+
+        Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
 
         Assertions.assertNull(generatedQuestion.getImageToDisplay());
         Assertions.assertNotNull(generatedQuestion.getStoryToDisplay());
@@ -90,15 +96,17 @@ public class QuizQuestionGeneratorTestTrueFalse {
 
     @Test
     public void transformPotentialQuestionTF_PLAYER_noTrueStories() {
-        setUpDrawingPromptAnswers_allFalse();
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionPLAYER, new ArrayList<>(testTrueFalseAnswers));
+        setUpTFPromptAnswers_allFalse();
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionPLAYER,
+                                            new ArrayList<>(testTrueFalseAnswers));
         Assertions.assertNull(generatedQuestion);
     }
 
     @Test
     public void transformPotentialQuestionTF_BOOLEAN() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionBOOLEAN, new ArrayList<>(testTrueFalseAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionBOOLEAN,
+                                            new ArrayList<>(testTrueFalseAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -115,6 +123,7 @@ public class QuizQuestionGeneratorTestTrueFalse {
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
+
         Assertions.assertNull(generatedQuestion.getImageToDisplay());
         Assertions.assertNotNull(generatedQuestion.getStoryToDisplay());
     }
@@ -183,7 +192,7 @@ public class QuizQuestionGeneratorTestTrueFalse {
         potentialTFQuestionPLAYER.setDisplayType(AdditionalDisplayType.TEXT);
     }
 
-    private void setUpDrawingPromptAnswers() {
+    private void setUpTFPromptAnswers() {
         for (Player player : testPlayers) {
             TrueFalsePromptAnswer tfAnswer = new TrueFalsePromptAnswer();
             tfAnswer.setAnswerText("some story from: " + player.getPlayerName());
@@ -195,7 +204,7 @@ public class QuizQuestionGeneratorTestTrueFalse {
         }
     }
 
-    private void setUpDrawingPromptAnswers_allFalse() {
+    private void setUpTFPromptAnswers_allFalse() {
         testTrueFalseAnswers = new ArrayList<>();
         for (Player player : testPlayers) {
             TrueFalsePromptAnswer tfAnswer = new TrueFalsePromptAnswer();
