@@ -202,6 +202,7 @@ public class GameService {
         }
         String pinString = pin.toString();
 
+        // if not already present: return, else: try again
         if (gameRepository.findByGamePin(pinString) == null) {
             return pinString;
         }

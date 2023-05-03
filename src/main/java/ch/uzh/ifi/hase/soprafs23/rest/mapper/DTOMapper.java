@@ -37,6 +37,7 @@ public interface DTOMapper {
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
 
+    // game
     @Mapping(source = "gameId", target = "gameId")
     @Mapping(source = "gamePin", target = "gamePin")
     @Mapping(source = "status", target = "status")
@@ -46,6 +47,7 @@ public interface DTOMapper {
     Game convertFromGamePutDTO(GamePutDTO game);
 
 
+    // player
     @Mapping(source = "playerId", target = "playerId")
     @Mapping(source = "playerName", target = "playerName")
     @Mapping(source = "score", target = "score")
@@ -59,6 +61,7 @@ public interface DTOMapper {
     Player convertFromPlayerPutDTO(PlayerPutDTO player);
 
 
+    // prompt answers
     @Mapping(source = "associatedPromptNr", target = "associatedPromptNr")
     @Mapping(source = "answer", target = "answer")
     TextPromptAnswer convertFromTextPromptAnswerPostDTO(TextPromptAnswerPostDTO textPromptAnswerPostDTO);
@@ -68,17 +71,20 @@ public interface DTOMapper {
     @Mapping(source = "answerBoolean", target = "answerBoolean")
     TrueFalsePromptAnswer convertFromTrueFalsePromptAnswerPostDTO(TrueFalsePromptAnswerPostDTO trueFalsePromptAnswerPostDTO);
 
-
     @Mapping(source = "associatedPromptNr", target = "associatedPromptNr")
     @Mapping(source = "answerDrawing", target = "answerDrawing")
     DrawingPromptAnswer convertFromDrawingPromptAnswerPostDTO(DrawingPromptAnswerPostDTO drawingPromptAnswerPostDTO);
 
+
+    // prompt
     @Mapping(source = "promptId", target = "promptId")
     @Mapping(source = "promptNr", target = "promptNr")
     @Mapping(source = "promptType", target = "promptType")
     @Mapping(source = "promptText", target = "promptText")
     PromptGetDTO convertToPromptGetDTO(Prompt prompt);
 
+
+    // quiz question
     @Mapping(source = "questionId", target = "questionId")
     @Mapping(source = "quizQuestionText", target = "quizQuestionText")
     @Mapping(source = "imageToDisplay", target = "imageToDisplay")
@@ -89,6 +95,7 @@ public interface DTOMapper {
     QuizQuestionGetDTO convertToQuizQuestionGetDTO(QuizQuestion question);
 
 
+    // quiz answer
     @Mapping(source = "pickedAnswerOptionId", target = "pickedAnswerOptionId")
     QuizAnswer convertFromQuizAnswerPostDTO(QuizAnswerPostDTO quizAnswerPostDTO);
 
