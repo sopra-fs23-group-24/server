@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * User Service
+ * Game Service
  * This class is the "worker" and responsible for all functionality related to
- * the user
+ * the game
  * (e.g., it creates, modifies, deletes, finds). The result will be passed back
  * to the caller.
  */
@@ -38,16 +38,10 @@ public class GameService {
     private final Logger log = LoggerFactory.getLogger(GameService.class);
 
     private final GameRepository gameRepository;
-
     private final PlayerRepository playerRepository;
-
-
     private final DrawingPromptAnswerRepository drawingPromptAnswerRepository;
-
     private final TextPromptAnswerRepository textPromptAnswerRepository;
-
     private final TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
-
     private final QuizQuestionRepository quizQuestionRepository;
 
     private final Random rand = SecureRandom.getInstanceStrong();
@@ -58,8 +52,8 @@ public class GameService {
                        @Qualifier("textPromptAnswerRepository") TextPromptAnswerRepository textPromptAnswerRepository,
                        @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
                        @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository,
-                       @Qualifier("quizQuestionRepository") QuizQuestionRepository quizQuestionRepository
-    ) throws NoSuchAlgorithmException {
+                       @Qualifier("quizQuestionRepository") QuizQuestionRepository quizQuestionRepository)
+            throws NoSuchAlgorithmException {
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
         this.textPromptAnswerRepository = textPromptAnswerRepository;
@@ -70,6 +64,7 @@ public class GameService {
 
 
     //TODO: test Integration?
+    //what do we need this for? - except testing for ourselves
     public List<Game> getGames() {
         return this.gameRepository.findAll();
     }
@@ -80,18 +75,22 @@ public class GameService {
         if (gameByPin == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
         }
-        else {
-            return gameByPin;
-        }
+        // can this else be removed? since we throw anyway if null above. I think so
+        //else {
+        return gameByPin;
+        //}
     }
 
     public Game createGame() {
         Game newGame = new Game();
-        newGame.setStatus(GameStatus.LOBBY);
+        // we already set the status to be LOBBY by default / by initialization ...
+        // newGame.setStatus(GameStatus.LOBBY);
 
+        // generate and set gamePin
         String pin = generateUniqueGamePin();
         newGame.setGamePin(pin);
 
+        // at this point a game should have a gameId, the LOBBY status, and a unique gamePin
         newGame = gameRepository.save(newGame);
         gameRepository.flush();
 
@@ -101,6 +100,9 @@ public class GameService {
 
     //TODO: test Integration?
     //TODO: test Service
+
+    // throws when no player or a non-host player tries to change the status
+    // returns the same game, but which now has a new status
     public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken) {
 
         Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
@@ -114,6 +116,9 @@ public class GameService {
         }
 
         if (requestedStatus == GameStatus.LOBBY) {
+            // TODO: do we want checks that e.g. it is only possible to switch to lobby from the END?
+
+            // clear all prompts, questions, answers and player scores
             gameByPin.emptyPromptSet();
             gameByPin.emptyQuizQuestions();
             quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
@@ -124,7 +129,17 @@ public class GameService {
                 player.setScore(0);
             }
         }
+
+        // TODO: add additional checks for changes to other statuses (best in other methods probably, to
+        //  not inflate this method here too much.)
+        // checks for changeToSelection
+        // checks for changeToPrompt
+        // checks for changeToQuiz
+        // checks for changeToEnd
+
+        // actual changing and saving of the game / its status
         gameByPin.setStatus(requestedStatus);
+
         gameByPin = gameRepository.save(gameByPin);
         gameRepository.flush();
 
