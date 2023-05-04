@@ -3,7 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.constant;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public enum AdditionalDisplayType {
+public enum DisplayType {
 
     IMAGE("IMAGE"),
     TEXT("TEXT"),
@@ -11,12 +11,12 @@ public enum AdditionalDisplayType {
 
     private final String displayTypeAsString;
 
-    AdditionalDisplayType(String displayTypeAsString) {
+    DisplayType(String displayTypeAsString) {
         this.displayTypeAsString = displayTypeAsString;
     }
 
-    public static AdditionalDisplayType transformToType(String displayType) {
-        for (AdditionalDisplayType s : AdditionalDisplayType.values()) {
+    public static DisplayType transformToType(String displayType) {
+        for (DisplayType s : DisplayType.values()) {
             if (displayType.equals(s.displayTypeAsString)) {
                 return s;
             }

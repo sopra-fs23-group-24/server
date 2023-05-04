@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity.prompt;
 
-import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
+import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 
 import javax.persistence.*;
@@ -30,7 +30,7 @@ public class PotentialQuestion implements Serializable {
     private boolean requiresTextInput;
 
     @Column
-    private AdditionalDisplayType displayType;
+    private DisplayType displayType;
 
     public Long getPotentialQuestionId() {
         return potentialQuestionId;
@@ -72,11 +72,11 @@ public class PotentialQuestion implements Serializable {
         this.requiresTextInput = requiresTextInput;
     }
 
-    public AdditionalDisplayType getDisplayType() {
+    public DisplayType getDisplayType() {
         return displayType;
     }
 
-    public void setDisplayType(AdditionalDisplayType displayType) {
+    public void setDisplayType(DisplayType displayType) {
         this.displayType = displayType;
     }
 }

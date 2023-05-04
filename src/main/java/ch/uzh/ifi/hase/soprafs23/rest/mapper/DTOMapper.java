@@ -90,6 +90,7 @@ public interface DTOMapper {
     @Mapping(source = "imageToDisplay", target = "imageToDisplay")
     @Mapping(source = "storyToDisplay", target = "storyToDisplay")
     @Mapping(source = "answerOptions", target = "answerOptions")
+    @Mapping(source = "answerDisplayType", target = "answerDisplayType")
     @Mapping(source = "correctAnswer", target = "correctAnswer")
     @Mapping(source = "questionStatus", target = "questionStatus")
     QuizQuestionGetDTO convertToQuizQuestionGetDTO(QuizQuestion question);

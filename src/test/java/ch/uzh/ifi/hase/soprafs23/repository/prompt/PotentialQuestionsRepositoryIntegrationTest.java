@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.repository.prompt;
 
-import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
+import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
@@ -40,7 +40,7 @@ public class PotentialQuestionsRepositoryIntegrationTest {
         testPQ.setQuestionType(QuestionType.PLAYER);
         testPQ.setQuestionText("Test question about a story of %s?");
         testPQ.setRequiresTextInput(true);
-        testPQ.setDisplayType(AdditionalDisplayType.TEXT);
+        testPQ.setDisplayType(DisplayType.TEXT);
         testPQ.setAssociatedPrompt(testPrompt);
         testPQ.setPotentialQuestionId(999L);
 

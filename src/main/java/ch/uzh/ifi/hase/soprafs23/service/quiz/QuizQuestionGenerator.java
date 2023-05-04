@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
-import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
+import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
@@ -125,16 +125,19 @@ public class QuizQuestionGenerator {
                 List<TrueFalsePromptAnswer> answersToPrompt = trueFalsePromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(game.getGamePin(), prompt.getPromptNr());
                 createdQuestion = transformPotentialQuestionTF(selectedPotentialQuestion, answersToPrompt);
             }
-            if (createdQuestion == null) {
+
+            //avoid duplicate questions
+            if (createdQuestion != null) {
+                for(QuizQuestion q : createdQuestions){
+                    if(q.getQuizQuestionText().equals(createdQuestion.getQuizQuestionText()) && q.getCorrectAnswer() == createdQuestion.getCorrectAnswer()){
+                        createdQuestion = null;
+                    }
+                }
+            }
+            if(createdQuestion == null){
                 continue;
             }
 
-            //TODO: avoid double questions
-            for(QuizQuestion q : createdQuestions){
-                if(q.getQuizQuestionText().equals(createdQuestion.getQuizQuestionText()) && q.getCorrectAnswer() == createdQuestion.getCorrectAnswer()){
-                    continue;
-                }
-            }
             createdQuestion.setAssociatedGamePin(game.getGamePin());
             createdQuestion.setAssociatedPrompt(prompt);
             createdQuestions.add(createdQuestion);
@@ -154,7 +157,7 @@ public class QuizQuestionGenerator {
             DrawingPromptAnswer selectedCorrectPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
             Player correctAnswerPlayer = playerRepository.findByPlayerId(selectedCorrectPromptAnswer.getAssociatedPlayerId());
 
-            if (pq.getDisplayType() == AdditionalDisplayType.IMAGE) {
+            if (pq.getDisplayType() == DisplayType.IMAGE) {
                 newQuestion.setImageToDisplay(selectedCorrectPromptAnswer.getAnswerDrawing());
             }
             log.debug("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getImageToDisplay());
@@ -185,6 +188,7 @@ public class QuizQuestionGenerator {
                 answerOptionRepository.flush();
                 allAnswers.remove(selectedPromptAnswer);
             }
+            newQuestion.setAnswerDisplayType(DisplayType.TEXT);
         }
 
         //picked pq will ask which drawing is from a specific player
@@ -219,6 +223,8 @@ public class QuizQuestionGenerator {
                 answerOptionRepository.flush();
                 allAnswers.remove(selectedPromptAnswer);
             }
+            //information for frontend that it should display images
+            newQuestion.setAnswerDisplayType(DisplayType.IMAGE);
         }
 
         shuffleQuizAnswers(newQuestion);
@@ -301,10 +307,13 @@ public class QuizQuestionGenerator {
                 allAnswers.remove(selectedPromptAnswer);
             }
         }
+        newQuestion.setAnswerDisplayType(DisplayType.TEXT);
 
         shuffleQuizAnswers(newQuestion);
+
         qqRepository.save(newQuestion);
         qqRepository.flush();
+
         return newQuestion;
     }
 
@@ -332,7 +341,7 @@ public class QuizQuestionGenerator {
 
             Player correctAnswerPlayer = playerRepository.findByPlayerId(selectedCorrectPromptAnswer.getAssociatedPlayerId());
 
-            if (pq.getDisplayType() == AdditionalDisplayType.TEXT) {
+            if (pq.getDisplayType() == DisplayType.TEXT) {
                 newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
             }
 
@@ -374,7 +383,7 @@ public class QuizQuestionGenerator {
             }
 
 
-            if (pq.getDisplayType() == AdditionalDisplayType.TEXT) {
+            if (pq.getDisplayType() == DisplayType.TEXT) {
                 newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
             }
 
@@ -400,6 +409,8 @@ public class QuizQuestionGenerator {
             answerOptionRepository.save(newAnswerOption);
             answerOptionRepository.flush();
         }
+        newQuestion.setAnswerDisplayType(DisplayType.TEXT);
+
         shuffleQuizAnswers(newQuestion);
 
         qqRepository.save(newQuestion);
