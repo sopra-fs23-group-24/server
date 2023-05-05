@@ -230,5 +230,13 @@ Week 5 (24. - 28. april)
 	- work on: 
 	- description:
 - Linda:
-	- work on: 
+	- work on:
+	    - https://github.com/sopra-fs23-group-24/server/issues/16
+	    - https://github.com/sopra-fs23-group-24/server/issues/17
+	    - https://github.com/sopra-fs23-group-24/server/issues/18
+	    - https://github.com/sopra-fs23-group-24/server/issues/19   
 	- description:
+	    - (not issue specific) writing test cases for all classes
+	    - (not issue specific) refactoring backend (links to repositories instead of services)
+	    - finished quiz question generation, communication with frontend, randomisation
+	    - (not issue specific) debugging for MS3 deployment 
