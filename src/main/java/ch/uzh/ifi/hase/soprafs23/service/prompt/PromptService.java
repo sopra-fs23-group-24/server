@@ -103,10 +103,18 @@ public class PromptService {
         promptsForGame.addAll(selectNrOfPromptsFromList(allTextPrompts, wantedTextPrompts));
         promptsForGame.addAll(selectNrOfPromptsFromList(allTrueFalsePrompts, wantedTrueFalsePrompts));
         promptsForGame.addAll(selectNrOfPromptsFromList(allDrawingPrompts, wantedDrawingPrompts));
-
         addPromptsToGame(promptsForGame, gamePin);
         return promptsForGame;
     }
+
+    public void addTimerToGame(PromptPostDTO promptPostDTO, String gamePin) {
+        Game gameByPin = gameRepository.findByGamePin(gamePin);
+        gameByPin.setTimer(promptPostDTO.getTimer());
+
+        gameRepository.save(gameByPin);
+        gameRepository.flush();
+    }
+
 
     //TODO: test Integration?
     private Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {

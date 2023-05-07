@@ -92,20 +92,24 @@ public class QuizAnswerService {
     // the notion of speed is not yet accounted for
     // TODO : Rename this
     public int calculateAndAddScore(QuizAnswer quizAnswer, long questionId) {
-        // get the picked and the correct answer
+        // get the chosen and the correct answer
         long pickedId = quizAnswer.getPickedAnswerOptionId();
         AnswerOption chosenAnswer = answerOptionRepository.getAnswerOptionByAnswerOptionId(pickedId);
         AnswerOption correctAnswer = qqRepository.findByQuestionId(questionId).getCorrectAnswer();
 
+        // include the timer into the calculation
+
         int score = 0;
         if (chosenAnswer.equals(correctAnswer)) {
-            score = 10;
+            // sets the reminding time as score (that is our calculation of score.)
+            // the subtraction of time is done in the frontend as of right now.
+            score = quizAnswer.getTimer();
             // add points to player
             quizAnswer.getAssociatedPlayer().addPoints(score);
             playerRepository.save(quizAnswer.getAssociatedPlayer());
             playerRepository.flush();
         }
-        return score; // either 0 or 10
+        return score;
 
     }
 
