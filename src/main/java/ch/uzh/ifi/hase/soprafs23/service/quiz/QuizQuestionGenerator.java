@@ -131,6 +131,7 @@ public class QuizQuestionGenerator {
                 for(QuizQuestion q : createdQuestions){
                     if(q.getQuizQuestionText().equals(createdQuestion.getQuizQuestionText()) && q.getCorrectAnswer() == createdQuestion.getCorrectAnswer()){
                         createdQuestion = null;
+                        break;
                     }
                 }
             }
