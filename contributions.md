@@ -257,7 +257,11 @@ Week 6 (01. - 07. may)
 	- description:
 - Jan:
 	- work on: 
+		- https://github.com/sopra-fs23-group-24/client/issues/27
+	    - https://github.com/sopra-fs23-group-24/client/issues/36
 	- description:
+	    - created a Soundtrack (8 second jingle on loop)
+	    - Button function to end and restart game in Endscreen
 - Mike:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/38
