@@ -219,7 +219,10 @@ Week 4 (17. -21. april)
 Week 5 (24. - 28. april)
 - Tim:
 	- work on: 
-	- description:
+	    - https://github.com/sopra-fs23-group-24/server/issues/76
+	    - https://github.com/sopra-fs23-group-24/server/issues/77
+	- description: 
+        - bugfixing for deployment and writing testcases 
 - Lara:
 	- work on: 
 	- description:
@@ -251,7 +254,11 @@ Week 5 (24. - 28. april)
 Week 6 (01. - 07. may)
 - Tim:
 	- work on: 
+        - https://github.com/sopra-fs23-group-24/server/issues/70
+        - https://github.com/sopra-fs23-group-24/server/issues/71
 	- description:
+        - adding the timer to the backend, inserting it in the classes which need it
+        - started working on going through and evaluating the logic, adding additional checks where needed   
 - Lara:
 	- work on: 
 	- description:
