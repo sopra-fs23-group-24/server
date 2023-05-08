@@ -7,40 +7,40 @@
 \\
 \\                  TF EXAMPLE
 1: PLAYER: Which player told this true story about their last holiday?: false: TEXT
-1: BOOLEAN: Is the following story by %s about their last holiday true or false?: true: TEXT
+1: BOOLEAN: Is the following story by <i>%s</i> about their last holiday true or false?: true: TEXT
 \\                  DRAW EXAMPLE
 2: PLAYER: Which player drew this rat?: false: IMAGE
-2: PROMPTANSWER: Which rat was drawn by %s?: true: NONE
+2: PROMPTANSWER: Which rat was drawn by <i>%s</i>?: true: NONE
 \\                  TEXT EXAMPLE
-3: PLAYER: Who would choose '%s' as their weapon in a zombie apocalypse?: true: NONE
-3: PROMPTANSWER: What is the weapon of choice of %s in a zombie apocalypse?: true: NONE
+3: PLAYER: Who would choose <i>'%s'</i> as their weapon in a zombie apocalypse?: true: NONE
+3: PROMPTANSWER: What is the weapon of choice of <i>%s</i> in a zombie apocalypse?: true: NONE
 \\
 4: PLAYER: Which player told this true story about their best friend?: false: TEXT
-4: BOOLEAN: Is this story about %s's best friend true or false?: true: TEXT
+4: BOOLEAN: Is this story about <i>%s's</i> best friend true or false?: true: TEXT
 5: PLAYER: Which player drew this toilet?: false: IMAGE
-5: PROMPTANSWER: Which toilet was drawn by %s?: true: NONE
-6: PLAYER: Who thinks the worst way to start a conversation is '%s'?: true: NONE
-6: PROMPTANSWER: What does %s think is the worst way to start a conversation?: true: NONE
+5: PROMPTANSWER: Which toilet was drawn by <i>%s</i>?: true: NONE
+6: PLAYER: Who thinks the worst way to start a conversation is <i>'%s'</i>?: true: NONE
+6: PROMPTANSWER: What does <i>%s</i> think is the worst way to start a conversation?: true: NONE
 7: PLAYER: Which player told this true story about their job/studies?: false: TEXT
-7: BOOLEAN: Is this story about the job/studies of %s true or false?: true: TEXT
+7: BOOLEAN: Is this story about the job/studies of <i>%s</i> true or false?: true: TEXT
 8: PLAYER: Which player drew this unicorn?: false: IMAGE
-8: PROMPTANSWER: Which unicorn was drawn by %s?: true: NONE
-9: PLAYER: Who would name their pet alligator %s?: true: NONE
-9: PROMPTANSWER: What would %s name a pet alligator?: true: NONE
+8: PROMPTANSWER: Which unicorn was drawn by <i>%s</i>?: true: NONE
+9: PLAYER: Who would name their pet alligator <i>%s</i>?: true: NONE
+9: PROMPTANSWER: What would <i>%s</i> name a pet alligator?: true: NONE
 10: PLAYER: Which player has claimed this remarkable achievement?: false: TEXT
-10: BOOLEAN: Did %s achieve the following or not?: true: TEXT
+10: BOOLEAN: Did <i>%s</i> achieve the following or not?: true: TEXT
 11: PLAYER: Which player drew this baby?: false: IMAGE
-11: PROMPTANSWER: Which baby was drawn by %s?: true: NONE
-12: PLAYER: Who thinks that '%s' is the worst place to fall asleep?: true: NONE
-12: PROMPTANSWER: Where does %s think is the worst place to fall asleep?: true: NONE
+11: PROMPTANSWER: Which baby was drawn by </i>%s</i>?: true: NONE
+12: PLAYER: Who thinks that <i>'%s'</i> is the worst place to fall asleep?: true: NONE
+12: PROMPTANSWER: Where does <i>%s</i> think is the worst place to fall asleep?: true: NONE
 13: PLAYER: Who did this embarrassing thing happen to?: false: TEXT
-13: BOOLEAN: Did %s actually experience this embarrassing thing?: true: TEXT
+13: BOOLEAN: Did <i>%s</i> actually experience this embarrassing thing?: true: TEXT
 14: PLAYER: Which player drew this lobster?: false: IMAGE
-14: PROMPTANSWER: Which lobster was drawn by %s?: true: NONE
-15: PLAYER: Who said that '%s' would be the title of a movie about their life?: true: NONE
-15: PROMPTANSWER: What does %s say a movie about their life would be called?: true: NONE
+14: PROMPTANSWER: Which lobster was drawn by <i>%s</i>?: true: NONE
+15: PLAYER: Who said that <i>'%s'</i> would be the title of a movie about their life?: true: NONE
+15: PROMPTANSWER: What does <i>%s</i> say a movie about their life would be called?: true: NONE
 16: PLAYER: Who told this true fun fact?: false: TEXT
-16: BOOLEAN: Did %s tell the truth with this fun fact?: true: TEXT
+16: BOOLEAN: Did <i>%s</i> tell the truth with this fun fact?: true: TEXT
 17: PLAYER: Which player drew this alien?: false: IMAGE
-17: PROMPTANSWER: Which alien was drawn by %s?: true: NONE
+17: PROMPTANSWER: Which alien was drawn by <i>%s</i>?: true: NONE
 \\unfinished, just so we don't get errors

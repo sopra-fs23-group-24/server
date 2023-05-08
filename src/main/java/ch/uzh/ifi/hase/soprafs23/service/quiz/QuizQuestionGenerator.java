@@ -129,7 +129,7 @@ public class QuizQuestionGenerator {
             //avoid duplicate questions
             if (createdQuestion != null) {
                 for(QuizQuestion q : createdQuestions){
-                    if(q.getQuizQuestionText().equals(createdQuestion.getQuizQuestionText()) && q.getCorrectAnswer() == createdQuestion.getCorrectAnswer()){
+                    if(q.getQuizQuestionText().equals(createdQuestion.getQuizQuestionText()) && q.getCorrectAnswer().getAnswerOptionText().equals(createdQuestion.getCorrectAnswer().getAnswerOptionText())){
                         createdQuestion = null;
                         break;
                     }
