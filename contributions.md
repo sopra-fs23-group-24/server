@@ -225,7 +225,13 @@ Week 5 (24. - 28. april)
 	- description:
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/29
+	    - https://github.com/sopra-fs23-group-24/client/issues/19
+	    - https://github.com/sopra-fs23-group-24/client/issues/28
 	- description:
+	    - User can now leave the lobby via button in endscreen
+	    - Debugging the frontend in general
+	    - Visual Feedback when selecting an answer
 - Mike:
 	- work on: 
 	- description:
