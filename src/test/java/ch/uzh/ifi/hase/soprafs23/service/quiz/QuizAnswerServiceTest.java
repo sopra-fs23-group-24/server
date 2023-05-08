@@ -153,6 +153,7 @@ public class QuizAnswerServiceTest {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
         quizAnswer.setAssociatedPlayer(testPlayer);
+        quizAnswer.setTimer(10);
         Assertions.assertEquals(testPlayer.getScore(), 0);
 
         int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId());

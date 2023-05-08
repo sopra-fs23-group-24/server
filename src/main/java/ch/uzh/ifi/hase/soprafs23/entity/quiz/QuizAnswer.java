@@ -23,7 +23,6 @@ public class QuizAnswer implements Serializable {
     private long pickedAnswerOptionId;
     @ManyToOne
     private Player associatedPlayer;
-
     @Column // does it need to be a column, why? , why not? not sure atm
     private Integer timer;
 
