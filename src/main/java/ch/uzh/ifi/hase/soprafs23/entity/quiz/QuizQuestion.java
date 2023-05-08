@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity.quiz;
 
+import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 
@@ -41,6 +42,9 @@ public class QuizQuestion implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerOption> answerOptions = new ArrayList<>();
+
+    @Column
+    private DisplayType answerDisplayType;
 
     @OneToOne
     private AnswerOption correctAnswer;
@@ -111,6 +115,14 @@ public class QuizQuestion implements Serializable {
 
     public void setAnswerOptions(List<AnswerOption> answerOptions) {
         this.answerOptions = answerOptions;
+    }
+
+    public DisplayType getAnswerDisplayType() {
+        return answerDisplayType;
+    }
+
+    public void setAnswerDisplayType(DisplayType answerDisplayType) {
+        this.answerDisplayType = answerDisplayType;
     }
 
     public AnswerOption getCorrectAnswer() {

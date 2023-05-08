@@ -4,6 +4,8 @@ public class QuizAnswerPostDTO {
 
     private long pickedAnswerOptionId;
 
+    private Integer timer;
+
 
     public long getPickedAnswerOptionId() {
         return pickedAnswerOptionId;
@@ -11,5 +13,13 @@ public class QuizAnswerPostDTO {
 
     public void setPickedAnswerOptionId(long pickedAnswerOptionId) {
         this.pickedAnswerOptionId = pickedAnswerOptionId;
+    }
+
+    public Integer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Integer timer) {
+        this.timer = timer;
     }
 }

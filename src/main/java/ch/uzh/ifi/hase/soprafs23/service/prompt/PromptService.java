@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service.prompt;
 
-import ch.uzh.ifi.hase.soprafs23.constant.AdditionalDisplayType;
+import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
@@ -103,10 +103,18 @@ public class PromptService {
         promptsForGame.addAll(selectNrOfPromptsFromList(allTextPrompts, wantedTextPrompts));
         promptsForGame.addAll(selectNrOfPromptsFromList(allTrueFalsePrompts, wantedTrueFalsePrompts));
         promptsForGame.addAll(selectNrOfPromptsFromList(allDrawingPrompts, wantedDrawingPrompts));
-
         addPromptsToGame(promptsForGame, gamePin);
         return promptsForGame;
     }
+
+    public void addTimerToGame(PromptPostDTO promptPostDTO, String gamePin) {
+        Game gameByPin = gameRepository.findByGamePin(gamePin);
+        gameByPin.setTimer(promptPostDTO.getTimer());
+
+        gameRepository.save(gameByPin);
+        gameRepository.flush();
+    }
+
 
     //TODO: test Integration?
     private Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {
@@ -223,7 +231,7 @@ public class PromptService {
             newPotentialQuestion.setQuestionType(QuestionType.transformToType(potentialQuestionLine[1]));
             newPotentialQuestion.setQuestionText(potentialQuestionLine[2]);
             newPotentialQuestion.setRequiresTextInput(Boolean.parseBoolean(potentialQuestionLine[3]));
-            newPotentialQuestion.setDisplayType(AdditionalDisplayType.transformToType(potentialQuestionLine[4]));
+            newPotentialQuestion.setDisplayType(DisplayType.transformToType(potentialQuestionLine[4]));
 
             log.debug("Potential question parsed as: {}", newPotentialQuestion);
             return newPotentialQuestion;

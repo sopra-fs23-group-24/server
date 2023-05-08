@@ -5,6 +5,8 @@ public class PromptPostDTO {
     private Integer truefalseNr;
     private Integer drawingNr;
 
+    private Integer timer;
+
     public Integer getTextNr() {
         return textNr;
     }
@@ -27,5 +29,13 @@ public class PromptPostDTO {
 
     public void setDrawingNr(Integer drawingNr) {
         this.drawingNr = drawingNr;
+    }
+
+    public Integer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Integer timer) {
+        this.timer = timer;
     }
 }

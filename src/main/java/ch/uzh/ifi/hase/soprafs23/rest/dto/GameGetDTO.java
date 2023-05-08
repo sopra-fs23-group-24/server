@@ -3,11 +3,15 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 
+import javax.persistence.criteria.CriteriaBuilder;
+
 public class GameGetDTO {
     private Long gameId;
     private String gamePin;
     private GameStatus status;
     private QuizQuestionGetDTO currentQuestion;
+
+    private Integer timer;
 
     public Long getGameId() {
         return gameId;
@@ -40,5 +44,13 @@ public class GameGetDTO {
 
     public void setCurrentQuestion(QuizQuestionGetDTO currentQuestion) {
         this.currentQuestion = currentQuestion;
+    }
+
+    public Integer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Integer timer) {
+        this.timer = timer;
     }
 }

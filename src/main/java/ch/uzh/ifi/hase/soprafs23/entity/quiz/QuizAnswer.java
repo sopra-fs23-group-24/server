@@ -24,6 +24,9 @@ public class QuizAnswer implements Serializable {
     @ManyToOne
     private Player associatedPlayer;
 
+    @Column // does it need to be a column, why? , why not? not sure atm
+    private Integer timer;
+
 
     public long getPickedAnswerOptionId() {
         return pickedAnswerOptionId;
@@ -49,5 +52,13 @@ public class QuizAnswer implements Serializable {
 
     public void setAssociatedPlayer(Player associatedPlayer) {
         this.associatedPlayer = associatedPlayer;
+    }
+
+    public Integer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Integer timer) {
+        this.timer = timer;
     }
 }

@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto.quiz;
 
 import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public class QuizQuestionGetDTO {
     private String storyToDisplay;
 
     private List<AnswerOption> answerOptions;
+
+    private DisplayType answerDisplayType;
 
     private AnswerOption correctAnswer;
 
@@ -61,6 +64,14 @@ public class QuizQuestionGetDTO {
 
     public void setAnswerOptions(List<AnswerOption> answerOptions) {
         this.answerOptions = answerOptions;
+    }
+
+    public DisplayType getAnswerDisplayType() {
+        return answerDisplayType;
+    }
+
+    public void setAnswerDisplayType(DisplayType answerDisplayType) {
+        this.answerDisplayType = answerDisplayType;
     }
 
     public AnswerOption getCorrectAnswer() {

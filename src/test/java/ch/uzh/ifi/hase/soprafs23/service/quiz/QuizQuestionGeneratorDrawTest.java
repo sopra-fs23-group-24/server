@@ -83,6 +83,7 @@ public class QuizQuestionGeneratorDrawTest {
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
+        Assertions.assertEquals(generatedQuestion.getAnswerDisplayType(), DisplayType.TEXT);
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
@@ -111,6 +112,7 @@ public class QuizQuestionGeneratorDrawTest {
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
+        Assertions.assertEquals(generatedQuestion.getAnswerDisplayType(), DisplayType.IMAGE);
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
@@ -172,14 +174,14 @@ public class QuizQuestionGeneratorDrawTest {
         potentialDrawingQuestionPROMPTANSWER.setQuestionType(QuestionType.PROMPTANSWER);
         potentialDrawingQuestionPROMPTANSWER.setAssociatedPrompt(promptRepository.findByPromptNr(997));
         potentialDrawingQuestionPROMPTANSWER.setRequiresTextInput(true);
-        potentialDrawingQuestionPROMPTANSWER.setDisplayType(AdditionalDisplayType.NONE);
+        potentialDrawingQuestionPROMPTANSWER.setDisplayType(DisplayType.NONE);
 
         potentialDrawingQuestionPLAYER = new PotentialQuestion();
         potentialDrawingQuestionPLAYER.setQuestionText("Which player drew this rat?");
         potentialDrawingQuestionPLAYER.setQuestionType(QuestionType.PLAYER);
         potentialDrawingQuestionPLAYER.setAssociatedPrompt(promptRepository.findByPromptNr(997));
         potentialDrawingQuestionPLAYER.setRequiresTextInput(false);
-        potentialDrawingQuestionPLAYER.setDisplayType(AdditionalDisplayType.IMAGE);
+        potentialDrawingQuestionPLAYER.setDisplayType(DisplayType.IMAGE);
     }
 
     private void setUpDrawingPromptAnswers() {

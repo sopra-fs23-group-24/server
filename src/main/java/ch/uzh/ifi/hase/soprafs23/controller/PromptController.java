@@ -59,7 +59,10 @@ public class PromptController {
     @ResponseBody
     public List<PromptGetDTO> setPromptsForGame(@RequestBody PromptPostDTO promptPostDTO, @PathVariable("pin") String gamePin) {
 
+        // add prompts to game
         List<Prompt> allPrompts = promptService.pickPrompts(promptPostDTO, gamePin);
+        // add timer to game
+        promptService.addTimerToGame(promptPostDTO, gamePin);
 
         List<PromptGetDTO> promptsGetDTOs = new ArrayList<>();
 
