@@ -260,7 +260,11 @@ Week 6 (01. - 07. may)
 	- description:
 - Mike:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/38
+	    - https://github.com/sopra-fs23-group-24/client/issues/39
 	- description:
+	    - Points the player earned now gets displayed correctly in Leaderboard View
+	    - Displaying correct answer from quiz question in leaderboard view
 - Linda:
 	- work on: 
 	- description:
