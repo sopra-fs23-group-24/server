@@ -171,7 +171,8 @@ public class GameService {
         }
         QuizQuestion currentQuestion = gameByPin.nextQuestion();
         if (currentQuestion == null && gameByPin.getStatus() == GameStatus.QUIZ) {
-            // clear all prompts, questions, answers
+
+            // clear all prompts, questions, answers - this is necessary to allow players to leave during the end stage
             gameByPin.emptyPromptSet();
             gameByPin.emptyQuizQuestions();
             quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
