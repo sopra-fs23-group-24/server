@@ -246,3 +246,75 @@ Week 5 (24. - 28. april)
 	    - (not issue specific) refactoring backend (links to repositories instead of services)
 	    - finished quiz question generation, communication with frontend, randomisation
 	    - (not issue specific) debugging for MS3 deployment 
+
+---
+Week 6 (01. - 07. may)
+- Tim:
+	- work on: 
+	- description:
+- Lara:
+	- work on: 
+	- description:
+- Jan:
+	- work on: 
+	- description:
+- Mike:
+	- work on: 
+	- description:
+- Linda:
+	- work on: 
+	- description:
+
+---
+Week 7 (08. - 14. may)
+- Tim:
+	- work on: 
+	- description:
+- Lara:
+	- work on: 
+	- description:
+- Jan:
+	- work on: 
+	- description:
+- Mike:
+	- work on: 
+	- description:
+- Linda:
+	- work on: 
+	- description:
+
+---
+Week 8 (15. - 21. may)
+- Tim:
+	- work on: 
+	- description:
+- Lara:
+	- work on: 
+	- description:
+- Jan:
+	- work on: 
+	- description:
+- Mike:
+	- work on: 
+	- description:
+- Linda:
+	- work on: 
+	- description:
+
+---
+Week 9 (22. - 25. may)
+- Tim:
+	- work on: 
+	- description:
+- Lara:
+	- work on: 
+	- description:
+- Jan:
+	- work on: 
+	- description:
+- Mike:
+	- work on: 
+	- description:
+- Linda:
+	- work on: 
+	- description:
