@@ -266,8 +266,16 @@ Week 6 (01. - 07. may)
 	    - Points the player earned now gets displayed correctly in Leaderboard View
 	    - Displaying correct answer from quiz question in leaderboard view
 - Linda:
-	- work on: 
+	- work on:
+	    - https://github.com/sopra-fs23-group-24/server/issues/69
+	    - https://github.com/sopra-fs23-group-24/server/issues/61
+	    - https://github.com/sopra-fs23-group-24/server/issues/62
+	    - https://github.com/sopra-fs23-group-24/server/issues/17 
 	- description:
+	    - removed duplicate questions
+	    - (old commit, but checked again) restart game
+	    - (old commit, but checked again) select prompts based on entered nr
+	    - (update on old issue) QuizQuestion has display information for options (image or text)
 
 ---
 Week 7 (08. - 14. may)
