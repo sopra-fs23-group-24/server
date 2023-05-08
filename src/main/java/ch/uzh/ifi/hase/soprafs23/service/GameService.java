@@ -118,13 +118,7 @@ public class GameService {
         if (requestedStatus == GameStatus.LOBBY) {
             // TODO: do we want checks that e.g. it is only possible to switch to lobby from the END?
 
-            // clear all prompts, questions, answers and player scores
-            gameByPin.emptyPromptSet();
-            gameByPin.emptyQuizQuestions();
-            quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
-            drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-            textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-            trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            //reset player scores
             for (Player player : gameByPin.getPlayerGroup()) {
                 player.setScore(0);
             }
@@ -135,7 +129,7 @@ public class GameService {
         // checks for changeToSelection
         // checks for changeToPrompt
         // checks for changeToQuiz
-        // checks for changeToEnd
+        // checks for changeToEnd - Linda
 
         // actual changing and saving of the game / its status
         gameByPin.setStatus(requestedStatus);
@@ -145,6 +139,10 @@ public class GameService {
 
         return gameByPin;
     }
+
+
+
+
 
     //TODO: test Integration?
     //TODO: test Service
@@ -160,9 +158,6 @@ public class GameService {
         }
 
         gameRepository.deleteByGamePin(gamePin);
-        drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-        textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-        trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
 
         return gameByPin;
     }
@@ -176,6 +171,15 @@ public class GameService {
         }
         QuizQuestion currentQuestion = gameByPin.nextQuestion();
         if (currentQuestion == null && gameByPin.getStatus() == GameStatus.QUIZ) {
+
+            // clear all prompts, questions, answers - this is necessary to allow players to leave during the end stage
+            gameByPin.emptyPromptSet();
+            gameByPin.emptyQuizQuestions();
+            quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
+            drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+
             gameByPin.setStatus(GameStatus.END);
         }
         gameByPin = gameRepository.save(gameByPin);

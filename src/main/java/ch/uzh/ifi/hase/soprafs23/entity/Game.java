@@ -152,16 +152,18 @@ public class Game implements Serializable {
     }
 
     public QuizQuestion nextQuestion() {
-        if (currentQuestion == null) {
-            currentQuestion = quizQuestionSet.get(0);
-            return currentQuestion;
-        }
-        int currentIndex = quizQuestionSet.indexOf(currentQuestion);
-        if (currentIndex + 1 < quizQuestionSet.size()) {
-            currentQuestion = quizQuestionSet.get(currentIndex + 1);
-        }
-        else {
-            currentQuestion = null;
+        if(quizQuestionSet.size() > 0){
+            if (currentQuestion == null) {
+                currentQuestion = quizQuestionSet.get(0);
+                return currentQuestion;
+            }
+            int currentIndex = quizQuestionSet.indexOf(currentQuestion);
+            if (currentIndex + 1 < quizQuestionSet.size()) {
+                currentQuestion = quizQuestionSet.get(currentIndex + 1);
+            }
+            else {
+                currentQuestion = null;
+            }
         }
         return currentQuestion;
     }

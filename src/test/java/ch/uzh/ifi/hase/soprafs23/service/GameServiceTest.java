@@ -9,6 +9,7 @@ import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +41,9 @@ public class GameServiceTest {
 
     @Mock
     private TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
+
+    @Mock
+    private QuizQuestionRepository quizQuestionRepository;
 
     @InjectMocks
     private GameService gameService;
@@ -180,7 +185,9 @@ public class GameServiceTest {
     @Test
     public void changeToNextQuestion_success_endGame() {
         testGame.setStatus(GameStatus.QUIZ);
-        testGame.setQuizQuestionSet(List.of(new QuizQuestion()));
+        List<QuizQuestion> aQuestion = new ArrayList<>();
+        aQuestion.add(new QuizQuestion());
+        testGame.setQuizQuestionSet(aQuestion);
         testGame.setCurrentQuestion(null);
 
         Game returnedGame = gameService.changeToNextQuestion(testGame.getGamePin(), testPlayer.getToken());
