@@ -237,7 +237,13 @@ Week 5 (24. - 28. april)
 	    - Visual Feedback when selecting an answer
 - Mike:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/26
+	    - https://github.com/sopra-fs23-group-24/client/issues/25
 	- description:
+	    - debugging front end in general
+	    - Functionalitay that player gets redirected to startscreen if he gets kicked out of the game 
+	    - added a minimum of 4 player constraint in Lobby
+	    - fix points display in leaderboard view (didnt work yet)
 - Linda:
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/server/issues/16
@@ -273,9 +279,11 @@ Week 6 (01. - 07. may)
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/38
 	    - https://github.com/sopra-fs23-group-24/client/issues/39
+	    - https://github.com/sopra-fs23-group-24/client/issues/45
 	- description:
 	    - Points the player earned now gets displayed correctly in Leaderboard View
 	    - Displaying correct answer from quiz question in leaderboard view
+	    - Fixed bug of displaying images as answers in quiz
 - Linda:
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/server/issues/69
