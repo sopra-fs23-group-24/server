@@ -118,13 +118,7 @@ public class GameService {
         if (requestedStatus == GameStatus.LOBBY) {
             // TODO: do we want checks that e.g. it is only possible to switch to lobby from the END?
 
-            // clear all prompts, questions, answers and player scores
-            gameByPin.emptyPromptSet();
-            gameByPin.emptyQuizQuestions();
-            quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
-            drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-            textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-            trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            //reset player scores
             for (Player player : gameByPin.getPlayerGroup()) {
                 player.setScore(0);
             }
@@ -164,9 +158,6 @@ public class GameService {
         }
 
         gameRepository.deleteByGamePin(gamePin);
-        drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-        textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-        trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
 
         return gameByPin;
     }
@@ -180,6 +171,14 @@ public class GameService {
         }
         QuizQuestion currentQuestion = gameByPin.nextQuestion();
         if (currentQuestion == null && gameByPin.getStatus() == GameStatus.QUIZ) {
+            // clear all prompts, questions, answers
+            gameByPin.emptyPromptSet();
+            gameByPin.emptyQuizQuestions();
+            quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
+            drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+
             gameByPin.setStatus(GameStatus.END);
         }
         gameByPin = gameRepository.save(gameByPin);
