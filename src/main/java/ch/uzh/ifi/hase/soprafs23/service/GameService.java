@@ -135,7 +135,7 @@ public class GameService {
         // checks for changeToSelection
         // checks for changeToPrompt
         // checks for changeToQuiz
-        // checks for changeToEnd
+        // checks for changeToEnd - Linda
 
         // actual changing and saving of the game / its status
         gameByPin.setStatus(requestedStatus);
@@ -145,6 +145,10 @@ public class GameService {
 
         return gameByPin;
     }
+
+
+
+
 
     //TODO: test Integration?
     //TODO: test Service
