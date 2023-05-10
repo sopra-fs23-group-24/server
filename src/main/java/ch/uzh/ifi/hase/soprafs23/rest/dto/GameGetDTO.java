@@ -3,8 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 public class GameGetDTO {
     private Long gameId;
     private String gamePin;

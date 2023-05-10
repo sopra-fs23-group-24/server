@@ -51,7 +51,6 @@ public class PromptService {
 
     private final Random rand = SecureRandom.getInstanceStrong();
 
-    private BufferedReader input;
 
     @Autowired
     public PromptService(@Qualifier("gameRepository") GameRepository gameRepository,
@@ -87,8 +86,8 @@ public class PromptService {
         if (userRequest.getTextNr() != null) {
             wantedTextPrompts = userRequest.getTextNr();
         }
-        if (userRequest.getTruefalseNr() != null) {
-            wantedTrueFalsePrompts = userRequest.getTruefalseNr();
+        if (userRequest.getTrueFalseNr() != null) {
+            wantedTrueFalsePrompts = userRequest.getTrueFalseNr();
         }
         if (userRequest.getDrawingNr() != null) {
             wantedDrawingPrompts = userRequest.getDrawingNr();
@@ -144,8 +143,7 @@ public class PromptService {
      */
 
     private void initialisePromptRepository() throws PromptSetupException, IOException {
-        try {
-            input = new BufferedReader(new FileReader("src/main/resources/prompts.txt"));
+        try (BufferedReader input = new BufferedReader(new FileReader("src/main/resources/prompts.txt"))){
             String line;
             while ((line = input.readLine()) != null) {
                 if (line.startsWith("\\")) {
@@ -165,16 +163,12 @@ public class PromptService {
         catch (IOException e) {
             throw new PromptSetupException("Could not find file for prompts.");
         }
-        finally {
-            input.close();
-        }
-
     }
 
     private void initialisePotentialQuestionRepository() throws PromptSetupException, IOException {
-        try {
+        try (BufferedReader input = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"))){
             String line;
-            input = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"));
+
             while ((line = input.readLine()) != null) {
                 if (line.startsWith("\\")) {
                     continue;
@@ -198,9 +192,6 @@ public class PromptService {
         }
         catch (IOException e) {
             throw new PromptSetupException("Could not find file for potential questions.");
-        }
-        finally {
-            input.close();
         }
     }
 
@@ -246,7 +237,7 @@ public class PromptService {
         List<Prompt> selectedPrompts = new ArrayList<>();
 
         for (int i = 0; i < wantedNumber; i++) {
-            if (allPromptsOfType.size() < 1) {
+            if (allPromptsOfType.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more text prompts than are available.");
             }
             int randomIndex = rand.nextInt(allPromptsOfType.size());

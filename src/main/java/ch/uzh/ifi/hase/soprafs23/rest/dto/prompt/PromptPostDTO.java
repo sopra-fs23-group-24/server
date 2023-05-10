@@ -15,12 +15,12 @@ public class PromptPostDTO {
         this.textNr = textNr;
     }
 
-    public Integer getTruefalseNr() {
+    public Integer getTrueFalseNr() {
         return truefalseNr;
     }
 
-    public void setTruefalseNr(Integer TFNr) {
-        this.truefalseNr = TFNr;
+    public void setTrueFalseNr(Integer trueFalseNr) {
+        this.truefalseNr = trueFalseNr;
     }
 
     public Integer getDrawingNr() {

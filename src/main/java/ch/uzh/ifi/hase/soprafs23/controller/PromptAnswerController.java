@@ -36,7 +36,7 @@ public class PromptAnswerController {
         // save
         TextPromptAnswer successfulSave = promptAnswerService.saveTextPromptAnswer(answer, loggedInToken, gamePin);
         // "game controller" method
-        Boolean canChangeToQuizStage = promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
+        promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
 
         return successfulSave;
     }
@@ -52,7 +52,7 @@ public class PromptAnswerController {
         // save
         TrueFalsePromptAnswer successfulSave = promptAnswerService.saveTrueFalsePromptAnswer(answer, loggedInToken, gamePin);
         // "game controller" method
-        Boolean canChangeToQuizStage = promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
+        promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
         return successfulSave;
     }
 
@@ -68,7 +68,7 @@ public class PromptAnswerController {
         // save
         DrawingPromptAnswer successfulSave = promptAnswerService.saveDrawingPromptAnswer(answer, loggedInToken, gamePin);
         // "game controller" method
-        Boolean canChangeToQuizStage = promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
+        promptAnswerService.changeFromPromptAnsweringToQuizStage(gamePin);
 
         return successfulSave;
     }

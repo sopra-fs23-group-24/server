@@ -156,7 +156,7 @@ public class QuizAnswerServiceTest {
         quizAnswer.setTimer(10);
         Assertions.assertEquals(testPlayer.getScore(), 0);
 
-        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId());
+        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin());
 
         Assertions.assertTrue(score > 0);
         Assertions.assertTrue(testPlayer.getScore() > 0);
@@ -169,7 +169,7 @@ public class QuizAnswerServiceTest {
         quizAnswer.setAssociatedPlayer(testPlayer);
         Assertions.assertEquals(testPlayer.getScore(), 0);
 
-        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId());
+        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin());
 
         Assertions.assertEquals(score, 0);
         Assertions.assertEquals(testPlayer.getScore(), 0);

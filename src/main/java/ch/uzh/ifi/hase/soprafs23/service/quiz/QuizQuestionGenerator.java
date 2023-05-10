@@ -66,7 +66,7 @@ public class QuizQuestionGenerator {
                                  @Qualifier("answerOptionRepository") AnswerOptionRepository answerOptionRepository,
                                  @Qualifier("playerRepository") PlayerRepository playerRepository,
                                  @Qualifier("gameRepository") GameRepository gameRepository)
-            throws NoSuchAlgorithmException {
+            throws NoSuchAlgorithmException { // this Exception is needed
         this.qqRepository = qqRepository;
         this.pqRepository = pqRepository;
         this.textPromptAnswerRepository = textPromptAnswerRepository;

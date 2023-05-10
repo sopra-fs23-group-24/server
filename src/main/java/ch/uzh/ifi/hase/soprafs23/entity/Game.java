@@ -152,7 +152,7 @@ public class Game implements Serializable {
     }
 
     public QuizQuestion nextQuestion() {
-        if(quizQuestionSet.size() > 0){
+        if(!quizQuestionSet.isEmpty()){
             if (currentQuestion == null) {
                 currentQuestion = quizQuestionSet.get(0);
                 return currentQuestion;

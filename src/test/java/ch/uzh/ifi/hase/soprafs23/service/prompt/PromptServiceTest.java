@@ -111,7 +111,7 @@ public class PromptServiceTest {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
-        testDTO.setTruefalseNr(1);
+        testDTO.setTrueFalseNr(1);
 
         testGame.setStatus(GameStatus.SELECTION);
         testGame.emptyPromptSet();
@@ -136,7 +136,7 @@ public class PromptServiceTest {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
-        testDTO.setTruefalseNr(1);
+        testDTO.setTrueFalseNr(1);
 
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(null);
 
@@ -148,7 +148,7 @@ public class PromptServiceTest {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
-        testDTO.setTruefalseNr(1);
+        testDTO.setTrueFalseNr(1);
 
         testGame.setStatus(GameStatus.PROMPT);
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
@@ -161,7 +161,7 @@ public class PromptServiceTest {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
-        testDTO.setTruefalseNr(1);
+        testDTO.setTrueFalseNr(1);
 
         testGame.setStatus(GameStatus.SELECTION);
         testGame.setPromptSet(List.of(textTestPrompt, tfTestPrompt, drawTestPrompt));

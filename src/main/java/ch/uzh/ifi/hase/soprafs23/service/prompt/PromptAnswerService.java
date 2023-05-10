@@ -33,6 +33,9 @@ public class PromptAnswerService {
     private final DrawingPromptAnswerRepository drawingPromptAnswerRepository;
     private QuizQuestionGenerator quizQuestionGenerator;
 
+    private static final String NO_ANSWER_MESSAGE = "No answer provided";
+    private static final String LOGGER_CAPSULE = "created  new: {}";
+
 
     // only one can have @Autowired - what does that do, and does it work like this with the two constructors?
     // I have no idea if this is going to work, but it seems better than multiple constructors...
@@ -64,13 +67,13 @@ public class PromptAnswerService {
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswer().equals("")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No answer provided");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
 
         textPromptAnswerRepository.save(answer);
         textPromptAnswerRepository.flush();
 
-        log.debug("created  new: {}", answer);
+        log.debug(LOGGER_CAPSULE, answer);
         return answer;
     }
 
@@ -81,14 +84,14 @@ public class PromptAnswerService {
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswerText().equals("")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No answer provided");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
         // test if there is a boolean value in answerBoolean...?
 
         trueFalsePromptAnswerRepository.save(answer);
         trueFalsePromptAnswerRepository.flush();
 
-        log.debug("created  new: {}", answer);
+        log.debug(LOGGER_CAPSULE, answer);
         return answer;
     }
 
@@ -99,13 +102,13 @@ public class PromptAnswerService {
         answer.setAssociatedPlayerId(player.getPlayerId());
 
         if (answer.getAnswerDrawing().equals("")) { // throws if the content is empty
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No answer provided");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
 
         drawingPromptAnswerRepository.save(answer);
         drawingPromptAnswerRepository.flush();
 
-        log.debug("created  new: {}", answer);
+        log.debug(LOGGER_CAPSULE, answer);
         return answer;
     }
 
@@ -143,18 +146,15 @@ public class PromptAnswerService {
     }
 
     // game controller method
-    public Boolean changeFromPromptAnsweringToQuizStage(String gamePin) {
+    public void changeFromPromptAnsweringToQuizStage(String gamePin) {
 
-        if (haveAllPlayersAnsweredAllPrompts(gamePin)) {
+        if (Boolean.TRUE.equals(haveAllPlayersAnsweredAllPrompts(gamePin))) {
             // change Status to Quiz
             findGameByPin(gamePin).setStatus(GameStatus.QUIZ);
 
             // initialize change to Quiz stage
             quizQuestionGenerator.createQuizQuestions(gamePin);
-            return true;
         }
-        //return gameService.getGameByPin(gamePin);
-        return false;
     }
 
 

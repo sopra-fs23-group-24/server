@@ -75,7 +75,6 @@ public class QuizAnswerService {
         // check if all players have answered a question
 
         List<Player> allPlayersOfGame = new ArrayList<>(gameByPin.getPlayerGroup());
-        System.out.println("");
         for (QuizAnswer answer : questionById.getReceivedAnswers()) {
             allPlayersOfGame.remove(answer.getAssociatedPlayer());
         }
@@ -89,26 +88,31 @@ public class QuizAnswerService {
     }
 
 
-    // the notion of speed is not yet accounted for
-    // TODO : Rename this
-    public int calculateAndAddScore(QuizAnswer quizAnswer, long questionId) {
+    public int calculateAndAddScore(QuizAnswer quizAnswer, long questionId, String gamePin) {
+        int score = 0;
+        int scoreToAddInCaseOfNoTimer = 10;
         // get the chosen and the correct answer
         long pickedId = quizAnswer.getPickedAnswerOptionId();
         AnswerOption chosenAnswer = answerOptionRepository.getAnswerOptionByAnswerOptionId(pickedId);
         AnswerOption correctAnswer = qqRepository.findByQuestionId(questionId).getCorrectAnswer();
 
-        // include the timer into the calculation
 
-        int score = 0;
         if (chosenAnswer.equals(correctAnswer)) {
-            // sets the reminding time as score (that is our calculation of score.)
-            // the subtraction of time is done in the frontend as of right now.
-            score = quizAnswer.getTimer();
-            // add points to player
-            quizAnswer.getAssociatedPlayer().addPoints(score);
-            playerRepository.save(quizAnswer.getAssociatedPlayer());
-            playerRepository.flush();
+            int gameTimer = gameRepository.findByGamePin(gamePin).getTimer();
+            if (gameTimer == -1) {
+                score = scoreToAddInCaseOfNoTimer;
+            } else {
+                // sets the reminding time as score (that is our calculation of score.)
+                score = quizAnswer.getTimer(); // rename get timer to reminding time
+            }
         }
+        // add points to player and set the latest score, is 0 if incorrect answer
+        Player player = quizAnswer.getAssociatedPlayer();
+        player.addPoints(score);
+        player.setLatestScore(score);
+
+        playerRepository.save(quizAnswer.getAssociatedPlayer());
+        playerRepository.flush();
         return score;
 
     }

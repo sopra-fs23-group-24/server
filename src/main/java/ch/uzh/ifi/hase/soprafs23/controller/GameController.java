@@ -14,11 +14,6 @@ import java.util.List;
 
 @RestController
 public class GameController {
-    //headers: @RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin
-    /*
-      System.out.println("Received PlayerToken: " + loggedInToken);
-      System.out.println("Received GamePin: " + gamePin);
-    */
     private final GameService gameService;
 
     GameController(GameService gameService) {
