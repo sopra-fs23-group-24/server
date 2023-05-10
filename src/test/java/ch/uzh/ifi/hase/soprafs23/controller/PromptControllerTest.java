@@ -64,7 +64,7 @@ public class PromptControllerTest {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
         promptPostDTO.setDrawingNr(1);
         promptPostDTO.setTextNr(1);
-        promptPostDTO.setTruefalseNr(1);
+        promptPostDTO.setTrueFalseNr(1);
 
         List<Prompt> pickedList = List.of(textPrompt, tfPrompt, drawPrompt);
 
@@ -95,7 +95,7 @@ public class PromptControllerTest {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
         promptPostDTO.setDrawingNr(10);
         promptPostDTO.setTextNr(1);
-        promptPostDTO.setTruefalseNr(1);
+        promptPostDTO.setTrueFalseNr(1);
 
         given(promptService.pickPrompts(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
@@ -114,7 +114,7 @@ public class PromptControllerTest {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
         promptPostDTO.setDrawingNr(1);
         promptPostDTO.setTextNr(1);
-        promptPostDTO.setTruefalseNr(1);
+        promptPostDTO.setTrueFalseNr(1);
 
         List<Prompt> pickedList = List.of(textPrompt, tfPrompt, drawPrompt);
 

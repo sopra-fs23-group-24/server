@@ -66,7 +66,7 @@ public class PromptServiceIntegrationTest {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
-        testDTO.setTruefalseNr(1);
+        testDTO.setTrueFalseNr(1);
 
         List<Prompt> pickedPrompts = promptService.pickPrompts(testDTO, testGame.getGamePin());
         Assertions.assertTrue(pickedPrompts.size() > 0);

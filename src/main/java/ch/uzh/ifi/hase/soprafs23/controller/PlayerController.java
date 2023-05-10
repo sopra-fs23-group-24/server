@@ -15,13 +15,9 @@ import java.util.List;
 
 @RestController
 public class PlayerController {
-    //headers: @RequestHeader("playerToken") String loggedInToken, @PathVariable ("pin") String gamePin
-    /*
-      System.out.println("Received PlayerToken: " + loggedInToken);
-      System.out.println("Received GamePin: " + gamePin);
-    */
     private final PlayerService playerService;
 
+    String playerToken = "playerToken";
     PlayerController(PlayerService playerService) {
         this.playerService = playerService;
     }
@@ -35,9 +31,9 @@ public class PlayerController {
 
         newPlayer = playerService.createPlayerAndAddToGame(newPlayer);
 
-        response.addHeader("playerToken", newPlayer.getToken()); //add Token via Header
-        response.addHeader("Access-Control-Allow-Headers", "playerToken"); //make Token Header available on frontend
-        response.addHeader("Access-Control-Expose-Headers", "playerToken"); //make Token Header available on frontend
+        response.addHeader(playerToken, newPlayer.getToken()); //add Token via Header
+        response.addHeader("Access-Control-Allow-Headers", playerToken); //make Token Header available on frontend
+        response.addHeader("Access-Control-Expose-Headers", playerToken); //make Token Header available on frontend
         //convert to ...
         return DTOMapper.INSTANCE.convertToPlayerGetDTO(newPlayer);
     }

@@ -53,7 +53,7 @@ public class GameService {
                        @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
                        @Qualifier("drawingPromptAnswerRepository") DrawingPromptAnswerRepository drawingPromptAnswerRepository,
                        @Qualifier("quizQuestionRepository") QuizQuestionRepository quizQuestionRepository)
-            throws NoSuchAlgorithmException {
+            throws NoSuchAlgorithmException { // this Exception is needed bc of the rand.
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
         this.textPromptAnswerRepository = textPromptAnswerRepository;
@@ -75,16 +75,11 @@ public class GameService {
         if (gameByPin == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
         }
-        // can this else be removed? since we throw anyway if null above. I think so
-        //else {
         return gameByPin;
-        //}
     }
 
     public Game createGame() {
         Game newGame = new Game();
-        // we already set the status to be LOBBY by default / by initialization ...
-        // newGame.setStatus(GameStatus.LOBBY);
 
         // generate and set gamePin
         String pin = generateUniqueGamePin();

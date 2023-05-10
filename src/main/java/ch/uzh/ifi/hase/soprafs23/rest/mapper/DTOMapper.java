@@ -83,10 +83,6 @@ public interface DTOMapper {
     PromptGetDTO convertToPromptGetDTO(Prompt prompt);
 
 
-    //@Mapping(source = "timer", target = "timer") // is this needed? - or maybe convert it into game
-    //Prompt convertFromPromptPostDTO(PromptPostDTO promptPostDTO);
-
-
     // quiz question
     @Mapping(source = "questionId", target = "questionId")
     @Mapping(source = "quizQuestionText", target = "quizQuestionText")

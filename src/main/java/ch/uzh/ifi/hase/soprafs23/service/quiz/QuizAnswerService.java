@@ -75,7 +75,6 @@ public class QuizAnswerService {
         // check if all players have answered a question
 
         List<Player> allPlayersOfGame = new ArrayList<>(gameByPin.getPlayerGroup());
-        System.out.println("");
         for (QuizAnswer answer : questionById.getReceivedAnswers()) {
             allPlayersOfGame.remove(answer.getAssociatedPlayer());
         }

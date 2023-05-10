@@ -19,8 +19,8 @@ public class PromptPostDTO {
         return truefalseNr;
     }
 
-    public void setTruefalseNr(Integer TFNr) {
-        this.truefalseNr = TFNr;
+    public void setTrueFalseNr(Integer trueFalseNr) {
+        this.truefalseNr = trueFalseNr;
     }
 
     public Integer getDrawingNr() {
