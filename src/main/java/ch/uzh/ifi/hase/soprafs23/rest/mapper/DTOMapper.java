@@ -50,6 +50,7 @@ public interface DTOMapper {
     @Mapping(source = "playerId", target = "playerId")
     @Mapping(source = "playerName", target = "playerName")
     @Mapping(source = "score", target = "score")
+    @Mapping(source = "latestScore", target = "latestScore")
     PlayerGetDTO convertToPlayerGetDTO(Player player);
 
     @Mapping(source = "playerName", target = "playerName")
@@ -97,6 +98,7 @@ public interface DTOMapper {
 
     // quiz answer
     @Mapping(source = "pickedAnswerOptionId", target = "pickedAnswerOptionId")
+    @Mapping(source = "timer", target = "timer")
     QuizAnswer convertFromQuizAnswerPostDTO(QuizAnswerPostDTO quizAnswerPostDTO);
 
 
