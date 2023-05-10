@@ -69,6 +69,7 @@ public class QuizAnswerServiceTest {
         testGame.setGamePin("123456");
         testGame.setHostId(2L);
         testGame.addPlayer(testPlayer);
+        testGame.setTimer(30);
         Mockito.when(gameRepository.findByGamePin("123456")).thenReturn(testGame);
         Mockito.when(gameRepository.findByGamePin("invalidPin")).thenReturn(null);
 
