@@ -6,6 +6,7 @@ public class PlayerGetDTO {
     private String playerName;
 
     private int score = 0;
+    private int latestScore = 0;
 
     public Long getPlayerId() {
         return playerId;
@@ -31,4 +32,11 @@ public class PlayerGetDTO {
         this.score = score;
     }
 
+    public int getLatestScore() {
+        return latestScore;
+    }
+
+    public void setLatestScore(int latestScore) {
+        this.latestScore = latestScore;
+    }
 }

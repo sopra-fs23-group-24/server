@@ -32,7 +32,7 @@ public class QuizAnswerController {
         QuizAnswer addedQuizAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin, loggedInToken);
 
         // checks if the answer is correct and if so (calculates) and adds the points to the player
-        return quizAnswerService.calculateAndAddScore(addedQuizAnswer, questionId);
+        return quizAnswerService.calculateAndAddScore(addedQuizAnswer, questionId, gamePin);
     }
 
     // more mappings?

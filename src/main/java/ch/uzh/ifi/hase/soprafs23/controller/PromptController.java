@@ -52,7 +52,7 @@ public class PromptController {
     @PostMapping("/games/{pin}/prompts")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public List<PromptGetDTO> setPromptsForGame(@RequestBody PromptPostDTO promptPostDTO, @PathVariable("pin") String gamePin) {
+    public List<PromptGetDTO> setPromptsAndTimerForGame(@RequestBody PromptPostDTO promptPostDTO, @PathVariable("pin") String gamePin) {
 
         // add prompts to game
         List<Prompt> allPrompts = promptService.pickPrompts(promptPostDTO, gamePin);

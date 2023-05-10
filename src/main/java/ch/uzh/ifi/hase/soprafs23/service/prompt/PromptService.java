@@ -86,8 +86,8 @@ public class PromptService {
         if (userRequest.getTextNr() != null) {
             wantedTextPrompts = userRequest.getTextNr();
         }
-        if (userRequest.getTruefalseNr() != null) {
-            wantedTrueFalsePrompts = userRequest.getTruefalseNr();
+        if (userRequest.getTrueFalseNr() != null) {
+            wantedTrueFalsePrompts = userRequest.getTrueFalseNr();
         }
         if (userRequest.getDrawingNr() != null) {
             wantedDrawingPrompts = userRequest.getDrawingNr();

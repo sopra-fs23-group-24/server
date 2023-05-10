@@ -26,6 +26,9 @@ public class Player implements Serializable {
     @Column
     private int score = 0;
 
+    @Column // does it need to be a column or not
+    private int latestScore = 0;
+
     @Column
     private boolean isHost;
 
@@ -76,6 +79,14 @@ public class Player implements Serializable {
 
     public void setHost(boolean host) {
         isHost = host;
+    }
+
+    public int getLatestScore() {
+        return latestScore;
+    }
+
+    public void setLatestScore(int latestScore) {
+        this.latestScore = latestScore;
     }
 
     //-------------------------
