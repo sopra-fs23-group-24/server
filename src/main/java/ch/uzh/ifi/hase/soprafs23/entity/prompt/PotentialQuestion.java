@@ -29,8 +29,6 @@ public class PotentialQuestion implements Serializable {
     @Column
     private boolean requiresTextInput;
 
-    @Column
-    private DisplayType displayType;
 
     public Long getPotentialQuestionId() {
         return potentialQuestionId;
@@ -72,11 +70,4 @@ public class PotentialQuestion implements Serializable {
         this.requiresTextInput = requiresTextInput;
     }
 
-    public DisplayType getDisplayType() {
-        return displayType;
-    }
-
-    public void setDisplayType(DisplayType displayType) {
-        this.displayType = displayType;
-    }
 }

@@ -69,7 +69,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
     @Test
     public void transformPotentialQuestionTF_PLAYER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionPLAYER,
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypePlayer(potentialTFQuestionPLAYER,
                                             new ArrayList<>(testTrueFalseAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
@@ -85,7 +85,6 @@ public class QuizQuestionGeneratorTrueFalseTest {
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
-        Assertions.assertEquals(generatedQuestion.getAnswerDisplayType(), DisplayType.TEXT);
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
@@ -98,7 +97,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
     @Test
     public void transformPotentialQuestionTF_PLAYER_noTrueStories() {
         setUpTFPromptAnswers_allFalse();
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionPLAYER,
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypePlayer(potentialTFQuestionPLAYER,
                                             new ArrayList<>(testTrueFalseAnswers));
         Assertions.assertNull(generatedQuestion);
     }
@@ -106,7 +105,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
     @Test
     public void transformPotentialQuestionTF_BOOLEAN() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionTF(potentialTFQuestionBOOLEAN,
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypeBoolean(potentialTFQuestionBOOLEAN,
                                             new ArrayList<>(testTrueFalseAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
@@ -120,7 +119,6 @@ public class QuizQuestionGeneratorTrueFalseTest {
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
-        Assertions.assertEquals(generatedQuestion.getAnswerDisplayType(), DisplayType.TEXT);
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
@@ -184,14 +182,12 @@ public class QuizQuestionGeneratorTrueFalseTest {
         potentialTFQuestionBOOLEAN.setQuestionType(QuestionType.BOOLEAN);
         potentialTFQuestionBOOLEAN.setAssociatedPrompt(promptRepository.findByPromptNr(999));
         potentialTFQuestionBOOLEAN.setRequiresTextInput(true);
-        potentialTFQuestionBOOLEAN.setDisplayType(DisplayType.TEXT);
 
         potentialTFQuestionPLAYER = new PotentialQuestion();
         potentialTFQuestionPLAYER.setQuestionText("Which player told this true story about their last holiday?");
         potentialTFQuestionPLAYER.setQuestionType(QuestionType.PLAYER);
         potentialTFQuestionPLAYER.setAssociatedPrompt(promptRepository.findByPromptNr(999));
         potentialTFQuestionPLAYER.setRequiresTextInput(false);
-        potentialTFQuestionPLAYER.setDisplayType(DisplayType.TEXT);
     }
 
     private void setUpTFPromptAnswers() {

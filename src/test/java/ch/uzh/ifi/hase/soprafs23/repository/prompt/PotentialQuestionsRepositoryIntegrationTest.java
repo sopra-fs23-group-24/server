@@ -40,7 +40,6 @@ public class PotentialQuestionsRepositoryIntegrationTest {
         testPQ.setQuestionType(QuestionType.PLAYER);
         testPQ.setQuestionText("Test question about a story of %s?");
         testPQ.setRequiresTextInput(true);
-        testPQ.setDisplayType(DisplayType.TEXT);
         testPQ.setAssociatedPrompt(testPrompt);
         testPQ.setPotentialQuestionId(999L);
 
@@ -62,7 +61,6 @@ public class PotentialQuestionsRepositoryIntegrationTest {
         assertEquals(1, allFound.size());
         assertEquals(testPQ.getQuestionType(), found.getQuestionType());
         assertEquals(testPQ.getQuestionText(), found.getQuestionText());
-        assertEquals(testPQ.getDisplayType(), found.getDisplayType());
         assertEquals(testPQ.getAssociatedPrompt(), found.getAssociatedPrompt());
         assertEquals(testPQ.isRequiresTextInput(), found.isRequiresTextInput());
     }
@@ -75,7 +73,6 @@ public class PotentialQuestionsRepositoryIntegrationTest {
         assertEquals(1, allFound.size());
         assertEquals(testPQ.getQuestionType(), found.getQuestionType());
         assertEquals(testPQ.getQuestionText(), found.getQuestionText());
-        assertEquals(testPQ.getDisplayType(), found.getDisplayType());
         assertEquals(testPQ.getAssociatedPrompt(), found.getAssociatedPrompt());
         assertEquals(testPQ.isRequiresTextInput(), found.isRequiresTextInput());
     }

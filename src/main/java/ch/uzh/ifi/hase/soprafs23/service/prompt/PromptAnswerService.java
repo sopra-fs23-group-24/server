@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.*;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
@@ -153,7 +154,8 @@ public class PromptAnswerService {
             findGameByPin(gamePin).setStatus(GameStatus.QUIZ);
 
             // initialize change to Quiz stage
-            quizQuestionGenerator.createQuizQuestions(gamePin);
+            List<QuizQuestion> generatedQuestions = quizQuestionGenerator.createQuizQuestions(gamePin);
+            log.debug("Generated {} questions", generatedQuestions.size());
         }
     }
 

@@ -66,7 +66,7 @@ public class QuizQuestionGeneratorTextTest {
     @Test
     public void transformPotentialQuestionText_PLAYER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionText(potentialTextQuestionPLAYER, new ArrayList<>(testTextAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTextQuestionTypePlayer(potentialTextQuestionPLAYER, new ArrayList<>(testTextAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -82,7 +82,6 @@ public class QuizQuestionGeneratorTextTest {
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
-        Assertions.assertEquals(generatedQuestion.getAnswerDisplayType(), DisplayType.TEXT);
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
@@ -93,7 +92,7 @@ public class QuizQuestionGeneratorTextTest {
     @Test
     public void transformPotentialQuestionText_PROMPTANSWER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialQuestionText(potentialTextQuestionPROMPTANSWER, new ArrayList<>(testTextAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTextQuestionTypePromptAnswer(potentialTextQuestionPROMPTANSWER, new ArrayList<>(testTextAnswers));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -109,7 +108,6 @@ public class QuizQuestionGeneratorTextTest {
 
         Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
-        Assertions.assertEquals(generatedQuestion.getAnswerDisplayType(), DisplayType.TEXT);
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
@@ -172,14 +170,12 @@ public class QuizQuestionGeneratorTextTest {
         potentialTextQuestionPROMPTANSWER.setQuestionType(QuestionType.PROMPTANSWER);
         potentialTextQuestionPROMPTANSWER.setAssociatedPrompt(promptRepository.findByPromptNr(998));
         potentialTextQuestionPROMPTANSWER.setRequiresTextInput(true);
-        potentialTextQuestionPROMPTANSWER.setDisplayType(DisplayType.NONE);
 
         potentialTextQuestionPLAYER = new PotentialQuestion();
         potentialTextQuestionPLAYER.setQuestionText("Whose favourite food is %s?");
         potentialTextQuestionPLAYER.setQuestionType(QuestionType.PLAYER);
         potentialTextQuestionPLAYER.setAssociatedPrompt(promptRepository.findByPromptNr(998));
         potentialTextQuestionPLAYER.setRequiresTextInput(true);
-        potentialTextQuestionPLAYER.setDisplayType(DisplayType.NONE);
     }
 
     private void setUpTextPromptAnswers() {
