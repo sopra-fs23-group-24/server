@@ -15,7 +15,6 @@ import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
-import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ import java.util.Random;
 @Service
 @Transactional
 public class QuizQuestionGenerator {
-    private final Logger log = LoggerFactory.getLogger(GameService.class);
+    private final Logger log = LoggerFactory.getLogger(QuizQuestionGenerator.class);
     private final QuizQuestionRepository qqRepository;
     private final PotentialQuestionRepository pqRepository;
     private final TextPromptAnswerRepository textPromptAnswerRepository;
@@ -207,7 +206,7 @@ public class QuizQuestionGenerator {
 
         newQuestion.setQuizQuestionText(pq.getQuestionText());
 
-        log.debug("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getImageToDisplay());
+        log.debug("Set Question text to: %s with display: %s".formatted(newQuestion.getQuizQuestionText(), newQuestion.getImageToDisplay()));
 
         // set and save the correct answer option, and add this option to the question
         AnswerOption correctAnswer = saveAsAnswerOption(correctAnswerPlayer.getPlayerName(), newQuestion);
@@ -242,7 +241,7 @@ public class QuizQuestionGenerator {
         else {
             newQuestion.setQuizQuestionText(pq.getQuestionText());
         }
-        log.debug("Set Question text to: " + newQuestion.getQuizQuestionText());
+        log.debug("Set Question text to: %s".formatted(newQuestion.getQuizQuestionText()));
 
         AnswerOption correctAnswer = saveAsAnswerOption(selectedCorrectPromptAnswer.getAnswerDrawing(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
@@ -273,7 +272,7 @@ public class QuizQuestionGenerator {
         else {
             newQuestion.setQuizQuestionText(pq.getQuestionText());
         }
-        log.debug("Set Question text to: " + newQuestion.getQuizQuestionText());
+        log.debug("Set Question text to: %s".formatted(newQuestion.getQuizQuestionText()));
 
         AnswerOption correctAnswer = saveAsAnswerOption(correctAnswerPlayer.getPlayerName(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
@@ -304,7 +303,7 @@ public class QuizQuestionGenerator {
         else {
             newQuestion.setQuizQuestionText(pq.getQuestionText());
         }
-        log.debug("Set Question text to: " + newQuestion.getQuizQuestionText());
+        log.debug("Set Question text to: %s".formatted(newQuestion.getQuizQuestionText()));
 
         AnswerOption correctAnswer = saveAsAnswerOption(selectedCorrectPromptAnswer.getAnswer(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
@@ -346,7 +345,7 @@ public class QuizQuestionGenerator {
 
         newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
 
-        log.debug("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getStoryToDisplay());
+        log.debug("Set Question text to: %s with display: %s".formatted(newQuestion.getQuizQuestionText(), newQuestion.getStoryToDisplay()));
 
         AnswerOption correctAnswer = saveAsAnswerOption(correctAnswerPlayer.getPlayerName(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
@@ -382,7 +381,7 @@ public class QuizQuestionGenerator {
 
         newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
 
-        log.debug("Set Question text to: " + newQuestion.getQuizQuestionText() + " with display: " + newQuestion.getStoryToDisplay());
+        log.debug("Set Question text to: %s with display: %s".formatted(newQuestion.getQuizQuestionText(), newQuestion.getStoryToDisplay()));
 
         AnswerOption correctAnswer = saveAsAnswerOption(selectedCorrectPromptAnswer.getAnswerBoolean().toString(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
