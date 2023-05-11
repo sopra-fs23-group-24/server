@@ -231,7 +231,6 @@ public class PromptService {
             newPotentialQuestion.setQuestionType(QuestionType.transformToType(potentialQuestionLine[1]));
             newPotentialQuestion.setQuestionText(potentialQuestionLine[2]);
             newPotentialQuestion.setRequiresTextInput(Boolean.parseBoolean(potentialQuestionLine[3]));
-            newPotentialQuestion.setDisplayType(DisplayType.transformToType(potentialQuestionLine[4]));
 
             log.debug("Potential question parsed as: {}", newPotentialQuestion);
             return newPotentialQuestion;
