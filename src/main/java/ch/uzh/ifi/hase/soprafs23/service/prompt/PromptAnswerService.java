@@ -66,6 +66,7 @@ public class PromptAnswerService {
         answer.setAssociatedGamePin(gamePin);
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
+        System.out.println("Prompt answer received for: " + player.getPlayerName() + ": " + answer.getAnswer());
 
         if (answer.getAnswer().equals("")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
@@ -83,6 +84,7 @@ public class PromptAnswerService {
         answer.setAssociatedGamePin(gamePin);
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
+        System.out.println("Prompt answer received for: " + player.getPlayerName() + ": " + answer.getAnswerText() + ", " + answer.getAnswerBoolean());
 
         if (answer.getAnswerText().equals("")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
@@ -101,6 +103,7 @@ public class PromptAnswerService {
         answer.setAssociatedGamePin(gamePin);
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
+        System.out.println("Prompt answer received for: " + player.getPlayerName());
 
         if (answer.getAnswerDrawing().equals("")) { // throws if the content is empty
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
