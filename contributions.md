@@ -267,7 +267,9 @@ Week 6 (01. - 07. may)
         - started working on going through and evaluating the logic, adding additional checks where needed   
 - Lara:
 	- work on: 
+	    - Joker 
 	- description:
+	     - Joker 
 - Jan:
 	- work on: 
 		- https://github.com/sopra-fs23-group-24/client/issues/27
@@ -303,7 +305,10 @@ Week 7 (08. - 14. may)
 	- description:
 - Lara:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/5
 	- description:
+	    - working on selectionPage
+	    - added buttons to increase/ decrease the numbers of the respective question types
 - Jan:
 	- work on: 
 		- https://github.com/sopra-fs23-group-24/client/issues/44
