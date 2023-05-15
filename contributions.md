@@ -306,7 +306,13 @@ Week 7 (08. - 14. may)
 	- description:
 - Jan:
 	- work on: 
+		- https://github.com/sopra-fs23-group-24/client/issues/44
+	    - https://github.com/sopra-fs23-group-24/client/issues/46
+	    - https://github.com/sopra-fs23-group-24/client/issues/46
 	- description:
+	    - added timer in frontend (limited time to answer questions, set points accordingly)
+	    - added check for maximum length of unsername (max 9. characters)
+	    - worked on 404 error at beginning of the game (loading time), not fixed yet
 - Mike:
 	- work on: 
 	- description:
