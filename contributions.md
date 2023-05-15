@@ -306,6 +306,7 @@ Week 7 (08. - 14. may)
 - Lara:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/server/issues/5
+	    - https://github.com/sopra-fs23-group-24/client/issues/31
 	- description:
 	    - working on selectionPage
 	    - added buttons to increase/ decrease the numbers of the respective question types (unfinished)
