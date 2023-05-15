@@ -302,7 +302,11 @@ Week 6 (01. - 07. may)
 Week 7 (08. - 14. may)
 - Tim:
 	- work on: 
+        - https://github.com/sopra-fs23-group-24/server/issues/73
+        - https://github.com/sopra-fs23-group-24/client/issues/41
 	- description:
+        - adding the latestScore attribute to player in backend 
+        - adding / adjusting the display of the leaderboard to include the new latestScore attribute 
 - Lara:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/server/issues/5
@@ -336,7 +340,7 @@ Week 7 (08. - 14. may)
 ---
 Week 8 (15. - 21. may)
 - Tim:
-	- work on: 
+	- will work on: ReadMe files, github flex environment, adding prompts to prompt generation files 
 	- description:
 - Lara:
 	- work on: 
