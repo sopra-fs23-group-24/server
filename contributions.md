@@ -317,9 +317,16 @@ Week 7 (08. - 14. may)
 	- work on: 
 	- description:
 - Linda:
-	- work on: 
+	- work on:
+	    -  https://github.com/sopra-fs23-group-24/server/issues/78
+	    -  https://github.com/sopra-fs23-group-24/server/issues/74
+	    -  https://github.com/sopra-fs23-group-24/server/issues/72
+	    -  https://github.com/sopra-fs23-group-24/client/issues/48
 	- description:
-
+	    - refactor and debug QuizQuestionGenerator - avoid duplicate code, remove unnecessary attributes in PotentialQuestion
+	    - debug server connection issues (not yet effective)
+	    - add HTML tags for question texts
+	    - make HTML tags in question texts work as such in frontend
 ---
 Week 8 (15. - 21. may)
 - Tim:
