@@ -310,10 +310,12 @@ Week 7 (08. - 14. may)
 - Lara:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/server/issues/5
+	    - https://github.com/sopra-fs23-group-24/client/issues/52
 	    - https://github.com/sopra-fs23-group-24/client/issues/31
 	- description:
 	    - working on selectionPage
-	    - added buttons to increase/ decrease the numbers of the respective question types (unfinished)
+	    - when the host starts game in lobby they are redirected to the selection page view
+	    - added buttons to increase / decrease the numbers of the respective question types
 - Jan:
 	- work on: 
 		- https://github.com/sopra-fs23-group-24/client/issues/44
