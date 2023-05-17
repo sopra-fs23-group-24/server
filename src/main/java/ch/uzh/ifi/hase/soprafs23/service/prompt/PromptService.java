@@ -106,6 +106,7 @@ public class PromptService {
         return promptsForGame;
     }
 
+    // could we move this into the game Service?
     public void addTimerToGame(PromptPostDTO promptPostDTO, String gamePin) {
         Game gameByPin = gameRepository.findByGamePin(gamePin);
         gameByPin.setTimer(promptPostDTO.getTimer());
@@ -114,7 +115,7 @@ public class PromptService {
         gameRepository.flush();
     }
 
-
+    // could we move this into the game Service?
     //TODO: test Integration?
     private Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {
         Game gameByPin = gameRepository.findByGamePin(gamePin);
@@ -128,8 +129,11 @@ public class PromptService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has prompts selected.");
         }
 
+        // maybe we can adjust this: - here only setPromptSet and save, the rest in the change status method in GameService
         gameByPin.setPromptSet(promptsForGame);
 
+        // what happens if we change the status before setPromptSet?
+        // , bc that would happen if we check and then change the status in the GameService
         gameByPin.setStatus(GameStatus.PROMPT);
 
         gameRepository.save(gameByPin);

@@ -100,6 +100,11 @@ public class GameService {
     // returns the same game, but which now has a new status
     public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken) {
 
+        // possible future improvement:
+        // could divide up this method into 2 methods, changeGameStatusByPlayer, which takes the 3 arguments,
+        // and changeGameStatus, which only takes the requestedStatus and gamePin, and is called in the
+        // changeGameStatusByPlayer method, as well as from inside the game, where there is no player to be checked.
+
         Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
         if (loggedInPlayer == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this token found.");
@@ -110,6 +115,9 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
+        // here would be the call to changeGameStatus(GameStatus requestedStatus, String gamePin),
+        // this method would contain the code below:
+
         if (requestedStatus == GameStatus.LOBBY) {
             // TODO: do we want checks that e.g. it is only possible to switch to lobby from the END?
 
@@ -119,12 +127,17 @@ public class GameService {
             }
         }
 
-        // TODO: add additional checks for changes to other statuses (best in other methods probably, to
-        //  not inflate this method here too much.)
-        // checks for changeToSelection
-        // checks for changeToPrompt
-        // checks for changeToQuiz
-        // checks for changeToEnd - Linda
+        if (requestedStatus == GameStatus.SELECTION) {
+            checkForChangeToSelection(gamePin);
+        }
+
+        // possible future improvement:
+        // add additional checks for changes to other statuses (best in separate methods probably, to
+        // not inflate this method here too much.):
+
+        // checks for changeToPrompt -> these checks are currently in PromptService (would connect the services...)
+        // checks for changeToQuiz -> these checks are currently in PromptAnswerService (would connect the services...)
+        // checks for changeToEnd -> this check is currently below in the nextQuestion method, could be factored out.
 
         // actual changing and saving of the game / its status
         gameByPin.setStatus(requestedStatus);
@@ -136,7 +149,12 @@ public class GameService {
     }
 
 
-
+    private void checkForChangeToSelection(String gamePin) {
+        int sizeOfPlayerGroup = gameRepository.findByGamePin(gamePin).getPlayerGroup().size();
+        if(sizeOfPlayerGroup < 4) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game has not at least 4 players, therefore it cannot start");
+        }
+    }
 
 
     //TODO: test Integration?
