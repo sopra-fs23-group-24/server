@@ -52,14 +52,6 @@ public class GameServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        testGame = new Game();
-        testGame.setGameId(1L);
-        testGame.setGamePin("123456");
-        testGame.setHostId(2L); //bc cannot be 1 bc game is 1 already
-
-        Mockito.when(gameRepository.save(Mockito.any())).thenReturn(testGame);
-        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
-        Mockito.when(gameRepository.findAll()).thenReturn(List.of(testGame));
 
         testPlayer = new Player();
         testPlayer.setPlayerId(2L);
@@ -67,6 +59,17 @@ public class GameServiceTest {
         testPlayer.setPlayerName("test");
         testPlayer.setToken("1");
         Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(testPlayer);
+
+        testGame = new Game();
+        testGame.setGameId(1L);
+        testGame.setGamePin("123456");
+        testGame.setHostId(2L); //bc cannot be 1 bc game is 1 already
+        testGame.setPlayerGroup(List.of(testPlayer, testPlayer, testPlayer, testPlayer));
+
+        Mockito.when(gameRepository.save(Mockito.any())).thenReturn(testGame);
+        Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
+        Mockito.when(gameRepository.findAll()).thenReturn(List.of(testGame));
+
     }
 
     @Test
