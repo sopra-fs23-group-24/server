@@ -57,4 +57,27 @@
 \\ DRAW
 17: PLAYER: Which player drew this alien?: false
 17: PROMPTANSWER: Which alien was drawn by <i>%s</i>?: true
-\\unfinished, just so we don't get errors
+\\unfinished, just so we don't get errors - outdated
+\\
+\\ new questions
+\\ TEXT
+18: PLAYER: Who said that <i>'%s'</i> was the most expensive thing they ever bought?: true
+18: PROMPTANSWER: What does <i>%s</i> say was the most expensive thing they ever bought?: true
+\\ TF
+19: PLAYER: Who told this true story about the most adventurous thing they have done?: false
+19: BOOLEAN: Did <i>%s</i> actually do this adventurous thing?: true
+\\ DRAW
+20: PLAYER: Which player drew this smiling piece of fruit?: false
+20: PROMPTANSWER: Which smiling piece of fruit was drawn by <i>%s</i>?: true
+\\ TEXT
+21: PLAYER: Who said that <i>'%s'</i> would be their pet, if they could have any animal as a pet?: true
+21: PROMPTANSWER: What does <i>%s</i> say would be their pet, if they could have any animal as a pet?: true
+\\ TF
+22: PLAYER: Who told this true story about their craziest dream?: false
+22: BOOLEAN: Did <i>%s</i> actually dream this crazy thing?: true
+\\ DRAW
+23: PLAYER: Which player drew this flower in a pot?: false
+23: PROMPTANSWER: Which flower in a pot was drawn by <i>%s</i>?: true
+\\ TEXT
+24: PLAYER: Who said that <i>'%s'</i> is their most useless talent?: true
+24: PROMPTANSWER: What does <i>%s</i> say is their most useless talent?: true

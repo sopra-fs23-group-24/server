@@ -22,3 +22,11 @@
 15: TEXT: What would be the title of a movie about your life?
 16: TRUEFALSE: Tell a fun-fact. Then mark whether it is true or false.
 17: DRAWING: Draw an alien.
+\\
+18: TEXT: What was the most expensive thing you ever bought?
+19: TRUEFALSE: Tell a story about the most adventurous thing you have done. Then mark whether it is true or false.
+20: DRAWING: A smiling piece of fruit.
+21: TEXT: If you could have any animal as a pet, what would it be?
+22: TRUEFALSE: Tell a story about your craziest dream. Then mark whether it is true or false.
+23: DRAWING: Draw a flower in a pot.
+24: TEXT: What's the most useless talent you have?
