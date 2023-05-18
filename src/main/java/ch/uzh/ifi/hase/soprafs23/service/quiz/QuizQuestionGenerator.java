@@ -53,7 +53,7 @@ public class QuizQuestionGenerator {
     private final Random rand = SecureRandom.getInstanceStrong();
 
     private final int nrOfQuestionPerPrompt = 2;
-    private final List<QuizQuestion> createdQuestions = new ArrayList<>();
+    private List<QuizQuestion> createdQuestions = new ArrayList<>();
 
     @Autowired
     public QuizQuestionGenerator(@Qualifier("quizQuestionRepository") QuizQuestionRepository qqRepository,
@@ -75,13 +75,10 @@ public class QuizQuestionGenerator {
         this.gameRepository = gameRepository;
     }
 
-    private List<Prompt> reshufflePrompts(List<Prompt> promptsOfGame) {
-        List<Prompt> allPromptsInRandomOrder = new ArrayList<>(promptsOfGame);
-        Collections.shuffle(allPromptsInRandomOrder);
-        return allPromptsInRandomOrder;
-    }
 
     public List<QuizQuestion> createQuizQuestions(String gamePin) {
+        System.out.println("Current Nr of created questions: " + createdQuestions.size());
+        createdQuestions = new ArrayList<>();
         Game gameByPin = gameRepository.findByGamePin(gamePin);
         if (gameByPin == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with this pin found.");
@@ -118,10 +115,14 @@ public class QuizQuestionGenerator {
                     allPromptsInRandomOrder.remove(currentPrompt);
                     allPlayersInRandomOrder.remove(pickedPlayer);
                 }
-                //if question could not sucessfully be generated, try with next player and move current one to end of list
+                //if question could not sucessfully be generated, try with next prompt and move the current one to end of list, if it's the last prompt reshuffle
                 else {
-                    allPlayersInRandomOrder.remove(pickedPlayer);
-                    allPlayersInRandomOrder.add(pickedPlayer);
+                    if(allPromptsInRandomOrder.size() > 1){
+                        allPromptsInRandomOrder.remove(currentPrompt);
+                        allPromptsInRandomOrder.add(currentPrompt);
+                    }else{
+                        allPromptsInRandomOrder = reshufflePrompts(gameByPin.getPromptSet());
+                    }
                 }
 
             }
@@ -226,7 +227,7 @@ public class QuizQuestionGenerator {
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         drawingPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer based on prompt: " + pickedCorrectPlayer.getPlayerName());
+
 
         newQuestion.setImageToDisplay(selectedCorrectPromptAnswer.getAnswerDrawing());
 
@@ -249,7 +250,7 @@ public class QuizQuestionGenerator {
 
             // creat and set a new answer option with that according player
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptPlayer.getPlayerName(), newQuestion);
-            System.out.println("Incorrect answer on prompt: " + wrongAnswer.getAnswerOptionText());
+            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
             allAnswers.remove(selectedPromptAnswer);
         }
 
@@ -304,7 +305,6 @@ public class QuizQuestionGenerator {
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         textPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer based on prompt: " + pickedCorrectPlayer.getPlayerName());
 
         if (pq.isRequiresTextInput()) {
             newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), selectedCorrectPromptAnswer.getAnswer()));
@@ -325,7 +325,7 @@ public class QuizQuestionGenerator {
 
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptPlayer.getPlayerName(), newQuestion);
             allAnswers.remove(selectedPromptAnswer);
-            System.out.println("Incorrect answer on prompt: " + wrongAnswer.getAnswerOptionText());
+            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
         }
 
         System.out.println("end of question \n");
@@ -343,7 +343,6 @@ public class QuizQuestionGenerator {
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         textPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer based on prompt: " + selectedCorrectPromptAnswer.getAnswer());
 
         if (pq.isRequiresTextInput()) {
             newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), pickedCorrectPlayer.getPlayerName()));
@@ -363,7 +362,7 @@ public class QuizQuestionGenerator {
 
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptAnswer.getAnswer(), newQuestion);
             allAnswers.remove(selectedPromptAnswer);
-            System.out.println("Incorrect answer on prompt: " + wrongAnswer.getAnswerOptionText());
+            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
         }
 
         System.out.println("end of question \n");
@@ -390,8 +389,6 @@ public class QuizQuestionGenerator {
 
         newQuestion.setQuizQuestionText(pq.getQuestionText());
 
-        System.out.println("Correct answer based on prompt: " + pickedCorrectPlayer.getPlayerName());
-
         newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
 
         log.debug("Set Question text to: %s with display: %s".formatted(newQuestion.getQuizQuestionText(), newQuestion.getStoryToDisplay()));
@@ -407,7 +404,7 @@ public class QuizQuestionGenerator {
 
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptPlayer.getPlayerName(), newQuestion);
             allAnswers.remove(selectedPromptAnswer);
-            System.out.println("Incorrect answer on prompt: " + wrongAnswer.getAnswerOptionText());
+            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
         }
 
         System.out.println("end of question \n");
@@ -426,7 +423,6 @@ public class QuizQuestionGenerator {
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         trueFalsePromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer based on prompt: " + selectedCorrectPromptAnswer.getAnswerBoolean());
 
         if (pq.isRequiresTextInput()) {
             newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), pickedCorrectPlayer.getPlayerName()));
@@ -446,11 +442,11 @@ public class QuizQuestionGenerator {
 
         if (selectedCorrectPromptAnswer.getAnswerBoolean()) {
             AnswerOption wrongAnswer = saveAsAnswerOption("false", newQuestion);
-            System.out.println("Incorrect answer on prompt: " + wrongAnswer.getAnswerOptionText());
+            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
         }
         else {
             AnswerOption wrongAnswer = saveAsAnswerOption("true", newQuestion);
-            System.out.println("Incorrect answer on prompt: " + wrongAnswer.getAnswerOptionText());
+            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
         }
 
         System.out.println("end of question \n");
@@ -458,19 +454,23 @@ public class QuizQuestionGenerator {
     }
 
 
+    private List<Prompt> reshufflePrompts(List<Prompt> promptsOfGame) {
+        List<Prompt> allPromptsInRandomOrder = new ArrayList<>(promptsOfGame);
+        Collections.shuffle(allPromptsInRandomOrder);
+        return allPromptsInRandomOrder;
+    }
+
     private PotentialQuestion pickPotentialQuestionForPrompt(Prompt prompt) {
         List<PotentialQuestion> potentialQuestions = pqRepository.findAllByAssociatedPrompt(prompt);
         return potentialQuestions.get(rand.nextInt(potentialQuestions.size()));
     }
 
     private AnswerOption saveAsAnswerOption(String answerText, QuizQuestion newQuestion) {
-        System.out.println("Correct answer in function: " + answerText);
         AnswerOption answer = new AnswerOption();
         answer.setAnswerOptionText(answerText);
         newQuestion.addAnswerOption(answer);
         answerOptionRepository.save(answer);
         answerOptionRepository.flush();
-        System.out.println("Answer saved in AO in function: " + answer.getAnswerOptionText());
         return answer;
     }
 
