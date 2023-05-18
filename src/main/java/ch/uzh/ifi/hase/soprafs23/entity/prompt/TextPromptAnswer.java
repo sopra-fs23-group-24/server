@@ -28,6 +28,8 @@ public class TextPromptAnswer implements PromptAnswer, Serializable {
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String answer;
 
+    @Column
+    private boolean usedAsCorrectAnswer = false;
 
     // getters + setters
 
@@ -67,5 +69,17 @@ public class TextPromptAnswer implements PromptAnswer, Serializable {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public void setTextPromptAnswerId(Long textPromptAnswerId) {
+        this.textPromptAnswerId = textPromptAnswerId;
+    }
+
+    public boolean isUsedAsCorrectAnswer() {
+        return usedAsCorrectAnswer;
+    }
+
+    public void setUsedAsCorrectAnswer(boolean usedAsCorrectAnswer) {
+        this.usedAsCorrectAnswer = usedAsCorrectAnswer;
     }
 }

@@ -14,4 +14,6 @@ public interface PotentialQuestionRepository extends JpaRepository<PotentialQues
 
     List<PotentialQuestion> findAllByQuestionType(QuestionType type);
 
+    PotentialQuestion findByAssociatedPromptAndQuestionType(Prompt prompt, QuestionType type);
+
 }

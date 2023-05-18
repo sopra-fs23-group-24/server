@@ -30,6 +30,9 @@ public class TrueFalsePromptAnswer implements PromptAnswer, Serializable {
     @Column(nullable = false)
     private Boolean answerBoolean;
 
+    @Column
+    private boolean usedAsCorrectAnswer = false;
+
 
     // getters + setters
     public Long getTrueFalsePromptAnswerId() {
@@ -75,5 +78,17 @@ public class TrueFalsePromptAnswer implements PromptAnswer, Serializable {
 
     public void setAssociatedGamePin(String associatedGamePin) {
         this.associatedGamePin = associatedGamePin;
+    }
+
+    public void setTrueFalsePromptAnswerId(Long trueFalsePromptAnswerId) {
+        this.trueFalsePromptAnswerId = trueFalsePromptAnswerId;
+    }
+
+    public boolean isUsedAsCorrectAnswer() {
+        return usedAsCorrectAnswer;
+    }
+
+    public void setUsedAsCorrectAnswer(boolean usedAsCorrectAnswer) {
+        this.usedAsCorrectAnswer = usedAsCorrectAnswer;
     }
 }

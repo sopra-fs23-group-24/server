@@ -29,6 +29,9 @@ public class DrawingPromptAnswer implements PromptAnswer, Serializable {
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String answerDrawing;
 
+    @Column
+    private boolean usedAsCorrectAnswer = false;
+
 
     // getters + setters
 
@@ -66,5 +69,17 @@ public class DrawingPromptAnswer implements PromptAnswer, Serializable {
 
     public void setAnswerDrawing(String answerDrawing) {
         this.answerDrawing = answerDrawing;
+    }
+
+    public void setDrawingPromptAnswerId(Long drawingPromptAnswerId) {
+        this.drawingPromptAnswerId = drawingPromptAnswerId;
+    }
+
+    public boolean isUsedAsCorrectAnswer() {
+        return usedAsCorrectAnswer;
+    }
+
+    public void setUsedAsCorrectAnswer(boolean usedAsCorrectAnswer) {
+        this.usedAsCorrectAnswer = usedAsCorrectAnswer;
     }
 }
