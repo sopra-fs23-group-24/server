@@ -10,6 +10,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import javax.websocket.Encoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,8 @@ public class QuizQuestionGeneratorTextTest {
     private PromptRepository promptRepository;
     @Mock
     private AnswerOptionRepository answerOptionRepository;
+    @Mock
+    private TextPromptAnswerRepository textPromptAnswerRepository;
 
     @InjectMocks
     private QuizQuestionGenerator quizQuestionGenerator;
@@ -66,7 +70,7 @@ public class QuizQuestionGeneratorTextTest {
     @Test
     public void transformPotentialQuestionText_PLAYER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTextQuestionTypePlayer(potentialTextQuestionPLAYER, new ArrayList<>(testTextAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTextQuestionTypePlayer(potentialTextQuestionPLAYER, new ArrayList<>(testTextAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -80,7 +84,7 @@ public class QuizQuestionGeneratorTextTest {
         }
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
 
-        Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
+        Assertions.assertEquals(generatedQuestion.getCorrectAnswer().getAnswerOptionText(), testPlayers.get(0).getPlayerName());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
@@ -92,7 +96,7 @@ public class QuizQuestionGeneratorTextTest {
     @Test
     public void transformPotentialQuestionText_PROMPTANSWER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTextQuestionTypePromptAnswer(potentialTextQuestionPROMPTANSWER, new ArrayList<>(testTextAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTextQuestionTypePromptAnswer(potentialTextQuestionPROMPTANSWER, new ArrayList<>(testTextAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -106,7 +110,7 @@ public class QuizQuestionGeneratorTextTest {
         }
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
 
-        Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
+        Assertions.assertEquals(generatedQuestion.getCorrectAnswer().getAnswerOptionText(), "some answer from: " + testPlayers.get(0).getPlayerName());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
@@ -185,8 +189,10 @@ public class QuizQuestionGeneratorTextTest {
             textAnswer.setAssociatedPromptNr(textTestPrompt.getPromptNr());
             textAnswer.setAssociatedGamePin(testGame.getGamePin());
             textAnswer.setAssociatedPlayerId(player.getPlayerId());
+            textAnswer.setUsedAsCorrectAnswer(false);
             testTextAnswers.add(textAnswer);
         }
+        Mockito.when(textPromptAnswerRepository.findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testTextAnswers.get(0));
     }
 
 }

@@ -10,6 +10,8 @@ import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import org.junit.jupiter.api.Assertions;
@@ -39,10 +41,13 @@ public class QuizQuestionGeneratorTrueFalseTest {
     private PlayerRepository playerRepository;
     @Mock
     private PromptRepository promptRepository;
+    @Mock
+    private TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository;
 
     // is needed to run
     @Mock
     private AnswerOptionRepository answerOptionRepository;
+
     @InjectMocks
     private QuizQuestionGenerator quizQuestionGenerator;
 
@@ -68,9 +73,9 @@ public class QuizQuestionGeneratorTrueFalseTest {
 
     @Test
     public void transformPotentialQuestionTF_PLAYER() {
-
+        Mockito.when(trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testTrueFalseAnswers.get(0));
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypePlayer(potentialTFQuestionPLAYER,
-                                            new ArrayList<>(testTrueFalseAnswers));
+                                            new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -83,7 +88,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
             );
         }
 
-        Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
+        Assertions.assertEquals(generatedQuestion.getCorrectAnswer().getAnswerOptionText(), testPlayers.get(0).getPlayerName());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
@@ -95,18 +100,18 @@ public class QuizQuestionGeneratorTrueFalseTest {
     }
 
     @Test
-    public void transformPotentialQuestionTF_PLAYER_noTrueStories() {
+    public void transformPotentialQuestionTF_PLAYER_notATrueStory() {
         setUpTFPromptAnswers_allFalse();
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypePlayer(potentialTFQuestionPLAYER,
-                                            new ArrayList<>(testTrueFalseAnswers));
+                                            new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
         Assertions.assertNull(generatedQuestion);
     }
 
     @Test
     public void transformPotentialQuestionTF_BOOLEAN() {
-
+        Mockito.when(trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testTrueFalseAnswers.get(0));
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypeBoolean(potentialTFQuestionBOOLEAN,
-                                            new ArrayList<>(testTrueFalseAnswers));
+                                            new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -117,7 +122,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
             );
         }
 
-        Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
+        Assertions.assertEquals(generatedQuestion.getCorrectAnswer().getAnswerOptionText(), "true");
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
@@ -125,7 +130,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
 
         Assertions.assertNull(generatedQuestion.getImageToDisplay());
-        Assertions.assertNotNull(generatedQuestion.getStoryToDisplay());
+        Assertions.assertEquals(generatedQuestion.getStoryToDisplay(), "some story from: " + testPlayers.get(0).getPlayerName());
     }
 
 
@@ -213,6 +218,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
             tfAnswer.setAssociatedPlayerId(player.getPlayerId());
             testTrueFalseAnswers.add(tfAnswer);
         }
+        Mockito.when(trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testTrueFalseAnswers.get(0));
     }
 
 

@@ -9,7 +9,9 @@ import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import org.junit.jupiter.api.Assertions;
@@ -39,6 +41,8 @@ public class QuizQuestionGeneratorDrawTest {
     private PromptRepository promptRepository;
     @Mock
     private AnswerOptionRepository answerOptionRepository;
+    @Mock
+    private DrawingPromptAnswerRepository drawingPromptAnswerRepository;
 
     @InjectMocks
     private QuizQuestionGenerator quizQuestionGenerator;
@@ -66,7 +70,7 @@ public class QuizQuestionGeneratorDrawTest {
     @Test
     public void transformPotentialQuestionDrawing_PLAYER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialDrawingQuestionTypePlayer(potentialDrawingQuestionPLAYER, new ArrayList<>(testDrawingAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialDrawingQuestionTypePlayer(potentialDrawingQuestionPLAYER, new ArrayList<>(testDrawingAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -81,20 +85,20 @@ public class QuizQuestionGeneratorDrawTest {
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
         Assertions.assertEquals(generatedQuestion.getQuizQuestionText(), potentialDrawingQuestionPLAYER.getQuestionText());
 
-        Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
+        Assertions.assertEquals(generatedQuestion.getCorrectAnswer().getAnswerOptionText(), testPlayers.get(0).getPlayerName());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
 
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
-        Assertions.assertNotNull(generatedQuestion.getImageToDisplay());
+        Assertions.assertEquals(generatedQuestion.getImageToDisplay(), "some drawing from: " + testPlayers.get(0).getPlayerName());
         Assertions.assertNull(generatedQuestion.getStoryToDisplay());
     }
 
     @Test
     public void transformPotentialQuestionDrawing_PROMPANSWER() {
 
-        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialDrawingQuestionTypePromptAnswer(potentialDrawingQuestionPROMPTANSWER, new ArrayList<>(testDrawingAnswers));
+        QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialDrawingQuestionTypePromptAnswer(potentialDrawingQuestionPROMPTANSWER, new ArrayList<>(testDrawingAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -109,7 +113,7 @@ public class QuizQuestionGeneratorDrawTest {
 
         Assertions.assertNotNull(generatedQuestion.getQuizQuestionText());
 
-        Assertions.assertNotNull(generatedQuestion.getCorrectAnswer());
+        Assertions.assertEquals(generatedQuestion.getCorrectAnswer().getAnswerOptionText(), "some drawing from: " + testPlayers.get(0).getPlayerName());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());
@@ -189,6 +193,7 @@ public class QuizQuestionGeneratorDrawTest {
             drawAnswer.setAssociatedPlayerId(player.getPlayerId());
             testDrawingAnswers.add(drawAnswer);
         }
+        Mockito.when(drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testDrawingAnswers.get(0));
     }
 
 }
