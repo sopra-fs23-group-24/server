@@ -54,7 +54,6 @@ public class PromptServiceIntegrationTest {
 
     @Test
     public void pickPrompts_success() {
-
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
         Assertions.assertTrue(foundGame.getPromptSet().isEmpty());
@@ -63,6 +62,7 @@ public class PromptServiceIntegrationTest {
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
         testDTO.setTrueFalseNr(1);
+        testDTO.setTimer(40);
 
         List<Prompt> pickedPrompts = promptService.pickPrompts(testDTO, testGame.getGamePin());
         Assertions.assertTrue(pickedPrompts.size() > 0);
@@ -109,6 +109,24 @@ public class PromptServiceIntegrationTest {
         for (Prompt p : foundPrompts) {
             assert (Objects.equals(p.getPromptText(), tfTestPrompt.getPromptText()) || Objects.equals(p.getPromptText(), drawTestPrompt.getPromptText()) || Objects.equals(p.getPromptText(), textTestPrompt.getPromptText()));
         }
+    }
+
+    @Test
+    public void addTimerToGame_success(){
+        Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
+        Assertions.assertNotNull(foundGame);
+        Assertions.assertNull(foundGame.getTimer());
+
+        PromptPostDTO testDTO = new PromptPostDTO();
+        testDTO.setDrawingNr(1);
+        testDTO.setTextNr(1);
+        testDTO.setTrueFalseNr(1);
+        testDTO.setTimer(40);
+
+        promptService.addTimerToGame(testDTO, testGame.getGamePin());
+
+        foundGame = gameRepository.findByGamePin(testGame.getGamePin());
+        Assertions.assertEquals(foundGame.getTimer(), 40);
     }
 
 }

@@ -34,6 +34,7 @@ public class PromptServiceTest {
     @Mock
     private GameRepository gameRepository;
 
+    //no usage but needs to be instantiated for promptService to run
     @Mock
     private PotentialQuestionRepository potentialQuestionRepository;
 
@@ -60,12 +61,6 @@ public class PromptServiceTest {
         drawTestPrompt.setPromptText("Draw something.");
         drawTestPrompt.setPromptType(PromptType.DRAWING);
 
-        /*PotentialQuestion testPQ = new PotentialQuestion();
-        testPQ.setQuestionType(QuestionType.PLAYER);
-        testPQ.setQuestionText("Test question about a story of %s?");
-        testPQ.setRequiresTextInput(true);
-        testPQ.setDisplayType(AdditionalDisplayType.TEXT);
-        testPQ.setAssociatedPrompt(tfTestPrompt);*/
 
         Mockito.when(promptRepository.findAll()).thenReturn(List.of(tfTestPrompt, textTestPrompt, drawTestPrompt));
         Mockito.when(promptRepository.findAllByPromptType(PromptType.TRUEFALSE)).thenReturn(new ArrayList<>(List.of(tfTestPrompt)));
@@ -112,6 +107,7 @@ public class PromptServiceTest {
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
         testDTO.setTrueFalseNr(1);
+        testDTO.setTimer(40);
 
         testGame.setStatus(GameStatus.SELECTION);
         testGame.emptyPromptSet();
@@ -137,6 +133,7 @@ public class PromptServiceTest {
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
         testDTO.setTrueFalseNr(1);
+        testDTO.setTimer(40);
 
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(null);
 
@@ -149,6 +146,7 @@ public class PromptServiceTest {
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
         testDTO.setTrueFalseNr(1);
+        testDTO.setTimer(40);
 
         testGame.setStatus(GameStatus.PROMPT);
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
@@ -162,12 +160,32 @@ public class PromptServiceTest {
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
         testDTO.setTrueFalseNr(1);
+        testDTO.setTimer(40);
 
         testGame.setStatus(GameStatus.SELECTION);
         testGame.setPromptSet(List.of(textTestPrompt, tfTestPrompt, drawTestPrompt));
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
 
         assertThrows(ResponseStatusException.class, () -> promptService.pickPrompts(testDTO, testGame.getGamePin()));
+    }
+
+    @Test
+    public void addTimerToGame() {
+        PromptPostDTO testDTO = new PromptPostDTO();
+        testDTO.setDrawingNr(1);
+        testDTO.setTextNr(1);
+        testDTO.setTrueFalseNr(1);
+        testDTO.setTimer(40);
+
+        testGame.setStatus(GameStatus.PROMPT);
+        Mockito.when(gameRepository.findByGamePin(Mockito.anyString())).thenReturn(testGame);
+        Mockito.when(gameRepository.save(Mockito.any())).thenReturn(testGame);
+
+        promptService.addTimerToGame(testDTO, "123456");
+
+        Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
+
+        assertEquals(gameRepository.findByGamePin(testGame.getGamePin()).getTimer(), testDTO.getTimer());
     }
 
 }
