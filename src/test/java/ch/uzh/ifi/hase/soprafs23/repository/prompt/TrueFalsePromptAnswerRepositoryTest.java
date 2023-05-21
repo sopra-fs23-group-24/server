@@ -77,4 +77,15 @@ class TrueFalsePromptAnswerRepositoryTest {
         assertEquals(trueFalsePromptAnswer.getAssociatedPlayerId(), found.getAssociatedPlayerId());
         assertEquals(trueFalsePromptAnswer.getAssociatedGamePin(), found.getAssociatedGamePin());
     }
+
+    @Test
+    void deleteAllByAssociatedGamePin() {
+        List<TrueFalsePromptAnswer> allFound = trueFalsePromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(trueFalsePromptAnswer.getAssociatedGamePin(), trueFalsePromptAnswer.getAssociatedPromptNr());
+        assertEquals(1, allFound.size());
+
+        trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(trueFalsePromptAnswer.getAssociatedGamePin());
+
+        allFound = trueFalsePromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(trueFalsePromptAnswer.getAssociatedGamePin(), trueFalsePromptAnswer.getAssociatedPromptNr());
+        assertEquals(0, allFound.size());
+    }
 }

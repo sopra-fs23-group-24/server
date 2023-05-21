@@ -38,13 +38,10 @@ class PromptAnswerControllerTest {
 
     @Test
     void postTextPromptAnswer_success() throws Exception {
-
-        // create DTO
         TextPromptAnswerPostDTO testDto = new TextPromptAnswerPostDTO();
         testDto.setAssociatedPromptNr(0);
         testDto.setAnswer("Test");
 
-        // the desired answer which service should create
         TextPromptAnswer textPromptAnswer = new TextPromptAnswer();
         textPromptAnswer.setAssociatedPromptNr(0);
         textPromptAnswer.setAnswer("Test");
@@ -57,35 +54,49 @@ class PromptAnswerControllerTest {
         given(promptAnswerService.saveTextPromptAnswer(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(textPromptAnswer);
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/prompt-answers/text")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(testDto))
                 .header("playerToken", playerToken);
 
-        // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.associatedPromptNr", is(textPromptAnswer.getAssociatedPromptNr())))
                 .andExpect(jsonPath("$.answer", is(testDto.getAnswer())));
     }
 
+    @Test
+    void postTextPromptAnswer_answerEmpty() throws Exception {
+        TextPromptAnswerPostDTO testDto = new TextPromptAnswerPostDTO();
+        testDto.setAssociatedPromptNr(0);
+        testDto.setAnswer("Test");
 
-    // test canChangeToQUiz
+        String playerToken = "TESTTOKEN";
+
+        given(promptAnswerService.saveTextPromptAnswer(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
+                .willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        MockHttpServletRequestBuilder postRequest = post("/games/123456/prompt-answers/text")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(testDto))
+                .header("playerToken", playerToken);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     void testPostTrueFalsePromptAnswer_success() throws Exception {
-        // create DTO
         TrueFalsePromptAnswerPostDTO testDto = new TrueFalsePromptAnswerPostDTO();
         testDto.setAssociatedPromptNr(0);
         testDto.setAnswerBoolean(true);
         testDto.setAnswerText("Test");
 
-        // the desired answer which service should create
         TrueFalsePromptAnswer trueFalsePromptAnswer = new TrueFalsePromptAnswer();
         trueFalsePromptAnswer.setAssociatedPromptNr(0);
         trueFalsePromptAnswer.setAnswerBoolean(true);
         trueFalsePromptAnswer.setAnswerText("Test");
-        // is this necessary, as it will not be tested here.
+
         trueFalsePromptAnswer.setAssociatedPlayerId(2L);
         trueFalsePromptAnswer.setAssociatedGamePin("123456");
 
@@ -94,14 +105,11 @@ class PromptAnswerControllerTest {
         given(promptAnswerService.saveTrueFalsePromptAnswer(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(trueFalsePromptAnswer);
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/prompt-answers/tf")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(testDto))
                 .header("playerToken", playerToken);
 
-        // then
-        // throws Exception
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.associatedPromptNr", is(trueFalsePromptAnswer.getAssociatedPromptNr())))
@@ -110,13 +118,32 @@ class PromptAnswerControllerTest {
     }
 
     @Test
+    void testPostTrueFalsePromptAnswer_answerEmpty() throws Exception {
+        TrueFalsePromptAnswerPostDTO testDto = new TrueFalsePromptAnswerPostDTO();
+        testDto.setAssociatedPromptNr(0);
+        testDto.setAnswerBoolean(true);
+        testDto.setAnswerText("Test");
+
+        String playerToken = "TESTTOKEN";
+
+        given(promptAnswerService.saveTrueFalsePromptAnswer(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
+                .willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        MockHttpServletRequestBuilder postRequest = post("/games/123456/prompt-answers/tf")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(testDto))
+                .header("playerToken", playerToken);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void postDrawingPromptAnswer_success() throws Exception {
-        // create DTO
         DrawingPromptAnswerPostDTO testDto = new DrawingPromptAnswerPostDTO();
         testDto.setAssociatedPromptNr(0);
         testDto.setAnswerDrawing("TestDrawing");
 
-        // the desired answer which service should create
         DrawingPromptAnswer drawingPromptAnswer = new DrawingPromptAnswer();
         drawingPromptAnswer.setAssociatedPromptNr(0);
         drawingPromptAnswer.setAnswerDrawing("TestDrawing");
@@ -129,18 +156,36 @@ class PromptAnswerControllerTest {
         given(promptAnswerService.saveDrawingPromptAnswer(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(drawingPromptAnswer);
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/prompt-answers/drawing")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(testDto))
                 .header("playerToken", playerToken);
 
-        // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.associatedPromptNr", is(drawingPromptAnswer.getAssociatedPromptNr())))
                 .andExpect(jsonPath("$.answerDrawing", is(testDto.getAnswerDrawing())));
 
+    }
+
+    @Test
+    void postDrawingPromptAnswer_answerEmpty() throws Exception {
+        DrawingPromptAnswerPostDTO testDto = new DrawingPromptAnswerPostDTO();
+        testDto.setAssociatedPromptNr(0);
+        testDto.setAnswerDrawing("TestDrawing");
+
+        String playerToken = "TESTTOKEN";
+
+        given(promptAnswerService.saveDrawingPromptAnswer(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
+                .willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        MockHttpServletRequestBuilder postRequest = post("/games/123456/prompt-answers/drawing")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(testDto))
+                .header("playerToken", playerToken);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isBadRequest());
     }
 
     private String asJsonString(final Object object) {

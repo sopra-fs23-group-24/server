@@ -50,10 +50,8 @@ class QuizQuestionControllerTest {
 
         given(quizQuestionService.getQuizQuestions()).willReturn(allQuizQuestions);
 
-        // when
         MockHttpServletRequestBuilder getRequest = get("/quizQuestions").contentType(MediaType.APPLICATION_JSON);
 
-        // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -69,10 +67,8 @@ class QuizQuestionControllerTest {
 
         given(quizQuestionService.getQuizQuestionsOfGame(Mockito.anyString())).willReturn(allQuizQuestions);
 
-        // when
         MockHttpServletRequestBuilder getRequest = get("/games/123456/quizQuestions").contentType(MediaType.APPLICATION_JSON);
 
-        // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -85,10 +81,8 @@ class QuizQuestionControllerTest {
     public void getAllQuiZQuestionsOfGame_invalidGamPin() throws Exception {
         given(quizQuestionService.getQuizQuestionsOfGame(Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // when
         MockHttpServletRequestBuilder getRequest = get("/games/654321").contentType(MediaType.APPLICATION_JSON);
 
-        // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isNotFound());
     }

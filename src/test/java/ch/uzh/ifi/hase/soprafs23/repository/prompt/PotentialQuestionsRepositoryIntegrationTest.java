@@ -76,4 +76,13 @@ public class PotentialQuestionsRepositoryIntegrationTest {
         assertEquals(testPQ.isRequiresTextInput(), found.isRequiresTextInput());
     }
 
+    @Test
+    public void findByAssociatedPromptAndQuestionType() {
+        PotentialQuestion found = pqRepository.findByAssociatedPromptAndQuestionType(testPQ.getAssociatedPrompt(), testPQ.getQuestionType());
+
+        assertEquals(testPQ.getQuestionType(), found.getQuestionType());
+        assertEquals(testPQ.getQuestionText(), found.getQuestionText());
+        assertEquals(testPQ.getAssociatedPrompt(), found.getAssociatedPrompt());
+        assertEquals(testPQ.isRequiresTextInput(), found.isRequiresTextInput());
+    }
 }

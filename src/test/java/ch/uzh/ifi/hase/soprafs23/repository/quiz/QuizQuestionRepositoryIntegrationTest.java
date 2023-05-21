@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.repository.quiz;
 
 import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
@@ -29,8 +30,8 @@ public class QuizQuestionRepositoryIntegrationTest {
     void setup() {
         AnswerOption testAnswerOption = new AnswerOption();
         testAnswerOption.setAnswerOptionText("answer option test");
-        entityManager.persist(testAnswerOption);
-        entityManager.merge(testAnswerOption);
+
+        testAnswerOption = entityManager.merge(testAnswerOption);
         entityManager.flush();
 
         Prompt testPrompt = new Prompt();
@@ -38,18 +39,21 @@ public class QuizQuestionRepositoryIntegrationTest {
         testPrompt.setPromptText("Tell a story");
         testPrompt.setPromptType(PromptType.TRUEFALSE);
 
-        entityManager.persist(testPrompt);
+        testPrompt = entityManager.merge(testPrompt);
         entityManager.flush();
 
         testQuizQuestion = new QuizQuestion();
-        testQuizQuestion.setAssociatedGamePin("123456");
+        testQuizQuestion.setQuestionId(999L);
         testQuizQuestion.setQuizQuestionText("test text");
-        testQuizQuestion.setQuestionStatus(CompletionStatus.NOT_FINISHED);
+        testQuizQuestion.setImageToDisplay("a story");
+        testQuizQuestion.setStoryToDisplay("an image");
+        testQuizQuestion.setAssociatedGamePin("123456");
         testQuizQuestion.setAssociatedPrompt(testPrompt);
         testQuizQuestion.setAnswerOptions(List.of(testAnswerOption));
+        testQuizQuestion.setCorrectAnswer(testAnswerOption);
+        testQuizQuestion.setAnswerDisplayType(DisplayType.IMAGE);
 
-        entityManager.merge(testQuizQuestion);
-        entityManager.persist(testAnswerOption);
+        testQuizQuestion = entityManager.merge(testQuizQuestion);
         entityManager.flush();
     }
 
@@ -63,19 +67,27 @@ public class QuizQuestionRepositoryIntegrationTest {
         List<QuizQuestion> foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
 
         Assertions.assertEquals(foundQuestions.size(), 1);
+        Assertions.assertEquals(foundQuestions.get(0).getQuestionId(), testQuizQuestion.getQuestionId());
+        Assertions.assertEquals(foundQuestions.get(0).getQuestionStatus(), CompletionStatus.NOT_FINISHED);
         Assertions.assertEquals(foundQuestions.get(0).getQuizQuestionText(), testQuizQuestion.getQuizQuestionText());
+        Assertions.assertEquals(foundQuestions.get(0).getImageToDisplay(), testQuizQuestion.getImageToDisplay());
+        Assertions.assertEquals(foundQuestions.get(0).getStoryToDisplay(), testQuizQuestion.getStoryToDisplay());
+        Assertions.assertEquals(foundQuestions.get(0).getAssociatedGamePin(), testQuizQuestion.getAssociatedGamePin());
+        Assertions.assertEquals(foundQuestions.get(0).getAssociatedPrompt(), testQuizQuestion.getAssociatedPrompt());
+        Assertions.assertEquals(foundQuestions.get(0).getAnswerOptions(), testQuizQuestion.getAnswerOptions());
+        Assertions.assertEquals(foundQuestions.get(0).getAnswerDisplayType(), testQuizQuestion.getAnswerDisplayType());
+        Assertions.assertEquals(foundQuestions.get(0).getCorrectAnswer(), testQuizQuestion.getCorrectAnswer());
+        Assertions.assertTrue(foundQuestions.get(0).getReceivedAnswers().isEmpty());
     }
 
     @Test
     public void deleteAllByAssociatedGamePin_success() {
         List<QuizQuestion> foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
-
         Assertions.assertEquals(foundQuestions.size(), 1);
 
         quizQuestionRepository.deleteAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
 
         foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
-
         Assertions.assertEquals(foundQuestions.size(), 0);
     }
 

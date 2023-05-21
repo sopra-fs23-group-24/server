@@ -25,13 +25,15 @@ public class PlayerRepositoryIntegrationTest {
     @BeforeEach
     void setup() {
         testPlayer = new Player();
-        testPlayer.setPlayerName("test");
-        testPlayer.setAssociatedGamePin("123456");
-        testPlayer.setHost(true);
-        testPlayer.setToken("1");
         testPlayer.setPlayerId(1L);
+        testPlayer.setAssociatedGamePin("123456");
+        testPlayer.setPlayerName("test");
+        testPlayer.setToken("1");
+        testPlayer.setScore(100);
+        testPlayer.setLatestScore(10);
+        testPlayer.setHost(true);
 
-        entityManager.merge(testPlayer);
+        testPlayer = entityManager.merge(testPlayer);
         entityManager.flush();
     }
 
@@ -40,55 +42,61 @@ public class PlayerRepositoryIntegrationTest {
         playerRepository.deleteAll();
     }
 
-    /*@Test
+    @Test
     public void findByPlayerId_success() {
-        //due to OneToMany relationship Game -> Players, Players are detached entities
-        //use merge instead of save
-
-
-        // when
         Player found = playerRepository.findByPlayerId(testPlayer.getPlayerId());
 
-        assertEquals(testPlayer.getPlayerName(), found.getPlayerName());
-        assertEquals(testPlayer.getScore(), found.getScore());
         assertEquals(testPlayer.getPlayerId(), found.getPlayerId());
-        assertEquals(testPlayer.getToken(), found.getToken());
         assertEquals(testPlayer.getAssociatedGamePin(), found.getAssociatedGamePin());
-    }*/
+        assertEquals(testPlayer.getPlayerName(), found.getPlayerName());
+        assertEquals(testPlayer.getToken(), found.getToken());
+        assertEquals(testPlayer.getScore(), found.getScore());
+        assertEquals(testPlayer.getLatestScore(), found.getLatestScore());
+        assertEquals(testPlayer.isHost(), found.isHost());
+    }
 
 
     @Test
     public void findByToken_success() {
-        //due to OneToMany relationship Game -> Players, Players are detached entities
-        //use merge instead of save
-        //entityManager.merge(testPlayer);
-        //entityManager.flush();
-
-        // when
         Player found = playerRepository.findByToken(testPlayer.getToken());
 
+        assertEquals(testPlayer.getPlayerId(), found.getPlayerId());
+        assertEquals(testPlayer.getAssociatedGamePin(), found.getAssociatedGamePin());
         assertEquals(testPlayer.getPlayerName(), found.getPlayerName());
         assertEquals(testPlayer.getToken(), found.getToken());
-        assertEquals(testPlayer.getAssociatedGamePin(), found.getAssociatedGamePin());
+        assertEquals(testPlayer.getScore(), found.getScore());
+        assertEquals(testPlayer.getLatestScore(), found.getLatestScore());
+        assertEquals(testPlayer.isHost(), found.isHost());
     }
 
     @Test
     public void findAllByAssociatedGamePin_success() {
-        //entityManager.merge(testPlayer);
-        //entityManager.flush();
-
-        // when
         List<Player> foundPlayers = playerRepository.findAllByAssociatedGamePin(testPlayer.getAssociatedGamePin());
 
         assertEquals(foundPlayers.size(), 1);
-        assertEquals(testPlayer.getPlayerName(), foundPlayers.get(0).getPlayerName());
-        assertEquals(testPlayer.getToken(), foundPlayers.get(0).getToken());
-        assertEquals(testPlayer.getAssociatedGamePin(), foundPlayers.get(0).getAssociatedGamePin());
+
+        Player found = foundPlayers.get(0);
+
+        assertEquals(testPlayer.getPlayerId(), found.getPlayerId());
+        assertEquals(testPlayer.getAssociatedGamePin(), found.getAssociatedGamePin());
+        assertEquals(testPlayer.getPlayerName(), found.getPlayerName());
+        assertEquals(testPlayer.getToken(), found.getToken());
+        assertEquals(testPlayer.getScore(), found.getScore());
+        assertEquals(testPlayer.getLatestScore(), found.getLatestScore());
+        assertEquals(testPlayer.isHost(), found.isHost());
     }
 
     @Test
     public void findByPlayerNameAndAssociatedGamePin() {
-        //todo: test
+        Player found = playerRepository.findByPlayerNameAndAssociatedGamePin(testPlayer.getPlayerName(), testPlayer.getAssociatedGamePin());
+
+        assertEquals(testPlayer.getPlayerId(), found.getPlayerId());
+        assertEquals(testPlayer.getAssociatedGamePin(), found.getAssociatedGamePin());
+        assertEquals(testPlayer.getPlayerName(), found.getPlayerName());
+        assertEquals(testPlayer.getToken(), found.getToken());
+        assertEquals(testPlayer.getScore(), found.getScore());
+        assertEquals(testPlayer.getLatestScore(), found.getLatestScore());
+        assertEquals(testPlayer.isHost(), found.isHost());
     }
 
 

@@ -64,6 +64,14 @@ public interface DTOMapper {
     Player convertFromPlayerPutDTO(PlayerPutDTO player);
 
 
+    // prompt
+    @Mapping(source = "promptId", target = "promptId")
+    @Mapping(source = "promptNr", target = "promptNr")
+    @Mapping(source = "promptType", target = "promptType")
+    @Mapping(source = "promptText", target = "promptText")
+    PromptGetDTO convertToPromptGetDTO(Prompt prompt);
+
+
     // prompt answers
     @Mapping(source = "associatedPromptNr", target = "associatedPromptNr")
     @Mapping(source = "answer", target = "answer")
@@ -78,13 +86,6 @@ public interface DTOMapper {
     @Mapping(source = "answerDrawing", target = "answerDrawing")
     DrawingPromptAnswer convertFromDrawingPromptAnswerPostDTO(DrawingPromptAnswerPostDTO drawingPromptAnswerPostDTO);
 
-
-    // prompt
-    @Mapping(source = "promptId", target = "promptId")
-    @Mapping(source = "promptNr", target = "promptNr")
-    @Mapping(source = "promptType", target = "promptType")
-    @Mapping(source = "promptText", target = "promptText")
-    PromptGetDTO convertToPromptGetDTO(Prompt prompt);
 
 
     // quiz question
