@@ -4,6 +4,7 @@ public class PlayerPostDTO {
     private String playerName;
     private boolean isHost;
 
+
     public String getPlayerName() {
         return playerName;
     }

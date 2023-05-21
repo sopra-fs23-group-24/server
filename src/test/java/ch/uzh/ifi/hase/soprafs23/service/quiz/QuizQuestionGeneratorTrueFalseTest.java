@@ -1,6 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
-import ch.uzh.ifi.hase.soprafs23.constant.*;
+import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
+import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
@@ -10,7 +13,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
@@ -75,7 +77,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
     public void transformPotentialQuestionTF_PLAYER() {
         Mockito.when(trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testTrueFalseAnswers.get(0));
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypePlayer(potentialTFQuestionPLAYER,
-                                            new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
+                new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
@@ -103,7 +105,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
     public void transformPotentialQuestionTF_PLAYER_notATrueStory() {
         setUpTFPromptAnswers_allFalse();
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypePlayer(potentialTFQuestionPLAYER,
-                                            new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
+                new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
         Assertions.assertNull(generatedQuestion);
     }
 
@@ -111,7 +113,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
     public void transformPotentialQuestionTF_BOOLEAN() {
         Mockito.when(trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testTrueFalseAnswers.get(0));
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypeBoolean(potentialTFQuestionBOOLEAN,
-                                            new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
+                new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 

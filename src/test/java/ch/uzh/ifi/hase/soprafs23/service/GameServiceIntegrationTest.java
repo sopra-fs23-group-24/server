@@ -12,11 +12,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test class for the UserResource REST resource.
- *
- * @see GameService
- */
 @WebAppConfiguration
 @SpringBootTest
 public class GameServiceIntegrationTest {
@@ -49,8 +44,5 @@ public class GameServiceIntegrationTest {
 
         assertNotNull(gameRepository.findByGamePin(createdGame.getGamePin()));
     }
-
-
-    //TODO: figure out if we can/need to also test rest (getters, update, delete, etc.)
 
 }

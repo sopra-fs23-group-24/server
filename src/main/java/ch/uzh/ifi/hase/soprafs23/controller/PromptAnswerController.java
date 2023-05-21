@@ -21,10 +21,6 @@ public class PromptAnswerController {
         this.promptAnswerService = promptAnswerService;
     }
 
-
-    // currently the playerToken header is not needed, / used, would only be needed for authentication I think
-    // I added the playerToken as an HTTP Header, but I don't know where...
-    // the game pin is needed for the {pin} part as far as I know
     @PostMapping("/games/{pin}/prompt-answers/text")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -72,7 +68,5 @@ public class PromptAnswerController {
 
         return successfulSave;
     }
-
-    // other endpoints? - (maybe for our testing purposes, but not for the game...)
 
 }

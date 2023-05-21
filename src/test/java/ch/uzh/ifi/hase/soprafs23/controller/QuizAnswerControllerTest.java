@@ -66,8 +66,8 @@ class QuizAnswerControllerTest {
         quizQuestion.addReceivedAnswer(quizAnswer);
 
         //
-        given(quizAnswerService.addQuizAnswerToQuizQuestion(Mockito.any(), Mockito.anyLong(),
-                Mockito.anyString(), Mockito.anyString()))
+        given(quizAnswerService.addQuizAnswerToQuizQuestion(Mockito.any(), Mockito.any(),
+                 Mockito.anyString()))
                 .willReturn(quizAnswer);
 
         // when
@@ -75,7 +75,6 @@ class QuizAnswerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(quizAnswerPostDTO))
                 .header("playerToken", playerToken);
-        // TODO: what about the PathVariables?
 
         // then
         mockMvc.perform(postRequest)

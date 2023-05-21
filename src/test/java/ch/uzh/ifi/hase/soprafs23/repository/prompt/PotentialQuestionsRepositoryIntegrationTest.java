@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.repository.prompt;
 
-import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;

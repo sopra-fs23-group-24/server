@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.repository.prompt;
 
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.DrawingPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.TextPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.TrueFalsePromptAnswer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +46,7 @@ class TrueFalsePromptAnswerRepositoryTest {
         entityManager.flush();
 
     }
+
     @AfterEach
     void emptyRepository() {
         trueFalsePromptAnswerRepository.deleteAll();

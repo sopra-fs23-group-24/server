@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
+import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.quiz.QuizAnswerService;
@@ -28,13 +30,18 @@ public class QuizAnswerController {
         //convert from DTO to QuizAnswer
         QuizAnswer quizAnswer = DTOMapper.INSTANCE.convertFromQuizAnswerPostDTO(clientAnswer);
 
-        // adds answer to question and checks if Question is answered by everyone
-        QuizAnswer addedQuizAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, questionId, gamePin, loggedInToken);
+        Game gameByPin = quizAnswerService.findGameByPin(gamePin);
+        QuizQuestion question = quizAnswerService.findQuestionById(questionId);
+
+        // adds answer to question
+        QuizAnswer addedQuizAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, question, loggedInToken);
+
+        //check if all players have answered question
+        QuizQuestion updatedQuestion = quizAnswerService.updateQuestionStatusIfAllAnswered(gameByPin, question);
 
         // checks if the answer is correct and if so (calculates) and adds the points to the player
-        return quizAnswerService.calculateAndAddScore(addedQuizAnswer, questionId, gamePin);
+        return quizAnswerService.calculateAndAddScore(addedQuizAnswer, updatedQuestion, gameByPin);
     }
 
-    // more mappings?
 
 }

@@ -25,12 +25,13 @@ public class Prompt implements Serializable {
     @Column(nullable = false)
     private String promptText;
 
-    public Long getPromptId() {
-        return promptId;
-    }
 
     public void setPromptId(Long promptId) {
         this.promptId = promptId;
+    }
+
+    public Long getPromptId() {
+        return promptId;
     }
 
     public Integer getPromptNr() {

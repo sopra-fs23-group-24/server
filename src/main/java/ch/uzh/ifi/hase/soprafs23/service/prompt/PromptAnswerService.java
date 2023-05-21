@@ -26,6 +26,8 @@ import java.util.List;
 @Service
 @Transactional
 public class PromptAnswerService {
+    private static final String NO_ANSWER_MESSAGE = "No answer provided";
+    private static final String LOGGER_CAPSULE = "created  new: {}";
     private final Logger log = LoggerFactory.getLogger(PromptAnswerService.class);
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
@@ -34,14 +36,7 @@ public class PromptAnswerService {
     private final DrawingPromptAnswerRepository drawingPromptAnswerRepository;
     private QuizQuestionGenerator quizQuestionGenerator;
 
-    private static final String NO_ANSWER_MESSAGE = "No answer provided";
-    private static final String LOGGER_CAPSULE = "created  new: {}";
 
-
-    // only one can have @Autowired - what does that do, and does it work like this with the two constructors?
-    // I have no idea if this is going to work, but it seems better than multiple constructors...
-    // the question is, do I need to pass these arguments? - bc in the Controller, where this constructor is used,
-    // there are no arguments passed... just a blank call.
     @Autowired
     public PromptAnswerService(@Qualifier("textPromptAnswerRepository") TextPromptAnswerRepository textPromptAnswerRepository,
                                @Qualifier("trueFalsePromptAnswerRepository") TrueFalsePromptAnswerRepository trueFalsePromptAnswerRepository,
@@ -66,13 +61,12 @@ public class PromptAnswerService {
         answer.setAssociatedGamePin(gamePin);
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
-        System.out.println("Prompt answer received for: " + player.getPlayerName() + ": " + answer.getAnswer());
 
         if (answer.getAnswer().equals("")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
 
-        textPromptAnswerRepository.save(answer);
+        answer = textPromptAnswerRepository.save(answer);
         textPromptAnswerRepository.flush();
 
         log.debug(LOGGER_CAPSULE, answer);
@@ -84,14 +78,12 @@ public class PromptAnswerService {
         answer.setAssociatedGamePin(gamePin);
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
-        System.out.println("Prompt answer received for: " + player.getPlayerName() + ": " + answer.getAnswerText() + ", " + answer.getAnswerBoolean());
 
         if (answer.getAnswerText().equals("")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
-        // test if there is a boolean value in answerBoolean...?
 
-        trueFalsePromptAnswerRepository.save(answer);
+        answer = trueFalsePromptAnswerRepository.save(answer);
         trueFalsePromptAnswerRepository.flush();
 
         log.debug(LOGGER_CAPSULE, answer);
@@ -103,22 +95,30 @@ public class PromptAnswerService {
         answer.setAssociatedGamePin(gamePin);
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
-        System.out.println("Prompt answer received for: " + player.getPlayerName());
 
-        if (answer.getAnswerDrawing().equals("")) { // throws if the content is empty
+        if (answer.getAnswerDrawing().equals("")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
 
-        drawingPromptAnswerRepository.save(answer);
+        answer = drawingPromptAnswerRepository.save(answer);
         drawingPromptAnswerRepository.flush();
 
         log.debug(LOGGER_CAPSULE, answer);
         return answer;
     }
 
+    public void changeFromPromptAnsweringToQuizStage(String gamePin) {
 
-    // check if all users have answered all prompts
-    // change game status below in a separate method
+        if (haveAllPlayersAnsweredAllPrompts(gamePin)) {
+            // change Status to Quiz
+            findGameByPin(gamePin).setStatus(GameStatus.QUIZ);
+
+            // initialize change to Quiz stage
+            List<QuizQuestion> generatedQuestions = quizQuestionGenerator.createQuizQuestions(gamePin);
+            log.debug("Generated {} questions", generatedQuestions.size());
+        }
+    }
+
     public Boolean haveAllPlayersAnsweredAllPrompts(String gamePin) {
         Game gameByPin = findGameByPin(gamePin);
 
@@ -131,7 +131,6 @@ public class PromptAnswerService {
                 PromptType type = prompt.getPromptType();
                 int promptNr = prompt.getPromptNr();
                 PromptAnswer found = null;
-                // TODO: maybe refactor to use overloading instead of switch statement
                 switch (type) {
                     case TEXT -> found = textPromptAnswerRepository
                             .findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(playerId, promptNr);
@@ -147,19 +146,6 @@ public class PromptAnswerService {
             }
         }
         return true;
-    }
-
-    // game controller method
-    public void changeFromPromptAnsweringToQuizStage(String gamePin) {
-
-        if (Boolean.TRUE.equals(haveAllPlayersAnsweredAllPrompts(gamePin))) {
-            // change Status to Quiz
-            findGameByPin(gamePin).setStatus(GameStatus.QUIZ);
-
-            // initialize change to Quiz stage
-            List<QuizQuestion> generatedQuestions = quizQuestionGenerator.createQuizQuestions(gamePin);
-            log.debug("Generated {} questions", generatedQuestions.size());
-        }
     }
 
 

@@ -1,6 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
-import ch.uzh.ifi.hase.soprafs23.constant.*;
+import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
+import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.DrawingPromptAnswer;
@@ -11,7 +14,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import org.junit.jupiter.api.Assertions;

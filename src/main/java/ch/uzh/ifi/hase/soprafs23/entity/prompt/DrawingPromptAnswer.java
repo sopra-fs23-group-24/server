@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Table(name = "DRAWINGPROMPTANSWER")
 public class DrawingPromptAnswer implements PromptAnswer, Serializable {
 
-
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -33,7 +32,6 @@ public class DrawingPromptAnswer implements PromptAnswer, Serializable {
     private boolean usedAsCorrectAnswer = false;
 
 
-    // getters + setters
 
     public Long getDrawingPromptAnswerId() {
         return drawingPromptAnswerId;
@@ -69,10 +67,6 @@ public class DrawingPromptAnswer implements PromptAnswer, Serializable {
 
     public void setAnswerDrawing(String answerDrawing) {
         this.answerDrawing = answerDrawing;
-    }
-
-    public void setDrawingPromptAnswerId(Long drawingPromptAnswerId) {
-        this.drawingPromptAnswerId = drawingPromptAnswerId;
     }
 
     public boolean isUsedAsCorrectAnswer() {

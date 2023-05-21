@@ -2,13 +2,10 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto.prompt;
 
 public class DrawingPromptAnswerPostDTO {
 
-
     private int associatedPromptNr;
 
     private String answerDrawing;
 
-
-    // getters + setters
 
 
     public int getAssociatedPromptNr() {

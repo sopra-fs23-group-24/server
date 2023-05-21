@@ -9,7 +9,5 @@ public enum GameStatus {
     END();
 
 
-    GameStatus() {
-    }
-
+    GameStatus() {}
 }

@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-// is the whole question, has AnswerOptions, and a correct one
 @Entity
 @Table(name = "QUIZQUESTION")
 public class QuizQuestion implements Serializable {
@@ -43,14 +42,15 @@ public class QuizQuestion implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerOption> answerOptions = new ArrayList<>();
 
-    @Column
-    private DisplayType answerDisplayType;
-
     @OneToOne
     private AnswerOption correctAnswer;
 
+    @Column
+    private DisplayType answerDisplayType;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizAnswer> receivedAnswers = new ArrayList<>();
+
 
 
     public Long getQuestionId() {
@@ -101,10 +101,6 @@ public class QuizQuestion implements Serializable {
         this.associatedGamePin = associatedGamePin;
     }
 
-    public Prompt getAssociatedPrompt() {
-        return associatedPrompt;
-    }
-
     public void setAssociatedPrompt(Prompt associatedPrompt) {
         this.associatedPrompt = associatedPrompt;
     }
@@ -137,20 +133,8 @@ public class QuizQuestion implements Serializable {
         return receivedAnswers;
     }
 
-    public void setReceivedAnswers(List<QuizAnswer> receivedAnswers) {
-        this.receivedAnswers = receivedAnswers;
-    }
-
     public void addAnswerOption(AnswerOption option) {
         this.answerOptions.add(option);
-    }
-
-    public List<String> getAnswerOptionStrings() {
-        List<String> allAnswerOptionTexts = new ArrayList<>();
-        for (AnswerOption answerOption : answerOptions) {
-            allAnswerOptionTexts.add(answerOption.getAnswerOptionText());
-        }
-        return allAnswerOptionTexts;
     }
 
     public void addReceivedAnswer(QuizAnswer answer) {

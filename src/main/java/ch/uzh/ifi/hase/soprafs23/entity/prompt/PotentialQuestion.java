@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.entity.prompt;
 
-import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 
 import javax.persistence.*;
@@ -29,10 +28,6 @@ public class PotentialQuestion implements Serializable {
     @Column
     private boolean requiresTextInput;
 
-
-    public Long getPotentialQuestionId() {
-        return potentialQuestionId;
-    }
 
     public void setPotentialQuestionId(Long potentialQuestionId) {
         this.potentialQuestionId = potentialQuestionId;

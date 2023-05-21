@@ -62,14 +62,11 @@ public class GameService {
         this.quizQuestionRepository = quizQuestionRepository;
     }
 
-
-    //TODO: test Integration?
-    //what do we need this for? - except testing for ourselves
     public List<Game> getGames() {
         return this.gameRepository.findAll();
     }
 
-    //TODO: test Integration?
+
     public Game getGameByPin(String pin) {
         Game gameByPin = gameRepository.findByGamePin(pin);
         if (gameByPin == null) {
@@ -81,11 +78,9 @@ public class GameService {
     public Game createGame() {
         Game newGame = new Game();
 
-        // generate and set gamePin
         String pin = generateUniqueGamePin();
         newGame.setGamePin(pin);
 
-        // at this point a game should have a gameId, the LOBBY status, and a unique gamePin
         newGame = gameRepository.save(newGame);
         gameRepository.flush();
 
@@ -93,17 +88,8 @@ public class GameService {
         return newGame;
     }
 
-    //TODO: test Integration?
-    //TODO: test Service
 
-    // throws when no player or a non-host player tries to change the status
-    // returns the same game, but which now has a new status
     public Game changeGameStatus(GameStatus requestedStatus, String gamePin, String loggedInToken) {
-
-        // possible future improvement:
-        // could divide up this method into 2 methods, changeGameStatusByPlayer, which takes the 3 arguments,
-        // and changeGameStatus, which only takes the requestedStatus and gamePin, and is called in the
-        // changeGameStatusByPlayer method, as well as from inside the game, where there is no player to be checked.
 
         Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
         if (loggedInPlayer == null) {
@@ -115,31 +101,18 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
-        // here would be the call to changeGameStatus(GameStatus requestedStatus, String gamePin),
-        // this method would contain the code below:
-
         if (requestedStatus == GameStatus.LOBBY) {
-            // TODO: do we want checks that e.g. it is only possible to switch to lobby from the END?
-
-            //reset player scores
             for (Player player : gameByPin.getPlayerGroup()) {
                 player.setScore(0);
             }
         }
-
-        if (requestedStatus == GameStatus.SELECTION) {
+        else if (requestedStatus == GameStatus.SELECTION) {
             checkForChangeToSelection(gamePin);
         }
+        else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot manually change to this status.");
+        }
 
-        // possible future improvement:
-        // add additional checks for changes to other statuses (best in separate methods probably, to
-        // not inflate this method here too much.):
-
-        // checks for changeToPrompt -> these checks are currently in PromptService (would connect the services...)
-        // checks for changeToQuiz -> these checks are currently in PromptAnswerService (would connect the services...)
-        // checks for changeToEnd -> this check is currently below in the nextQuestion method, could be factored out.
-
-        // actual changing and saving of the game / its status
         gameByPin.setStatus(requestedStatus);
 
         gameByPin = gameRepository.save(gameByPin);
@@ -156,9 +129,6 @@ public class GameService {
         }
     }
 
-
-    //TODO: test Integration?
-    //TODO: test Service
     public Game deleteGameByPin(String gamePin, String loggedInToken) {
         Game gameByPin = getGameByPin(gamePin);
         Player loggedInPlayer = playerRepository.findByToken(loggedInToken);
@@ -186,12 +156,7 @@ public class GameService {
         if (currentQuestion == null && gameByPin.getStatus() == GameStatus.QUIZ) {
 
             // clear all prompts, questions, answers - this is necessary to allow players to leave during the end stage
-            gameByPin.emptyPromptSet();
-            gameByPin.emptyQuizQuestions();
-            quizQuestionRepository.deleteAllByAssociatedGamePin(gamePin);
-            drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-            textPromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
-            trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(gamePin);
+            resetGame(gameByPin);
 
             gameByPin.setStatus(GameStatus.END);
         }
@@ -202,15 +167,11 @@ public class GameService {
     }
 
 
-    /**
-     * Helper functions
-     */
 
     private boolean checkIfHost(Game game, long userId) {
         return game.getHostId() == userId;
     }
 
-    //TODO: test?
     private String generateUniqueGamePin() {
 
         StringBuilder pin = new StringBuilder();
@@ -228,4 +189,14 @@ public class GameService {
         }
     }
 
+    private Game resetGame(Game game){
+        game.emptyPromptSet();
+        game.emptyQuizQuestions();
+        quizQuestionRepository.deleteAllByAssociatedGamePin(game.getGamePin());
+        drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(game.getGamePin());
+        textPromptAnswerRepository.deleteAllByAssociatedGamePin(game.getGamePin());
+        trueFalsePromptAnswerRepository.deleteAllByAssociatedGamePin(game.getGamePin());
+
+        return game;
+    }
 }

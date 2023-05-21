@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.repository.prompt;
 
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
-import ch.uzh.ifi.hase.soprafs23.entity.prompt.DrawingPromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.TextPromptAnswer;
 import org.junit.jupiter.api.AfterEach;
@@ -45,6 +44,7 @@ class TextPromptAnswerRepositoryTest {
         entityManager.flush();
 
     }
+
     @AfterEach
     void emptyRepository() {
         textPromptAnswerRepository.deleteAll();

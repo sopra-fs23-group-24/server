@@ -18,6 +18,7 @@ public class PlayerController {
     private final PlayerService playerService;
 
     String playerToken = "playerToken";
+
     PlayerController(PlayerService playerService) {
         this.playerService = playerService;
     }

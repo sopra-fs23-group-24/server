@@ -23,7 +23,9 @@ public class QuizQuestionGetDTO {
 
     private AnswerOption correctAnswer;
 
-    private CompletionStatus questionStatus = CompletionStatus.NOT_FINISHED;
+    private CompletionStatus questionStatus;
+
+
 
     public Long getQuestionId() {
         return questionId;
@@ -32,7 +34,6 @@ public class QuizQuestionGetDTO {
     public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }
-
 
     public String getQuizQuestionText() {
         return quizQuestionText;

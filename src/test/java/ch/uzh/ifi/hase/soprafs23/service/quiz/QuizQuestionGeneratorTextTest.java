@@ -1,6 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
-import ch.uzh.ifi.hase.soprafs23.constant.*;
+import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
+import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
@@ -21,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import javax.websocket.Encoder;
 import java.util.ArrayList;
 import java.util.List;
 

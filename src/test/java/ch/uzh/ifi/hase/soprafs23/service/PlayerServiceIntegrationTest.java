@@ -7,11 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-/**
- * Test class for the UserResource REST resource.
- *
- * @see PlayerService
- */
 @WebAppConfiguration
 @SpringBootTest
 public class PlayerServiceIntegrationTest {
@@ -25,6 +20,5 @@ public class PlayerServiceIntegrationTest {
         playerRepository.deleteAll();
     }
 
-    //TODO: cannot test because again relies on gameService
 
 }

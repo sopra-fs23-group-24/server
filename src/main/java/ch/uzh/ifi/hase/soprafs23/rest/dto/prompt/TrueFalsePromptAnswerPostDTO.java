@@ -9,7 +9,6 @@ public class TrueFalsePromptAnswerPostDTO {
     private Boolean answerBoolean;
 
 
-    // getters + setters
     public int getAssociatedPromptNr() {
         return associatedPromptNr;
     }
@@ -17,7 +16,6 @@ public class TrueFalsePromptAnswerPostDTO {
     public void setAssociatedPromptNr(int associatedPromptNr) {
         this.associatedPromptNr = associatedPromptNr;
     }
-
 
     public String getAnswerText() {
         return answerText;

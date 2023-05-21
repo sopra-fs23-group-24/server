@@ -19,13 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * User Service
- * This class is the "worker" and responsible for all functionality related to
- * the user
- * (e.g., it creates, modifies, deletes, finds). The result will be passed back
- * to the caller.
- */
 @Service
 @Transactional
 public class PlayerService {
@@ -43,12 +36,10 @@ public class PlayerService {
     }
 
 
-    //TODO: test Integration?
     public List<Player> getPlayers() {
         return this.playerRepository.findAll();
     }
 
-    //TODO: test Integration?
     public List<Player> getPlayersWithPin(String gamePin) {
         List<Player> players = playerRepository.findAllByAssociatedGamePin(gamePin);
         if (players.isEmpty()) {
@@ -57,8 +48,6 @@ public class PlayerService {
         return players;
     }
 
-    //TODO: test Integration?
-    //TODO: test Service
     public Player createPlayerAndAddToGame(Player newPlayer) {
 
         newPlayer.setToken(UUID.randomUUID().toString());
@@ -128,8 +117,6 @@ public class PlayerService {
         return playerById;
     }
 
-    //TODO: test Integration?
-    //TODO: test Service
     public Player deletePlayer(long playerToBeDeletedId, String loggedInPlayerToken, String gamePin) {
         Player loggedInPlayer = getByToken(loggedInPlayerToken);
         Player playerToDelete = getById(playerToBeDeletedId);
@@ -152,16 +139,10 @@ public class PlayerService {
         return playerToDelete;
     }
 
-    // sorts the list of players, and returns it
-    public List<Player> sortPlayersByScore(List<Player> players) {
-        players.sort(Comparator.comparingInt(Player::getScore).reversed()); // e.g. 20, 10, 0.
-        return players;
-    }
 
 
-    /**
-     * Helper functions
-     */
+
+
     private Player getById(long id) {
         Optional<Player> player = playerRepository.findById(id);
         if (player.isPresent()) {
@@ -182,4 +163,8 @@ public class PlayerService {
         return gameRepository.findByGamePin((gamePin)).getHostId() == userId;
     }
 
+    public List<Player> sortPlayersByScore(List<Player> players) {
+        players.sort(Comparator.comparingInt(Player::getScore).reversed()); // e.g. 20, 10, 0.
+        return players;
+    }
 }

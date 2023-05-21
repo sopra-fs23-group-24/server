@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 
-// is one answer option that is displayed and can be picked in the frontend
 @Entity
 @Table(name = "ANSWEROPTION")
 public class AnswerOption implements Serializable {
@@ -17,6 +16,7 @@ public class AnswerOption implements Serializable {
 
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String answerOptionText;
+
 
     public Long getAnswerOptionId() {
         return answerOptionId;

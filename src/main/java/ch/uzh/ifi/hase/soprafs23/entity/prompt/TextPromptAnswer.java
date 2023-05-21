@@ -8,7 +8,6 @@ import java.io.Serializable;
 @Table(name = "TEXTPROMPTANSWER")
 public class TextPromptAnswer implements PromptAnswer, Serializable {
 
-
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -31,7 +30,6 @@ public class TextPromptAnswer implements PromptAnswer, Serializable {
     @Column
     private boolean usedAsCorrectAnswer = false;
 
-    // getters + setters
 
     public String getAssociatedGamePin() {
         return associatedGamePin;
@@ -45,7 +43,6 @@ public class TextPromptAnswer implements PromptAnswer, Serializable {
         return textPromptAnswerId;
     }
 
-    //no setter for ID bc that already is done by the @Id above.
 
     public int getAssociatedPromptNr() {
         return associatedPromptNr;
@@ -69,10 +66,6 @@ public class TextPromptAnswer implements PromptAnswer, Serializable {
 
     public void setAnswer(String answer) {
         this.answer = answer;
-    }
-
-    public void setTextPromptAnswerId(Long textPromptAnswerId) {
-        this.textPromptAnswerId = textPromptAnswerId;
     }
 
     public boolean isUsedAsCorrectAnswer() {

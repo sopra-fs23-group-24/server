@@ -8,8 +8,9 @@ public class GameGetDTO {
     private String gamePin;
     private GameStatus status;
     private QuizQuestionGetDTO currentQuestion;
-
     private Integer timer;
+
+
 
     public Long getGameId() {
         return gameId;
@@ -26,7 +27,6 @@ public class GameGetDTO {
     public void setGamePin(String gamePin) {
         this.gamePin = gamePin;
     }
-
 
     public GameStatus getStatus() {
         return status;

@@ -77,7 +77,6 @@ public class QuizQuestionGenerator {
 
 
     public List<QuizQuestion> createQuizQuestions(String gamePin) {
-        System.out.println("Current Nr of created questions: " + createdQuestions.size());
         createdQuestions = new ArrayList<>();
         Game gameByPin = gameRepository.findByGamePin(gamePin);
         if (gameByPin == null) {
@@ -87,11 +86,13 @@ public class QuizQuestionGenerator {
         List<Player> allPlayersInRandomOrder;
         List<Prompt> allPromptsInRandomOrder;
         allPromptsInRandomOrder = reshufflePrompts(gameByPin.getPromptSet());
+        log.debug("Started generating quiz questions.");
 
         //generate at least the desired number of questions per prompt
         while (createdQuestions.size() < gameByPin.getPromptSet().size() * nrOfQuestionPerPrompt) {
             allPlayersInRandomOrder = new ArrayList<>(gameByPin.getPlayerGroup());
             Collections.shuffle(allPlayersInRandomOrder);
+            log.debug("New question is being generated.");
 
             //make sure each players gets one question per iteration
             while (allPlayersInRandomOrder.size() > 0) {
@@ -99,7 +100,9 @@ public class QuizQuestionGenerator {
                     allPromptsInRandomOrder = reshufflePrompts(gameByPin.getPromptSet());
                 }
                 Prompt currentPrompt = allPromptsInRandomOrder.get(0);
+                log.debug("Current prompt: {}", currentPrompt.getPromptText());
                 Player pickedPlayer = allPlayersInRandomOrder.get(0);
+                log.debug("Current player: {}", pickedPlayer.getPlayerName());
                 QuizQuestion questionForPrompt = new QuizQuestion();
                 switch (currentPrompt.getPromptType()) {
                     case DRAWING ->
@@ -109,25 +112,28 @@ public class QuizQuestionGenerator {
                     case TRUEFALSE ->
                             questionForPrompt = generateQuestionForTrueFalsePrompt(currentPrompt, pickedPlayer, gameByPin);
                 }
-                //if question could sucessfully be generated, add question and remove player and prompt for remaining iteration
+                //if question could successfully be generated, add question and remove player and prompt for remaining iteration
                 if (questionForPrompt != null) {
+                    log.debug("This question could be generated successfully.");
                     createdQuestions.add(questionForPrompt);
                     allPromptsInRandomOrder.remove(currentPrompt);
                     allPlayersInRandomOrder.remove(pickedPlayer);
                 }
-                //if question could not sucessfully be generated, try with next prompt and move the current one to end of list, if it's the last prompt reshuffle
+                //if question could not successfully be generated, try with next prompt and move the current one to end of list, if it's the last prompt reshuffle
                 else {
-                    if(allPromptsInRandomOrder.size() > 1){
+                    log.debug("The question could not be generated successfully.");
+                    if (allPromptsInRandomOrder.size() > 1) {
                         allPromptsInRandomOrder.remove(currentPrompt);
                         allPromptsInRandomOrder.add(currentPrompt);
-                    }else{
+                    }
+                    else {
                         allPromptsInRandomOrder = reshufflePrompts(gameByPin.getPromptSet());
                     }
                 }
-
+                log.debug("end of question \n");
             }
         }
-
+        log.debug("Generated {} quiz questions in total.", createdQuestions.size());
         Collections.shuffle(createdQuestions);
 
         gameByPin.addQuizQuestions(createdQuestions);
@@ -222,26 +228,26 @@ public class QuizQuestionGenerator {
         log.debug("Drawing question - Player");
 
         DrawingPromptAnswer selectedCorrectPromptAnswer = drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(pickedCorrectPlayer.getPlayerId(), pq.getAssociatedPrompt().getPromptNr());
-        if(selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()){
+        if (selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()) {
+            log.debug("Selected prompt has already been used as correct answer, will not transform question.");
             return null;
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         drawingPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
 
-
         newQuestion.setImageToDisplay(selectedCorrectPromptAnswer.getAnswerDrawing());
 
-        newQuestion.setQuizQuestionText(pq.getQuestionText());
+        newQuestion.setQuizQuestionText(generateQuizQuestionText(pq, selectedCorrectPromptAnswer.getAnswerDrawing()));
 
         log.debug("Set Question text to: %s with display: %s".formatted(newQuestion.getQuizQuestionText(), newQuestion.getImageToDisplay()));
 
         // set and save the correct answer option, and add this option to the question
         AnswerOption correctAnswer = saveAsAnswerOption(pickedCorrectPlayer.getPlayerName(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
+
         // remove used answer
-        //TODO: check if this works? since not taken from list but from repository now
         allAnswers.remove(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer in qq: " + newQuestion.getCorrectAnswer().getAnswerOptionText());
+        log.debug("Correct answer:{}", newQuestion.getCorrectAnswer().getAnswerOptionText());
 
         while (newQuestion.getAnswerOptions().size() < 4) {
             // get a random answer and its according player from allAnswers
@@ -250,11 +256,10 @@ public class QuizQuestionGenerator {
 
             // creat and set a new answer option with that according player
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptPlayer.getPlayerName(), newQuestion);
-            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
+            log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
             allAnswers.remove(selectedPromptAnswer);
         }
 
-        System.out.println("end of question \n");
         return newQuestion;
     }
 
@@ -263,33 +268,32 @@ public class QuizQuestionGenerator {
 
         //picked pq will ask which drawing is from a specific player
         log.debug("Drawing question - PromptAnswer");
+
         DrawingPromptAnswer selectedCorrectPromptAnswer = drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(pickedCorrectPlayer.getPlayerId(), pq.getAssociatedPrompt().getPromptNr());
-        if(selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()){
+        if (selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()) {
+            log.debug("Selected prompt has already been used as correct answer, will not transform question.");
             return null;
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         drawingPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
 
-        if (pq.isRequiresTextInput()) {
-            newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), pickedCorrectPlayer.getPlayerName()));
-        }
-        else {
-            newQuestion.setQuizQuestionText(pq.getQuestionText());
-        }
+        newQuestion.setQuizQuestionText(generateQuizQuestionText(pq, pickedCorrectPlayer.getPlayerName()));
+
         log.debug("Set Question text to: %s".formatted(newQuestion.getQuizQuestionText()));
 
         AnswerOption correctAnswer = saveAsAnswerOption(selectedCorrectPromptAnswer.getAnswerDrawing(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
         allAnswers.remove(selectedCorrectPromptAnswer);
+        log.debug("Correct answer:{}", newQuestion.getCorrectAnswer().getAnswerOptionText());
 
         while (newQuestion.getAnswerOptions().size() < 4) {
             DrawingPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
 
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptAnswer.getAnswerDrawing(), newQuestion);
             allAnswers.remove(selectedPromptAnswer);
+            log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }
 
-        System.out.println("end of question \n");
         return newQuestion;
     }
 
@@ -297,27 +301,24 @@ public class QuizQuestionGenerator {
         QuizQuestion newQuestion = new QuizQuestion();
 
         //picked pq will ask which player answer is from
-
         log.debug("Text question - Player");
+
         TextPromptAnswer selectedCorrectPromptAnswer = textPromptAnswerRepository.findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(pickedCorrectPlayer.getPlayerId(), pq.getAssociatedPrompt().getPromptNr());
-        if(selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()){
+        if (selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()) {
+            log.debug("Selected prompt has already been used as correct answer, will not transform question.");
             return null;
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         textPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
 
-        if (pq.isRequiresTextInput()) {
-            newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), selectedCorrectPromptAnswer.getAnswer()));
-        }
-        else {
-            newQuestion.setQuizQuestionText(pq.getQuestionText());
-        }
+        newQuestion.setQuizQuestionText(generateQuizQuestionText(pq, selectedCorrectPromptAnswer.getAnswer()));
+
         log.debug("Set Question text to: %s".formatted(newQuestion.getQuizQuestionText()));
 
         AnswerOption correctAnswer = saveAsAnswerOption(pickedCorrectPlayer.getPlayerName(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
         allAnswers.remove(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer in qq: " + newQuestion.getCorrectAnswer().getAnswerOptionText());
+        log.debug("Correct answer:{}", newQuestion.getCorrectAnswer().getAnswerOptionText());
 
         while (newQuestion.getAnswerOptions().size() < 4) {
             TextPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
@@ -325,10 +326,9 @@ public class QuizQuestionGenerator {
 
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptPlayer.getPlayerName(), newQuestion);
             allAnswers.remove(selectedPromptAnswer);
-            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
+            log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }
 
-        System.out.println("end of question \n");
         return newQuestion;
     }
 
@@ -337,35 +337,32 @@ public class QuizQuestionGenerator {
 
         //picked pq will ask which answer is from a specific player
         log.debug("Text question - PromptAnswer");
+
         TextPromptAnswer selectedCorrectPromptAnswer = textPromptAnswerRepository.findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(pickedCorrectPlayer.getPlayerId(), pq.getAssociatedPrompt().getPromptNr());
-        if(selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()){
+        if (selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()) {
+            log.debug("Selected prompt has already been used as correct answer, will not transform question.");
             return null;
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         textPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
 
-        if (pq.isRequiresTextInput()) {
-            newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), pickedCorrectPlayer.getPlayerName()));
-        }
-        else {
-            newQuestion.setQuizQuestionText(pq.getQuestionText());
-        }
+        newQuestion.setQuizQuestionText(generateQuizQuestionText(pq, pickedCorrectPlayer.getPlayerName()));
+
         log.debug("Set Question text to: %s".formatted(newQuestion.getQuizQuestionText()));
 
         AnswerOption correctAnswer = saveAsAnswerOption(selectedCorrectPromptAnswer.getAnswer(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
         allAnswers.remove(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer in qq: " + newQuestion.getCorrectAnswer().getAnswerOptionText());
+        log.debug("Correct answer:{}", newQuestion.getCorrectAnswer().getAnswerOptionText());
 
         while (newQuestion.getAnswerOptions().size() < 4) {
             TextPromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
 
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptAnswer.getAnswer(), newQuestion);
             allAnswers.remove(selectedPromptAnswer);
-            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
+            log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }
 
-        System.out.println("end of question \n");
         return newQuestion;
     }
 
@@ -373,21 +370,22 @@ public class QuizQuestionGenerator {
         QuizQuestion newQuestion = new QuizQuestion();
 
         //picked pq will ask which player story is from
-
         log.debug("tf question - Player");
 
         //if the selected player did not tell a true story, then this type of QuizQuestion cannot be generated for this player
         TrueFalsePromptAnswer selectedCorrectPromptAnswer = trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(pickedCorrectPlayer.getPlayerId(), pq.getAssociatedPrompt().getPromptNr());
         if (!selectedCorrectPromptAnswer.getAnswerBoolean()) {
+            log.debug("Selected prompt was an untrue story and hence does not fit requirement, will not transform question.");
             return null;
         }
-        if(selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()){
+        if (selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()) {
+            log.debug("Selected prompt has already been used as correct answer, will not transform question.");
             return null;
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         trueFalsePromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
 
-        newQuestion.setQuizQuestionText(pq.getQuestionText());
+        newQuestion.setQuizQuestionText(generateQuizQuestionText(pq, selectedCorrectPromptAnswer.getAnswerText()));
 
         newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
 
@@ -396,7 +394,7 @@ public class QuizQuestionGenerator {
         AnswerOption correctAnswer = saveAsAnswerOption(pickedCorrectPlayer.getPlayerName(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
         allAnswers.remove(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer in qq: " + newQuestion.getCorrectAnswer().getAnswerOptionText());
+        log.debug("Correct answer:{}", newQuestion.getCorrectAnswer().getAnswerOptionText());
 
         while (newQuestion.getAnswerOptions().size() < 4) {
             TrueFalsePromptAnswer selectedPromptAnswer = allAnswers.get(rand.nextInt(allAnswers.size()));
@@ -404,10 +402,9 @@ public class QuizQuestionGenerator {
 
             AnswerOption wrongAnswer = saveAsAnswerOption(selectedPromptPlayer.getPlayerName(), newQuestion);
             allAnswers.remove(selectedPromptAnswer);
-            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
+            log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }
 
-        System.out.println("end of question \n");
         return newQuestion;
     }
 
@@ -418,18 +415,14 @@ public class QuizQuestionGenerator {
         log.debug("Drawing question - Boolean");
 
         TrueFalsePromptAnswer selectedCorrectPromptAnswer = trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(pickedCorrectPlayer.getPlayerId(), pq.getAssociatedPrompt().getPromptNr());
-        if(selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()){
+        if (selectedCorrectPromptAnswer.isUsedAsCorrectAnswer()) {
+            log.debug("Selected prompt has already been used as correct answer, will not transform question.");
             return null;
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         trueFalsePromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
 
-        if (pq.isRequiresTextInput()) {
-            newQuestion.setQuizQuestionText(String.format(pq.getQuestionText(), pickedCorrectPlayer.getPlayerName()));
-        }
-        else {
-            newQuestion.setQuizQuestionText(pq.getQuestionText());
-        }
+        newQuestion.setQuizQuestionText(generateQuizQuestionText(pq, pickedCorrectPlayer.getPlayerName()));
 
         newQuestion.setStoryToDisplay(selectedCorrectPromptAnswer.getAnswerText());
 
@@ -438,18 +431,17 @@ public class QuizQuestionGenerator {
         AnswerOption correctAnswer = saveAsAnswerOption(selectedCorrectPromptAnswer.getAnswerBoolean().toString(), newQuestion);
         newQuestion.setCorrectAnswer(correctAnswer);
         allAnswers.remove(selectedCorrectPromptAnswer);
-        System.out.println("Correct answer in qq: " + newQuestion.getCorrectAnswer().getAnswerOptionText());
+        log.debug("Correct answer:{}", newQuestion.getCorrectAnswer().getAnswerOptionText());
 
         if (selectedCorrectPromptAnswer.getAnswerBoolean()) {
             AnswerOption wrongAnswer = saveAsAnswerOption("false", newQuestion);
-            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
+            log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }
         else {
             AnswerOption wrongAnswer = saveAsAnswerOption("true", newQuestion);
-            System.out.println("Incorrect answer: " + wrongAnswer.getAnswerOptionText());
+            log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }
 
-        System.out.println("end of question \n");
         return newQuestion;
     }
 
@@ -474,14 +466,26 @@ public class QuizQuestionGenerator {
         return answer;
     }
 
+    private String generateQuizQuestionText(PotentialQuestion potentialQuestion, String textToAddIfNeeded) {
+        String generatedText;
+        if (potentialQuestion.isRequiresTextInput()) {
+            generatedText = String.format(potentialQuestion.getQuestionText(), textToAddIfNeeded);
+        }
+        else {
+            generatedText = potentialQuestion.getQuestionText();
+        }
+        return generatedText;
+    }
+
     private QuizQuestion setToNullIfDuplicate(QuizQuestion newQuestion) {
         if (newQuestion == null) {
+            log.debug("Question creation failed during transformation, returned null.");
             return null;
         }
         for (QuizQuestion q : createdQuestions) {
             //check if there is already a question with the same questionText and the same correctAnswer
-            //TODO: better checks for using the same prompt as correct in different ways?
             if (q.getQuizQuestionText().equals(newQuestion.getQuizQuestionText()) && q.getCorrectAnswer().getAnswerOptionText().equals(newQuestion.getCorrectAnswer().getAnswerOptionText())) {
+                log.debug("Question is duplicate, will not be generated.");
                 return null;
             }
         }

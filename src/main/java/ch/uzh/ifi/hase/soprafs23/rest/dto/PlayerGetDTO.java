@@ -2,11 +2,10 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 public class PlayerGetDTO {
     private Long playerId;
-
     private String playerName;
-
     private int score = 0;
     private int latestScore = 0;
+
 
     public Long getPlayerId() {
         return playerId;

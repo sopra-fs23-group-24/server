@@ -20,11 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Test class for the UserResource REST resource.
- *
- * @see PlayerService
- */
+
 @WebAppConfiguration
 @SpringBootTest
 public class PromptServiceIntegrationTest {

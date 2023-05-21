@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.service.prompt;
 
-import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
@@ -30,13 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * User Service
- * This class is the "worker" and responsible for all functionality related to
- * the user
- * (e.g., it creates, modifies, deletes, finds). The result will be passed back
- * to the caller.
- */
 @Service
 @Transactional
 public class PromptService {
@@ -62,13 +54,12 @@ public class PromptService {
         initialisePotentialQuestionRepository();
     }
 
-    //TODO: test Integration?
+
     public List<Prompt> getPrompts() {
         return promptRepository.findAll();
     }
 
 
-    //TODO: test Integration?
     public List<Prompt> getPromptsOfGame(String gamePin) {
         Game gameByPin = gameRepository.findByGamePin(gamePin);
         if (gameByPin == null) {
@@ -77,7 +68,6 @@ public class PromptService {
         return gameByPin.getPromptSet();
     }
 
-    //TODO: test Integration?
     public List<Prompt> pickPrompts(PromptPostDTO userRequest, String gamePin) {
         int wantedTextPrompts = 4;
         int wantedTrueFalsePrompts = 2;
@@ -115,8 +105,6 @@ public class PromptService {
         gameRepository.flush();
     }
 
-    // could we move this into the game Service?
-    //TODO: test Integration?
     private Game addPromptsToGame(List<Prompt> promptsForGame, String gamePin) {
         Game gameByPin = gameRepository.findByGamePin(gamePin);
         if (gameByPin == null) {
@@ -129,11 +117,8 @@ public class PromptService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This game already has prompts selected.");
         }
 
-        // maybe we can adjust this: - here only setPromptSet and save, the rest in the change status method in GameService
         gameByPin.setPromptSet(promptsForGame);
 
-        // what happens if we change the status before setPromptSet?
-        // , bc that would happen if we check and then change the status in the GameService
         gameByPin.setStatus(GameStatus.PROMPT);
 
         gameRepository.save(gameByPin);
@@ -142,12 +127,12 @@ public class PromptService {
         return gameByPin;
     }
 
-    /**
-     * set up functions
+    /*
+        SETUP FUNCTIONS for Prompt and PotentialQuestion repositories
      */
 
     private void initialisePromptRepository() throws PromptSetupException, IOException {
-        try (BufferedReader input = new BufferedReader(new FileReader("src/main/resources/prompts.txt"))){
+        try (BufferedReader input = new BufferedReader(new FileReader("src/main/resources/prompts.txt"))) {
             String line;
             while ((line = input.readLine()) != null) {
                 if (line.startsWith("\\")) {
@@ -170,7 +155,7 @@ public class PromptService {
     }
 
     private void initialisePotentialQuestionRepository() throws PromptSetupException, IOException {
-        try (BufferedReader input = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"))){
+        try (BufferedReader input = new BufferedReader(new FileReader("src/main/resources/potentialQuestions.txt"))) {
             String line;
 
             while ((line = input.readLine()) != null) {

@@ -9,7 +9,10 @@ import ch.uzh.ifi.hase.soprafs23.entity.prompt.TrueFalsePromptAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.*;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.DrawingPromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.PromptGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TextPromptAnswerPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.prompt.TrueFalsePromptAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizAnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.quiz.QuizQuestionGetDTO;
 import org.mapstruct.Mapper;
@@ -38,7 +41,7 @@ public interface DTOMapper {
     @Mapping(source = "gameId", target = "gameId")
     @Mapping(source = "gamePin", target = "gamePin")
     @Mapping(source = "status", target = "status")
-    // does it need the timer - i would say so.
+    @Mapping(source = "currentQuestion", target = "currentQuestion")
     @Mapping(source = "timer", target = "timer")
     GameGetDTO convertToGameGetDTO(Game game);
 

@@ -6,8 +6,6 @@ public class TextPromptAnswerPostDTO {
 
     private String answer;
 
-    // getters + setters
-
 
     public int getAssociatedPromptNr() {
         return associatedPromptNr;

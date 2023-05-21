@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 
-// is the answer a player picked (contains a AnswerOption)
 @Entity
 @Table(name = "QUIZANSWERS")
 public class QuizAnswer implements Serializable {
@@ -17,13 +16,13 @@ public class QuizAnswer implements Serializable {
     @GeneratedValue
     private Long quizAnswerId;
 
-
-    // @OneToOne // maybe change the database column to be bigInt or sth like that.
     @Column
     private long pickedAnswerOptionId;
+
     @ManyToOne
     private Player associatedPlayer;
-    @Column // does it need to be a column, why? , why not? not sure atm
+
+    @Column
     private Integer timer;
 
 
@@ -35,15 +34,9 @@ public class QuizAnswer implements Serializable {
         this.pickedAnswerOptionId = pickedAnswerOptionId;
     }
 
-
-    public Long getQuizAnswerId() {
-        return quizAnswerId;
-    }
-
     public void setQuizAnswerId(Long quizAnswerId) {
         this.quizAnswerId = quizAnswerId;
     }
-
 
     public Player getAssociatedPlayer() {
         return associatedPlayer;

@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
 import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
-import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
@@ -10,11 +9,9 @@ import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizAnswer;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
-import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.Answer;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -103,30 +99,20 @@ public class QuizAnswerServiceTest {
     }
 
     @Test
-    public void addQuizAnswerToQuizQuestion_success_changeQuestionStatus() {
+    public void addQuizAnswerToQuizQuestion_success() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
 
         Mockito.when(quizAnswerRepository.save(Mockito.any())).thenReturn(quizAnswer);
 
         Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
-        QuizAnswer newAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), testPlayer.getToken());
+        QuizAnswer newAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion, testPlayer.getToken());
 
         Assertions.assertEquals(newAnswer.getAssociatedPlayer(), testPlayer);
         Assertions.assertEquals(testQuestion.getReceivedAnswers().size(), 1);
         Assertions.assertEquals(testQuestion.getReceivedAnswers().get(0).getAssociatedPlayer(), testPlayer);
-        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.FINISHED);
     }
 
-    @Test
-    public void addQuizAnswerToQuizQuestion_invalidPin() {
-        QuizAnswer quizAnswer = new QuizAnswer();
-        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
-
-        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
-
-        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), "invalidPin", testPlayer.getToken()));
-    }
 
     @Test
     public void addQuizAnswerToQuizQuestion_invalidToken() {
@@ -135,7 +121,7 @@ public class QuizAnswerServiceTest {
 
         Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), "invalidToken"));
+        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion, "invalidToken"));
     }
 
     @Test
@@ -146,7 +132,7 @@ public class QuizAnswerServiceTest {
         testQuestion.addReceivedAnswer(quizAnswer);
         Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin(), testPlayer.getToken()));
+        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion, testPlayer.getToken()));
     }
 
     @Test
@@ -157,7 +143,7 @@ public class QuizAnswerServiceTest {
         quizAnswer.setTimer(10);
         Assertions.assertEquals(testPlayer.getScore(), 0);
 
-        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin());
+        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion, testGame);
 
         Assertions.assertTrue(score > 0);
         Assertions.assertTrue(testPlayer.getScore() > 0);
@@ -170,7 +156,7 @@ public class QuizAnswerServiceTest {
         quizAnswer.setAssociatedPlayer(testPlayer);
         Assertions.assertEquals(testPlayer.getScore(), 0);
 
-        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion.getQuestionId(), testGame.getGamePin());
+        int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion, testGame);
 
         Assertions.assertEquals(score, 0);
         Assertions.assertEquals(testPlayer.getScore(), 0);

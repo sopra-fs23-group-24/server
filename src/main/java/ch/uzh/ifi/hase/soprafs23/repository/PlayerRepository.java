@@ -9,7 +9,6 @@ import java.util.List;
 @Repository("playerRepository")
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
-    //TODO: test
     Player findByPlayerId(Long id);
 
     Player findByToken(String token);
