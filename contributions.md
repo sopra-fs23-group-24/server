@@ -366,7 +366,14 @@ Week 8 (15. - 21. may)
 	    - Added drawing with touch function in canvas
 - Mike:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/40
+	    - https://github.com/sopra-fs23-group-24/client/issues/57
+	    - https://github.com/sopra-fs23-group-24/client/issues/34
+
 	- description:
+	    - Create Header
+	    - added explanation of the game to the header
+	    - made everything adaptive until Selection View
 - Linda:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/37
