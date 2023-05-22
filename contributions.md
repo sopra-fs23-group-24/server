@@ -84,6 +84,10 @@ Week 2 (3. - 7. april)
 	    - https://github.com/sopra-fs23-group-24/client/issues/13
 	- description:
 	    - Implemented Drawing Prompt and submit drawing function
+	    - Implemented a clear canvas button that erases everything
+	    - Implement several colorbuttons to change colors
+	    - Implement button to submit drawing
+	    - Bugfixes on Canvas
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
@@ -131,9 +135,9 @@ Week 2 (3. - 7. april)
 	    - if it is scanned it leads to the entername view for a specific game (only half finished)
 - Jan:
 	- work on: 
-	    - https://github.com/sopra-fs23-group-24/client/issues/13
+	    - JOKER -
 	- description:
-	    - Improved Drawing Prompt and submit drawing function
+	   
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
