@@ -84,6 +84,10 @@ Week 2 (3. - 7. april)
 	    - https://github.com/sopra-fs23-group-24/client/issues/13
 	- description:
 	    - Implemented Drawing Prompt and submit drawing function
+	    - Implemented a clear canvas button that erases everything
+	    - Implement several colorbuttons to change colors
+	    - Implement button to submit drawing
+	    - Bugfixes on Canvas
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
@@ -131,9 +135,9 @@ Week 2 (3. - 7. april)
 	    - if it is scanned it leads to the entername view for a specific game (only half finished)
 - Jan:
 	- work on: 
-	    - https://github.com/sopra-fs23-group-24/client/issues/13
+	    - JOKER -
 	- description:
-	    - Improved Drawing Prompt and submit drawing function
+	   
 - Mike
 	- work on:
 	    - https://github.com/sopra-fs23-group-24/client/issues/14
@@ -342,20 +346,65 @@ Week 7 (08. - 14. may)
 ---
 Week 8 (15. - 21. may)
 - Tim:
-	- will work on: ReadMe files, github flex environment, adding prompts to prompt generation files 
+	- work on:
+        - https://github.com/sopra-fs23-group-24/server/issues/80
+        - https://github.com/sopra-fs23-group-24/server/issues/81
+	    - ReadMe files (in progress, will finish today) 
+	        - https://github.com/sopra-fs23-group-24/client/issues/49
+            - https://github.com/sopra-fs23-group-24/server/issues/79
 	- description:
+	    - change server to flex environment
+	    - adding prompts and potential questions to prompt generation files
+	    - work on README files
 - Lara:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/5
+	    - https://github.com/sopra-fs23-group-24/client/issues/59
+	    - https://github.com/sopra-fs23-group-24/client/issues/60
 	- description:
+	    - added a dropdown menue to select the timer
+	    - added constraints so that min / max nr of the question types that have to be selected
+	    - if no question is selected the host will not be able to start the game
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/53
+	    - https://github.com/sopra-fs23-group-24/client/issues/43
+	    - https://github.com/sopra-fs23-group-24/client/issues/51
+	    - https://github.com/sopra-fs23-group-24/client/issues/46
+
 	- description:
+	    - Bugfixes on Nr. 53 and 46. 
+	    - Implemented eraser function in canvas (Betatesting feedback)
+	    - Added drawing with touch function in canvas
 - Mike:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/40
+	    - https://github.com/sopra-fs23-group-24/client/issues/57
+	    - https://github.com/sopra-fs23-group-24/client/issues/34
+
 	- description:
+	    - Create Header
+	    - added explanation of the game to the header
+	    - made everything adaptive until Selection View
 - Linda:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/37
+	    - https://github.com/sopra-fs23-group-24/client/issues/54
+	    - https://github.com/sopra-fs23-group-24/client/issues/55
+	    - https://github.com/sopra-fs23-group-24/server/issues/83
+	    - https://github.com/sopra-fs23-group-24/client/issues/58
+	    - https://github.com/sopra-fs23-group-24/client/issues/40
+	    - https://github.com/sopra-fs23-group-24/server/issues/82
+	    - https://github.com/sopra-fs23-group-24/server/issues/75
 	- description:
+	    - add guards to frontend
+	    - enter key and autofocus for input fields
+	    - fix error when trying to leave end
+	    - question generator takes into account players, evenly distribute questions among all of them
+	    - answers do not transfer to next prompt of same type
+	    - filled out game info
+	    - (unfinshed) tidy up server code
+	    - (unfinished) update test cases: controller, repository, mapper, some service
 
 ---
 Week 9 (22. - 25. may)

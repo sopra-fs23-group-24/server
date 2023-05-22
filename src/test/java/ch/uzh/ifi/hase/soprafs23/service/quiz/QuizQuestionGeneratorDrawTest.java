@@ -11,8 +11,10 @@ import ch.uzh.ifi.hase.soprafs23.entity.prompt.PotentialQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.AnswerOption;
 import ch.uzh.ifi.hase.soprafs23.entity.quiz.QuizQuestion;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.prompt.PotentialQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.PromptRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
@@ -38,13 +40,19 @@ public class QuizQuestionGeneratorDrawTest {
     @Mock
     private QuizQuestionRepository qqRepository;
     @Mock
-    private PlayerRepository playerRepository;
+    private PotentialQuestionRepository potentialQuestionRepository;
     @Mock
-    private PromptRepository promptRepository;
+    private DrawingPromptAnswerRepository drawingPromptAnswerRepository;
     @Mock
     private AnswerOptionRepository answerOptionRepository;
     @Mock
-    private DrawingPromptAnswerRepository drawingPromptAnswerRepository;
+    private PlayerRepository playerRepository;
+    @Mock
+    private GameRepository gameRepository;
+    @Mock
+    private PromptRepository promptRepository;
+
+
 
     @InjectMocks
     private QuizQuestionGenerator quizQuestionGenerator;
@@ -62,6 +70,8 @@ public class QuizQuestionGeneratorDrawTest {
         testGame.setHostId(testPlayers.get(0).getPlayerId());
         setUpPromptAndPotentialQuestion();
         testGame.setPromptSet(List.of(drawTestPrompt));
+        Mockito.when(gameRepository.findByGamePin(Mockito.anyString())).thenReturn(testGame);
+        Mockito.when(gameRepository.save(Mockito.any())).thenReturn(testGame);
 
         setUpDrawingPromptAnswers();
 
@@ -70,8 +80,18 @@ public class QuizQuestionGeneratorDrawTest {
     }
 
     @Test
-    public void transformPotentialQuestionDrawing_PLAYER() {
+    public void generateQuestionForTextPrompt(){
+        /*QuizQuestion generatedQuestion = quizQuestionGenerator.generateQuestionForDrawingPrompt(drawTestPrompt, testPlayers.get(0), testGame);
+        Assertions.assertNotNull(generatedQuestion);*/
+    }
 
+    @Test
+    public void createQuizQuestions(){
+        /*List<QuizQuestion> generatedQuestions = quizQuestionGenerator.createQuizQuestions(testGame.getGamePin());
+        Assertions.assertEquals(4, generatedQuestions.size());*/
+    }
+    @Test
+    public void transformPotentialQuestionDrawing_PLAYER() {
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialDrawingQuestionTypePlayer(potentialDrawingQuestionPLAYER, new ArrayList<>(testDrawingAnswers), testPlayers.get(0));
 
         Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
@@ -184,6 +204,8 @@ public class QuizQuestionGeneratorDrawTest {
         potentialDrawingQuestionPLAYER.setQuestionType(QuestionType.PLAYER);
         potentialDrawingQuestionPLAYER.setAssociatedPrompt(promptRepository.findByPromptNr(997));
         potentialDrawingQuestionPLAYER.setRequiresTextInput(false);
+
+        Mockito.when(potentialQuestionRepository.findAllByAssociatedPrompt(drawTestPrompt)).thenReturn(List.of(potentialDrawingQuestionPLAYER, potentialDrawingQuestionPROMPTANSWER));
     }
 
     private void setUpDrawingPromptAnswers() {
@@ -193,9 +215,21 @@ public class QuizQuestionGeneratorDrawTest {
             drawAnswer.setAssociatedPromptNr(drawTestPrompt.getPromptNr());
             drawAnswer.setAssociatedGamePin(testGame.getGamePin());
             drawAnswer.setAssociatedPlayerId(player.getPlayerId());
+            drawAnswer.setUsedAsCorrectAnswer(false);
             testDrawingAnswers.add(drawAnswer);
         }
-        Mockito.when(drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testDrawingAnswers.get(0));
+        Mockito.when(drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(testPlayers.get(0).getPlayerId(), drawTestPrompt.getPromptNr())).thenReturn(testDrawingAnswers.get(0));
+        Mockito.when(drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(testPlayers.get(1).getPlayerId(), drawTestPrompt.getPromptNr())).thenReturn(testDrawingAnswers.get(1));
+        Mockito.when(drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(testPlayers.get(2).getPlayerId(), drawTestPrompt.getPromptNr())).thenReturn(testDrawingAnswers.get(2));
+        Mockito.when(drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(testPlayers.get(3).getPlayerId(), drawTestPrompt.getPromptNr())).thenReturn(testDrawingAnswers.get(3));
+
+        Mockito.when(drawingPromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(testGame.getGamePin(), drawTestPrompt.getPromptNr())).thenReturn(testDrawingAnswers);
+
+        Mockito.when(drawingPromptAnswerRepository.save(testDrawingAnswers.get(0))).thenReturn(testDrawingAnswers.get(0));
+        Mockito.when(drawingPromptAnswerRepository.save(testDrawingAnswers.get(1))).thenReturn(testDrawingAnswers.get(1));
+        Mockito.when(drawingPromptAnswerRepository.save(testDrawingAnswers.get(2))).thenReturn(testDrawingAnswers.get(2));
+        Mockito.when(drawingPromptAnswerRepository.save(testDrawingAnswers.get(3))).thenReturn(testDrawingAnswers.get(3));
+
     }
 
 }

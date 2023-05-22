@@ -74,4 +74,14 @@ class DrawingPromptAnswerRepositoryTest {
         assertEquals(drawingPromptAnswer.getAssociatedGamePin(), found.getAssociatedGamePin());
     }
 
+    @Test
+    void deleteAllByAssociatedGamePin() {
+        List<DrawingPromptAnswer> allFound = drawingPromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(drawingPromptAnswer.getAssociatedGamePin(), drawingPromptAnswer.getAssociatedPromptNr());
+        assertEquals(1, allFound.size());
+
+        drawingPromptAnswerRepository.deleteAllByAssociatedGamePin(drawingPromptAnswer.getAssociatedGamePin());
+
+        allFound = drawingPromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(drawingPromptAnswer.getAssociatedGamePin(), drawingPromptAnswer.getAssociatedPromptNr());
+        assertEquals(0, allFound.size());
+    }
 }

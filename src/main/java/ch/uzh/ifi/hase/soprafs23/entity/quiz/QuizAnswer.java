@@ -34,6 +34,10 @@ public class QuizAnswer implements Serializable {
         this.pickedAnswerOptionId = pickedAnswerOptionId;
     }
 
+    public Long getQuizAnswerId() {
+        return quizAnswerId;
+    }
+
     public void setQuizAnswerId(Long quizAnswerId) {
         this.quizAnswerId = quizAnswerId;
     }

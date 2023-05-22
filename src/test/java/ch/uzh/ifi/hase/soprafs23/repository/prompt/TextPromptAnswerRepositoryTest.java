@@ -74,4 +74,15 @@ class TextPromptAnswerRepositoryTest {
         assertEquals(textPromptAnswer.getAssociatedGamePin(), found.getAssociatedGamePin());
     }
 
+    @Test
+    void deleteAllByAssociatedGamePin() {
+        List<TextPromptAnswer> allFound = textPromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(textPromptAnswer.getAssociatedGamePin(), textPromptAnswer.getAssociatedPromptNr());
+        assertEquals(1, allFound.size());
+
+        textPromptAnswerRepository.deleteAllByAssociatedGamePin(textPromptAnswer.getAssociatedGamePin());
+
+        allFound = textPromptAnswerRepository.findAllByAssociatedGamePinAndAssociatedPromptNr(textPromptAnswer.getAssociatedGamePin(), textPromptAnswer.getAssociatedPromptNr());
+        assertEquals(0, allFound.size());
+    }
+
 }

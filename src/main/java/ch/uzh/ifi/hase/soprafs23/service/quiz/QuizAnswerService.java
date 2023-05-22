@@ -43,7 +43,6 @@ public class QuizAnswerService {
     }
 
 
-    // return value is never used
     public QuizAnswer addQuizAnswerToQuizQuestion(QuizAnswer newQuizAnswer, QuizQuestion associatedQuestion, String loggedInToken) {
 
         // set the player
@@ -79,7 +78,6 @@ public class QuizAnswerService {
         AnswerOption chosenAnswer = answerOptionRepository.getAnswerOptionByAnswerOptionId(pickedId);
         AnswerOption correctAnswer = associatedQuestion.getCorrectAnswer();
 
-
         if (chosenAnswer.equals(correctAnswer)) {
             int gameTimer = associatedGame.getTimer();
             if (gameTimer == -1) {
@@ -98,7 +96,6 @@ public class QuizAnswerService {
         playerRepository.save(quizAnswer.getAssociatedPlayer());
         playerRepository.flush();
         return score;
-
     }
 
     public QuizQuestion updateQuestionStatusIfAllAnswered(Game associatedGame, QuizQuestion associatedQuestion) {

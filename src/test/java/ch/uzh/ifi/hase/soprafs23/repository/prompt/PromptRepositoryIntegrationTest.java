@@ -41,8 +41,7 @@ public class PromptRepositoryIntegrationTest {
 
 
     @Test
-    public void findByPromptNr_success() {
-        // when
+    public void findByPromptNr() {
         Prompt found = promptRepository.findByPromptNr(testPrompt.getPromptNr());
 
         assertEquals(testPrompt.getPromptNr(), found.getPromptNr());

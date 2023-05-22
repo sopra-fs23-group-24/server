@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @DataJpaTest
 public class AnswerOptionRepositoryIntegrationTest {
     AnswerOption testAnswerOption;
@@ -20,16 +22,24 @@ public class AnswerOptionRepositoryIntegrationTest {
 
     @BeforeEach
     void setup() {
-        //setup
+        testAnswerOption = new AnswerOption();
+        testAnswerOption.setAnswerOptionId(999L);
+        testAnswerOption.setAnswerOptionText("here's an answer you can pick");
+
+        testAnswerOption = entityManager.merge(testAnswerOption);
+        entityManager.flush();
     }
 
     @AfterEach
     void emptyRepository() {
+        answerOptionRepository.deleteAll();
     }
 
     @Test
     void getAnswerOptionByAnswerOptionId() {
-        //todo: test
+        AnswerOption found = answerOptionRepository.getAnswerOptionByAnswerOptionId(testAnswerOption.getAnswerOptionId());
+
+        assertEquals(testAnswerOption.getAnswerOptionText(), found.getAnswerOptionText());
     }
 
 

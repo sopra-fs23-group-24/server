@@ -87,7 +87,6 @@ public class Game implements Serializable {
         this.gamePin = gamePin;
     }
 
-
     public void addPlayer(Player player) {
         playerGroup.add(player);
     }

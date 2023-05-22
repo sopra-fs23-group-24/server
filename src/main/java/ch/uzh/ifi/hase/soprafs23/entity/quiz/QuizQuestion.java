@@ -101,6 +101,10 @@ public class QuizQuestion implements Serializable {
         this.associatedGamePin = associatedGamePin;
     }
 
+    public Prompt getAssociatedPrompt() {
+        return associatedPrompt;
+    }
+
     public void setAssociatedPrompt(Prompt associatedPrompt) {
         this.associatedPrompt = associatedPrompt;
     }
@@ -113,14 +117,6 @@ public class QuizQuestion implements Serializable {
         this.answerOptions = answerOptions;
     }
 
-    public DisplayType getAnswerDisplayType() {
-        return answerDisplayType;
-    }
-
-    public void setAnswerDisplayType(DisplayType answerDisplayType) {
-        this.answerDisplayType = answerDisplayType;
-    }
-
     public AnswerOption getCorrectAnswer() {
         return correctAnswer;
     }
@@ -129,8 +125,20 @@ public class QuizQuestion implements Serializable {
         this.correctAnswer = correctAnswer;
     }
 
+    public DisplayType getAnswerDisplayType() {
+        return answerDisplayType;
+    }
+
+    public void setAnswerDisplayType(DisplayType answerDisplayType) {
+        this.answerDisplayType = answerDisplayType;
+    }
+
     public List<QuizAnswer> getReceivedAnswers() {
         return receivedAnswers;
+    }
+
+    public void setReceivedAnswers(List<QuizAnswer> receivedAnswers) {
+        this.receivedAnswers = receivedAnswers;
     }
 
     public void addAnswerOption(AnswerOption option) {

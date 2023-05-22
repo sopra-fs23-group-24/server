@@ -70,12 +70,10 @@ public class PromptControllerTest {
 
         given(promptService.pickPrompts(Mockito.any(), Mockito.anyString())).willReturn(pickedList);
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/prompts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(promptPostDTO));
 
-        // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -91,7 +89,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void setPrompts_exceedAvailableNumber() throws Exception {
+    public void setPrompts_exceedAvailableNumberOrWrongState() throws Exception {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
         promptPostDTO.setDrawingNr(10);
         promptPostDTO.setTextNr(1);
@@ -99,14 +97,29 @@ public class PromptControllerTest {
 
         given(promptService.pickPrompts(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/prompts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(promptPostDTO));
 
-        // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void setPrompts_invalidGamePin() throws Exception {
+        PromptPostDTO promptPostDTO = new PromptPostDTO();
+        promptPostDTO.setDrawingNr(10);
+        promptPostDTO.setTextNr(1);
+        promptPostDTO.setTrueFalseNr(1);
+
+        given(promptService.pickPrompts(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        MockHttpServletRequestBuilder postRequest = post("/games/123456/prompts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(promptPostDTO));
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -120,12 +133,10 @@ public class PromptControllerTest {
 
         given(promptService.getPrompts()).willReturn(pickedList);
 
-        // when
         MockHttpServletRequestBuilder getRequest = get("/prompts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(promptPostDTO));
 
-        // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -142,7 +153,6 @@ public class PromptControllerTest {
 
     @Test
     public void getPromptsOfGame_returnsPromptsOfGame() throws Exception {
-        // given
         Prompt prompt = new Prompt();
         prompt.setPromptNr(999);
         prompt.setPromptType(PromptType.TEXT);
@@ -154,10 +164,8 @@ public class PromptControllerTest {
 
         given(promptService.getPromptsOfGame(Mockito.anyString())).willReturn(allPrompts);
 
-        // when
         MockHttpServletRequestBuilder getRequest = get("/games/123456/prompts").contentType(MediaType.APPLICATION_JSON);
 
-        // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -171,10 +179,8 @@ public class PromptControllerTest {
 
         given(promptService.getPromptsOfGame(Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // when
         MockHttpServletRequestBuilder getRequest = get("/games/123456/prompts").contentType(MediaType.APPLICATION_JSON);
 
-        // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isNotFound());
     }

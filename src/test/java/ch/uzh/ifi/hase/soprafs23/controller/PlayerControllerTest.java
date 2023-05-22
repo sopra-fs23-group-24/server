@@ -58,15 +58,14 @@ public class PlayerControllerTest {
 
         given(playerService.createPlayerAndAddToGame(Mockito.any())).willReturn(testPlayer);
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/players")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(playerPostDTO));
 
-        // then
         MvcResult mvcResult = mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.score", is(testPlayer.getScore())))
+                .andExpect(jsonPath("$.latestScore", is(testPlayer.getLatestScore())))
                 .andExpect(jsonPath("$.playerName", is(testPlayer.getPlayerName())))
                 .andReturn();
         assertEquals(mvcResult.getResponse().getHeader("playerToken"), testPlayer.getToken());
@@ -80,12 +79,10 @@ public class PlayerControllerTest {
 
         given(playerService.createPlayerAndAddToGame(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/players")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(playerPostDTO));
 
-        // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isNotFound());
     }
@@ -98,12 +95,10 @@ public class PlayerControllerTest {
 
         given(playerService.createPlayerAndAddToGame(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/players")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(playerPostDTO));
 
-        // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isBadRequest());
     }
@@ -116,12 +111,10 @@ public class PlayerControllerTest {
 
         given(playerService.createPlayerAndAddToGame(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        // when
         MockHttpServletRequestBuilder postRequest = post("/games/123456/players")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(playerPostDTO));
 
-        // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isBadRequest());
     }
@@ -132,10 +125,8 @@ public class PlayerControllerTest {
 
         given(playerService.getPlayers()).willReturn(allPlayers);
 
-        // when
         MockHttpServletRequestBuilder getRequest = get("/players").contentType(MediaType.APPLICATION_JSON);
 
-        // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -147,24 +138,27 @@ public class PlayerControllerTest {
     public void getAllPlayersOfGame_returnsAllPlayersOfGame() throws Exception {
         List<Player> allPlayers = Collections.singletonList(testPlayer);
 
-
         given(playerService.getPlayersWithPin(Mockito.anyString())).willReturn(allPlayers);
         given(playerService.sortPlayersByScore(Mockito.any())).willReturn(allPlayers);
 
-
-        // when
         MockHttpServletRequestBuilder getRequest = get("/games/123456/players").contentType(MediaType.APPLICATION_JSON);
-        // then
+
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].playerName", is(testPlayer.getPlayerName())))
+                .andExpect(jsonPath("$[0].latestScore", is(testPlayer.getLatestScore())))
                 .andExpect(jsonPath("$[0].score", is(testPlayer.getScore())));
     }
 
     @Test
-    public void getAllPlayersOfGame_invalidGamePin() {
-        //TODO: test
+    public void getAllPlayersOfGame_invalidGamePin() throws Exception {
+        given(playerService.getPlayersWithPin(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        MockHttpServletRequestBuilder getRequest = get("/games/123456/players").contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -198,13 +192,11 @@ public class PlayerControllerTest {
 
         given(playerService.changePlayerUsername(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // when
         MockHttpServletRequestBuilder putRequest = put("/players/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(playerPutDTO))
                 .header("playerToken", "2");
 
-        // then
         mockMvc.perform(putRequest)
                 .andExpect(status().isNotFound());
     }
@@ -216,13 +208,11 @@ public class PlayerControllerTest {
 
         given(playerService.changePlayerUsername(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
-        // when
         MockHttpServletRequestBuilder putRequest = put("/players/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(playerPutDTO))
                 .header("playerToken", "1");
 
-        // then
         mockMvc.perform(putRequest)
                 .andExpect(status().isUnauthorized());
     }
@@ -234,23 +224,19 @@ public class PlayerControllerTest {
 
         given(playerService.changePlayerUsername(Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        // when
         MockHttpServletRequestBuilder putRequest = put("/players/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(playerPutDTO))
                 .header("playerToken", "2");
 
-        // then
         mockMvc.perform(putRequest)
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
     public void deletePlayer_success() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willReturn(testPlayer);
 
-        // when
         MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("playerToken", "2");
@@ -266,7 +252,6 @@ public class PlayerControllerTest {
     public void deletePlayer_playerIsHost() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        // when
         MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("playerToken", "2");
@@ -280,7 +265,6 @@ public class PlayerControllerTest {
     public void deletePlayer_notLoggedInAsHostOrPlayer() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
-        // when
         MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("playerToken", "2");
