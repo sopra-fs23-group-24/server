@@ -355,7 +355,23 @@ Week 8 (15. - 21. may)
 	- description:
 - Linda:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/37
+	    - https://github.com/sopra-fs23-group-24/client/issues/54
+	    - https://github.com/sopra-fs23-group-24/client/issues/55
+	    - https://github.com/sopra-fs23-group-24/server/issues/83
+	    - https://github.com/sopra-fs23-group-24/client/issues/58
+	    - https://github.com/sopra-fs23-group-24/client/issues/40
+	    - https://github.com/sopra-fs23-group-24/server/issues/82
+	    - https://github.com/sopra-fs23-group-24/server/issues/75
 	- description:
+	    - add guards to frontend
+	    - enter key and autofocus for input fields
+	    - fix error when trying to leave end
+	    - question generator takes into account players, evenly distribute questions among all of them
+	    - answers do not transfer to next prompt of same type
+	    - filled out game info
+	    - (unfinshed) tidy up server code
+	    - (unfinished) update test cases: controller, repository, mapper, some service
 
 ---
 Week 9 (22. - 25. may)
