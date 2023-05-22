@@ -346,7 +346,13 @@ Week 8 (15. - 21. may)
 	- description:
 - Lara:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/5
+	    - https://github.com/sopra-fs23-group-24/client/issues/59
+	    - https://github.com/sopra-fs23-group-24/client/issues/60
 	- description:
+	    - added a dropdown menue to select the timer
+	    - added constraints so that min / max nr of the question types that have to be selected
+	    - if no question is selected the host will not be able to start the game
 - Jan:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/53
