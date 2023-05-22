@@ -349,7 +349,15 @@ Week 8 (15. - 21. may)
 	- description:
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/53
+	    - https://github.com/sopra-fs23-group-24/client/issues/43
+	    - https://github.com/sopra-fs23-group-24/client/issues/51
+	    - https://github.com/sopra-fs23-group-24/client/issues/46
+
 	- description:
+	    - Bugfixes on Nr. 53 and 46. 
+	    - Implemented eraser function in canvas (Betatesting feedback)
+	    - Added drawing with touch function in canvas
 - Mike:
 	- work on: 
 	- description:
