@@ -342,8 +342,16 @@ Week 7 (08. - 14. may)
 ---
 Week 8 (15. - 21. may)
 - Tim:
-	- will work on: ReadMe files, github flex environment, adding prompts to prompt generation files 
+	- work on:
+        - https://github.com/sopra-fs23-group-24/server/issues/80
+        - https://github.com/sopra-fs23-group-24/server/issues/81
+	    - ReadMe files (in progress, will finish today) 
+	        - https://github.com/sopra-fs23-group-24/client/issues/49
+            - https://github.com/sopra-fs23-group-24/server/issues/79
 	- description:
+	    - change server to flex environment
+	    - adding prompts and potential questions to prompt generation files
+	    - work on README files
 - Lara:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/server/issues/5
