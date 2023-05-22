@@ -62,7 +62,7 @@ public class PromptAnswerService {
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
 
-        if (answer.getAnswer().equals("")) {
+        if (answer.getAnswer().equals("") || answer.getAnswer() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
 
@@ -79,7 +79,7 @@ public class PromptAnswerService {
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
 
-        if (answer.getAnswerText().equals("")) {
+        if (answer.getAnswerText().equals("") || answer.getAnswerText() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
 
@@ -96,7 +96,7 @@ public class PromptAnswerService {
         Player player = getByToken(playerToken);
         answer.setAssociatedPlayerId(player.getPlayerId());
 
-        if (answer.getAnswerDrawing().equals("")) {
+        if (answer.getAnswerDrawing().equals("") || answer.getAnswerDrawing() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ANSWER_MESSAGE);
         }
 

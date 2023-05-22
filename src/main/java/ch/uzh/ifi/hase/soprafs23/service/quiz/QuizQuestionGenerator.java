@@ -146,7 +146,7 @@ public class QuizQuestionGenerator {
     }
 
 
-    private QuizQuestion generateQuestionForDrawingPrompt(Prompt prompt, Player pickedPlayer, Game game) {
+    public QuizQuestion generateQuestionForDrawingPrompt(Prompt prompt, Player pickedPlayer, Game game) {
 
         QuizQuestion newDrawingQuestion;
         PotentialQuestion selectedPotentialQuestion = pickPotentialQuestionForPrompt(prompt);
@@ -169,7 +169,7 @@ public class QuizQuestionGenerator {
         return newDrawingQuestion;
     }
 
-    private QuizQuestion generateQuestionForTextPrompt(Prompt prompt, Player pickedPlayer, Game game) {
+    public QuizQuestion generateQuestionForTextPrompt(Prompt prompt, Player pickedPlayer, Game game) {
 
         QuizQuestion newTextQuestion;
         PotentialQuestion selectedPotentialQuestion = pickPotentialQuestionForPrompt(prompt);
@@ -234,6 +234,7 @@ public class QuizQuestionGenerator {
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         drawingPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
+        log.debug("for prompt of " + selectedCorrectPromptAnswer.getAssociatedPlayerId() + "set to true");
 
         newQuestion.setImageToDisplay(selectedCorrectPromptAnswer.getAnswerDrawing());
 
@@ -260,6 +261,7 @@ public class QuizQuestionGenerator {
             allAnswers.remove(selectedPromptAnswer);
         }
 
+        log.debug("new question is: " + newQuestion);
         return newQuestion;
     }
 
@@ -276,6 +278,7 @@ public class QuizQuestionGenerator {
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         drawingPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
+        log.debug("for prompt of " + selectedCorrectPromptAnswer.getAssociatedPlayerId() + " set to true");
 
         newQuestion.setQuizQuestionText(generateQuizQuestionText(pq, pickedCorrectPlayer.getPlayerName()));
 
@@ -294,6 +297,7 @@ public class QuizQuestionGenerator {
             log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }
 
+        log.debug("new question is: " + newQuestion);
         return newQuestion;
     }
 
