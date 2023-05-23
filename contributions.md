@@ -331,6 +331,7 @@ Week 7 (08. - 14. may)
 	    - worked on 404 error at beginning of the game (loading time), not fixed yet
 - Mike:
 	- work on: 
+	    -JOKER
 	- description:
 - Linda:
 	- work on:
