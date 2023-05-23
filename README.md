@@ -1,25 +1,23 @@
 # "Who said that?" - party game  
 We have created a party game, which makes getting to know people easier and more fun. 
 
-## Introduction:
+## Introduction
 Instead of just asking each other the same lame questions over and over again, we wanted to create a fun
 and easy way to getting to know people. To achieve this we created a quiz game, revolving around the participants
 themselves.   
 
-roughly explained:
-- All players answer the questions that are posed initially.  
-- Next the quiz asks: "Who said that?" - and everybody takes a guess. 
-- The goal is to be as correct and as fast as possible.  
+- roughly explained:
+  - All players answer the questions that are posed initially.
+  - Each typ of question requires a different answer: a drawing, some text or telling a true/false story.
+  - Next the quiz asks: "Who said that?" - and everybody takes a guess. 
+  - The goal is to be as correct and as fast as possible.  
 
 ## Technologies used
 
 - JPA, hibernate database, REST, Google Cloud, GitHub, Gradle, Spring Boot
 
 
-## High-level components:
-- Our main file, running the application: [Application.java](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2FApplication.java)    
-  - but not really that important though, at least no to us in this course, since we left it as it was 
-
+## High-level components
 
 - Our main components are all of our services and controllers.   
 (For each entity one of each, and an additional service for generating the quiz questions.)
@@ -29,11 +27,7 @@ roughly explained:
   - the package with all our controllers: [controller](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fcontroller)
 
 
-## Launch & Deployment:
-Write down the steps a new developer joining your team would
-have to take to get started with your application. What commands are required to build and
-run your project locally? How can they run the tests? Do you have external dependencies
-or a database that needs to be running? How can they do releases?
+## Launch & Deployment
 
 - #### Build  
 
@@ -49,7 +43,7 @@ or a database that needs to be running? How can they do releases?
       ./gradlew bootRun
       ```
   
-  - the running server will be "stuck" at: "80% EXECUTING [time]" - this is normal. 
+  - The running server will be "stuck" at: "80% EXECUTING [time]" - this is normal. 
   - The last log in the terminal should 
     say: "Started Application", indicating that the application (the server) is running.
   - Additionally, this can be checked by visiting the `localhost:8080`, which will show the text: "The application is running."
@@ -58,15 +52,15 @@ or a database that needs to be running? How can they do releases?
   - ```bash
     ./gradlew test
     ```
-  - and with the built-in test functionality of your IDE of choice.
-  - We recommend using [Postman](https://www.getpostman.com) to test your API Endpoints.
+  - And with the built-in test functionality of your IDE of choice.
+  - We also recommend using [Postman](https://www.getpostman.com) to test your API Endpoints.
 
 - #### Dependencies and databases 
   - The JPA / hibernate database does not need to be run separately, neither to any dependencies.  
 
 
 - #### Development
-  - to make development faster and easier, you can use the "development mode":
+  - To make development faster and easier, you can use the "development mode":
     - using `./gradlew build --continuous`, to re-build with each change to the code
   - If you want to avoid running all tests with every change, use the following command instead:
       - `./gradlew build --continuous -xtest`
@@ -78,17 +72,19 @@ or a database that needs to be running? How can they do releases?
   - On each push to the main branch, the project is automatically deployed to google cloud.  
 
     
-## Roadmap:
+## Roadmap
 
-- adding new "game modes" respectively question types, like "rate this on a scale of 1-10", or other.
-- changing the calculation of points to include "answer-streaks". 
-- making the game even more customisable by letting the users choose how many questions the want to be generated, per prompt. 
-- adding progress indicators:
+- Adding new "game modes" respectively question types, like "rate this on a scale of 1-10", or other.
+- Changing the calculation of points to include "answer-streaks". 
+- Making the game even more customisable by letting the users choose how many questions the want to be generated, per prompt. 
+- Adding progress indicators:
   - on how far the other players are with answering their prompts
   - in the quiz: 
     - on each question - how many players have already answered 
     - in general - showing how many questions out of the total amount have been answered
-- adding a "go back" option to allow "undo" and the re-writing of already answered prompts  
+- Adding a "go back" option to allow "undo" and the re-writing of already answered prompts  
+
+(This is the same as in the client README, because the two parts of our application are closely connected, in achieving these features.)
 
 
 ## Authors
