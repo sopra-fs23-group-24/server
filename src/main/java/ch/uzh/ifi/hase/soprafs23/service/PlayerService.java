@@ -95,18 +95,15 @@ public class PlayerService {
     }
 
     public Player changePlayerUsername(Player newPlayerInfo, String loggedInPlayerToken) {
-        Player playerById = playerRepository.findByPlayerId(newPlayerInfo.getPlayerId());
-        Player loggedInPlayer = playerRepository.findByToken(loggedInPlayerToken);
+        Player playerById = getById(newPlayerInfo.getPlayerId());
+        Player loggedInPlayer = getByToken(loggedInPlayerToken);
 
-        if (playerById == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No player with this id found.");
-        }
         if (playerById != loggedInPlayer) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 
         Player playerByUsernameAndPin = playerRepository.findByPlayerNameAndAssociatedGamePin(newPlayerInfo.getPlayerName(), newPlayerInfo.getAssociatedGamePin());
-        if (newPlayerInfo.getPlayerName().isBlank() || playerByUsernameAndPin != null) {
+        if (newPlayerInfo.getPlayerName().isBlank() || (playerByUsernameAndPin != null && playerByUsernameAndPin != loggedInPlayer)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid username, might be empty or already in use.");
         }
 
@@ -125,7 +122,10 @@ public class PlayerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "May not delete host.");
         }
 
+        System.out.println("ID of logged in player: " + loggedInPlayer.getPlayerId());
+        System.out.println("ID of delete in player: " + playerToBeDeletedId);
         if (playerToBeDeletedId != loggedInPlayer.getPlayerId() && !checkIfHost(gamePin, loggedInPlayer.getPlayerId())) {
+
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");
         }
 

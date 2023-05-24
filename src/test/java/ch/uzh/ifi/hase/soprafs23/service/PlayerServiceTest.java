@@ -13,7 +13,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,29 +39,27 @@ public class PlayerServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        //playerService.setGameService(gameService);
-
-        testPlayer = new Player();
-        testPlayer.setPlayerId(2L);
-        testPlayer.setAssociatedGamePin("123456");
-        testPlayer.setPlayerName("test");
-        testPlayer.setToken("1");
-        testPlayer.setHost(true);
-
-        Mockito.when(playerRepository.save(Mockito.any())).thenReturn(testPlayer);
-        Mockito.when(playerRepository.findByToken(Mockito.any())).thenReturn(testPlayer);
-        Mockito.when(playerRepository.findAllByAssociatedGamePin(Mockito.any())).thenReturn(List.of(testPlayer));
-        Mockito.when(playerRepository.findAll()).thenReturn(List.of(testPlayer));
-
         testGame = new Game();
-        testGame.setGameId(1L);
         testGame.setGamePin("123456");
-        testGame.setHostId(2L); //bc cannot be 1 bc game is 1 already
+        testGame.setStatus(GameStatus.LOBBY);
+        testGame.setHostId(800L);
 
         Mockito.when(gameRepository.save(Mockito.any())).thenReturn(testGame);
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(testGame);
         Mockito.when(gameRepository.findAll()).thenReturn(List.of(testGame));
 
+        testPlayer = new Player();
+        testPlayer.setAssociatedGamePin(testGame.getGamePin());
+        testPlayer.setPlayerName("test");
+        testPlayer.setToken("1");
+        testPlayer.setHost(true);
+        testPlayer.setPlayerId(100L);
+
+        Mockito.when(playerRepository.save(Mockito.any())).thenReturn(testPlayer);
+        Mockito.when(playerRepository.findByToken(Mockito.any())).thenReturn(testPlayer);
+        Mockito.when(playerRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(testPlayer));
+        Mockito.when(playerRepository.findAllByAssociatedGamePin(Mockito.any())).thenReturn(List.of(testPlayer));
+        Mockito.when(playerRepository.findAll()).thenReturn(List.of(testPlayer));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PlayerServiceTest {
         assertEquals(allPlayers, List.of(testPlayer));
     }
 
-    // score must either not be declared or not set other than 0 in the setup
+
     @Test
     public void getScoreOfAllPlayersFromGame() {
         List<Player> allPlayers = playerService.getPlayersWithPin(testPlayer.getAssociatedGamePin());
@@ -91,69 +91,169 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void createPlayerAndAddToGame_success() {
-        Player newPlayer = new Player();
-        newPlayer.setPlayerName("name");
-        newPlayer.setHost(false);
-        newPlayer.setAssociatedGamePin(testGame.getGamePin());
+    public void createPlayerAndAddToGame_notHost_success() {
+        testPlayer.setHost(false);
 
-        testGame.setStatus(GameStatus.LOBBY);
+        Mockito.when(playerRepository.save(Mockito.any())).thenReturn(testPlayer);
 
-        Mockito.when(playerRepository.save(Mockito.any())).thenReturn(newPlayer);
+        Player addedPlayer = playerService.createPlayerAndAddToGame(testPlayer);
+        assertEquals(addedPlayer.getPlayerName(), testPlayer.getPlayerName());
+        assertEquals(addedPlayer.getScore(), 0);
+    }
 
-        Player addedPlayer = playerService.createPlayerAndAddToGame(newPlayer);
-        assertEquals(addedPlayer.getPlayerName(), newPlayer.getPlayerName());
+    @Test
+    public void createPlayerAndAddToGame_host_success() {
+        testPlayer.setHost(true);
+        testGame.setHostId(null);
+
+        Mockito.when(playerRepository.save(Mockito.any())).thenReturn(testPlayer);
+
+        Player addedPlayer = playerService.createPlayerAndAddToGame(testPlayer);
+        assertEquals(addedPlayer.getPlayerName(), testPlayer.getPlayerName());
         assertEquals(addedPlayer.getScore(), 0);
     }
 
     @Test
     public void createPlayerAndAddToGame_invalidGamePin() {
-        Player newPlayer = new Player();
-        newPlayer.setPlayerName("name");
-        newPlayer.setHost(false);
-        newPlayer.setAssociatedGamePin("invalidPin");
+        testPlayer.setAssociatedGamePin("invalidPin");
 
         Mockito.when(gameRepository.findByGamePin("invalidPin")).thenReturn(null);
 
-        assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(newPlayer));
+        assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(testPlayer));
     }
 
     @Test
     public void createPlayerAndAddToGame_notInLobby() {
-        Player newPlayer = new Player();
-        newPlayer.setPlayerName("name");
-        newPlayer.setHost(false);
-        newPlayer.setAssociatedGamePin(testGame.getGamePin());
-
         testGame.setStatus(GameStatus.SELECTION);
 
-        assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(newPlayer));
+        assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(testPlayer));
     }
 
     @Test
     public void createPlayerAndAddToGame_alreadyHasHost() {
-        Player newPlayer = new Player();
-        newPlayer.setPlayerName("name");
-        newPlayer.setHost(true);
-        newPlayer.setAssociatedGamePin(testGame.getGamePin());
+        testGame.setHostId(999L);
+        testPlayer.setHost(true);
 
-        testGame.setStatus(GameStatus.LOBBY);
-
-        assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(newPlayer));
+        assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(testPlayer));
     }
 
     @Test
     public void createPlayerAndAddToGame_duplicateUsername() {
-        Player newPlayer = new Player();
-        newPlayer.setPlayerName("name");
-        newPlayer.setHost(true);
-        newPlayer.setAssociatedGamePin(testGame.getGamePin());
-
-        testGame.setStatus(GameStatus.LOBBY);
         Mockito.when(playerRepository.findByPlayerNameAndAssociatedGamePin(Mockito.anyString(), Mockito.anyString())).thenReturn(new Player());
 
-        assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(newPlayer));
+        assertThrows(ResponseStatusException.class, () -> playerService.createPlayerAndAddToGame(testPlayer));
     }
 
 
+    @Test
+    public void changePlayerUsername_sucess() {
+        testPlayer.setPlayerName("newName");
+        Player addedPlayer = playerService.changePlayerUsername(testPlayer, testPlayer.getToken());
+        assertEquals(addedPlayer.getPlayerName(), testPlayer.getPlayerName());
+    }
+
+    @Test
+    public void changePlayerUsername_unauthorized() {
+        Mockito.when(playerRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(new Player()));
+
+        assertThrows(ResponseStatusException.class, () -> playerService.changePlayerUsername(testPlayer, "notTheirToken"));
+    }
+
+    @Test
+    public void changePlayerUsername_duplicateUsername() {
+        Mockito.when(playerRepository.findByPlayerNameAndAssociatedGamePin(Mockito.anyString(), Mockito.anyString())).thenReturn(new Player());
+
+        assertThrows(ResponseStatusException.class, () -> playerService.changePlayerUsername(testPlayer, testPlayer.getToken()));
+    }
+
+    @Test
+    public void changePlayerUsername_emptyUsername() {
+        testPlayer.setPlayerName("");
+
+        Mockito.when(playerRepository.findByPlayerNameAndAssociatedGamePin(Mockito.anyString(), Mockito.anyString())).thenReturn(new Player());
+
+        assertThrows(ResponseStatusException.class, () -> playerService.changePlayerUsername(testPlayer, testPlayer.getToken()));
+    }
+
+    @Test
+    public void changePlayerUsername_invalidId() {
+        Mockito.when(playerRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(null));
+
+        assertThrows(ResponseStatusException.class, () -> playerService.changePlayerUsername(testPlayer, testPlayer.getToken()));
+    }
+
+    @Test
+    public void changePlayerUsername_invalidToken() {
+        Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(null);
+
+        assertThrows(ResponseStatusException.class, () -> playerService.changePlayerUsername(testPlayer, "invalidToken"));
+    }
+
+    @Test
+    public void deletePlayer_success(){
+        testGame.addPlayer(testPlayer);
+        Player deletedPlayer = playerService.deletePlayer(testPlayer.getPlayerId(), testPlayer.getToken(), testPlayer.getAssociatedGamePin());
+        assertEquals(deletedPlayer.getPlayerName(), testPlayer.getPlayerName());
+    }
+
+
+    @Test
+    public void deletePlayer_unauthorized() {
+        testGame.setHostId(1L);
+        Player notTestPlayer = new Player();
+        notTestPlayer.setPlayerId(99L);
+        Mockito.when(playerRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(notTestPlayer));
+
+        assertThrows(ResponseStatusException.class, () -> playerService.deletePlayer(99L, testPlayer.getToken(), testPlayer.getAssociatedGamePin()));
+    }
+
+    @Test
+    public void deletePlayer_isHost() {
+        testPlayer.setPlayerId(testGame.getHostId());
+
+        assertThrows(ResponseStatusException.class, () -> playerService.deletePlayer(testPlayer.getPlayerId(), testPlayer.getToken(), testPlayer.getAssociatedGamePin()));
+    }
+
+    @Test
+    public void deletePlayer_invalidId() {
+        Mockito.when(playerRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(null));
+
+        assertThrows(ResponseStatusException.class, () -> playerService.deletePlayer(testPlayer.getPlayerId(), testPlayer.getToken(), testPlayer.getAssociatedGamePin()));
+    }
+
+    @Test
+    public void deletePlayer_invalidToken() {
+        Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(null);
+
+        assertThrows(ResponseStatusException.class, () -> playerService.deletePlayer(testPlayer.getPlayerId(), "invalidToken", testPlayer.getAssociatedGamePin()));
+    }
+
+    @Test
+    public void sortPlayersByScore_success(){
+        Player player1 = new Player();
+        player1.setScore(100);
+        Player player2 = new Player();
+        player2.setScore(50);
+        Player player3 = new Player();
+        player3.setScore(0);
+
+        List<Player> unsortedList = new ArrayList<>();
+        unsortedList.add(player3);
+        unsortedList.add(player1);
+        unsortedList.add(player2);
+
+        List<Player> sortedList = playerService.sortPlayersByScore(unsortedList);
+        assertEquals(player1, sortedList.get(0));
+        assertEquals(player2, sortedList.get(1));
+        assertEquals(player3, sortedList.get(2));
+        for(Player player : sortedList){
+            int currentIndex = sortedList.indexOf(player);
+            if(currentIndex > 0){
+                assert(player.getScore() <= sortedList.get(currentIndex - 1).getScore());
+            }
+            if(currentIndex < sortedList.size() - 1){
+                assert(player.getScore() >= sortedList.get(currentIndex + 1).getScore());
+            }
+        }
+    }
 }
