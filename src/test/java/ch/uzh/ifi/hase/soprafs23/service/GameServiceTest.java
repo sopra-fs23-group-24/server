@@ -53,7 +53,6 @@ public class GameServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-
         testPlayer = new Player();
         testPlayer.setPlayerId(2L);
         testPlayer.setAssociatedGamePin("123456");
@@ -75,11 +74,9 @@ public class GameServiceTest {
 
     @Test
     public void createGame_success() {
-
         Game createdGame = gameService.createGame();
         Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
 
-        //test host properties
         assertEquals(testGame.getGameId(), createdGame.getGameId());
         assertEquals(testGame.getGamePin(), createdGame.getGamePin());
         assertEquals(testGame.getHostId(), createdGame.getHostId());
@@ -113,7 +110,7 @@ public class GameServiceTest {
 
 
     @Test
-    public void changeGameStatus_success() {
+    public void changeGameStatus_ToSelection_success() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -123,6 +120,48 @@ public class GameServiceTest {
         Game updatedGame = gameService.changeGameStatus(GameStatus.SELECTION, testGame.getGamePin(), testHost.getToken());
 
         assertEquals(GameStatus.SELECTION, updatedGame.getStatus());
+    }
+
+    @Test
+    public void changeGameStatus_ToSelection_notEnoughPlayers() {
+        testGame.setPlayerGroup(List.of(testPlayer));
+
+        Player testHost = new Player();
+        testHost.setPlayerId(testGame.getHostId());
+        testHost.setToken("1");
+
+        assertThrows(ResponseStatusException.class, () -> gameService.changeGameStatus(GameStatus.SELECTION, testGame.getGamePin(), testHost.getToken()));
+    }
+
+    @Test
+    public void changeGameStatus_ToLobby_success() {
+        Player testHost = new Player();
+        testHost.setPlayerId(testGame.getHostId());
+        testHost.setToken("1");
+        testHost.setScore(100);
+        testPlayer.setScore(100);
+        testGame.setPlayerGroup(List.of(testHost, testPlayer));
+
+        Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(testHost);
+
+        Game updatedGame = gameService.changeGameStatus(GameStatus.LOBBY, testGame.getGamePin(), testHost.getToken());
+
+        assertEquals(GameStatus.LOBBY, updatedGame.getStatus());
+        assertEquals(testHost.getScore(), 0);
+        assertEquals(testPlayer.getScore(), 0);
+    }
+
+    @Test
+    public void changeGameStatus_invalidStatus() {
+        Player testHost = new Player();
+        testHost.setPlayerId(testGame.getHostId());
+        testHost.setToken("1");
+
+        Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(null);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.changeGameStatus(GameStatus.PROMPT, testGame.getGamePin(), testHost.getToken()));
+        assertThrows(ResponseStatusException.class, () -> gameService.changeGameStatus(GameStatus.QUIZ, testGame.getGamePin(), testHost.getToken()));
+        assertThrows(ResponseStatusException.class, () -> gameService.changeGameStatus(GameStatus.END, testGame.getGamePin(), testHost.getToken()));
     }
 
     @Test
