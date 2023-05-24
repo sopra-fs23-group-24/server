@@ -10,6 +10,7 @@ import ch.uzh.ifi.hase.soprafs23.repository.prompt.DrawingPromptAnswerRepository
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TextPromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.prompt.TrueFalsePromptAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -253,6 +254,43 @@ public class GameServiceTest {
 
         assertThrows(ResponseStatusException.class, () -> gameService.changeToNextQuestion(testGame.getGamePin(), testHost.getToken()));
     }
+
+    @Test
+    public void game_nextQuestion() {
+        Assertions.assertTrue(testGame.getQuizQuestionSet().isEmpty());
+        Assertions.assertNull(testGame.getCurrentQuestion());
+
+        //empty question set
+        QuizQuestion nextQuestion = testGame.nextQuestion();
+        Assertions.assertNull(nextQuestion);
+        QuizQuestion currentQuestion = testGame.getCurrentQuestion();
+        Assertions.assertNull(currentQuestion);
+
+        QuizQuestion question1 = new QuizQuestion();
+        QuizQuestion question2 = new QuizQuestion();
+
+        List<QuizQuestion> questions = new ArrayList<>(List.of(question1, question2));
+        testGame.addQuizQuestions(questions);
+
+        //first question
+        nextQuestion = testGame.nextQuestion();
+        Assertions.assertEquals(question1, nextQuestion);
+        currentQuestion = testGame.getCurrentQuestion();
+        Assertions.assertEquals(question1, currentQuestion);
+
+        //next question
+        nextQuestion = testGame.nextQuestion();
+        Assertions.assertEquals(question2, nextQuestion);
+        currentQuestion = testGame.getCurrentQuestion();
+        Assertions.assertEquals(question2, currentQuestion);
+
+        //last question
+        nextQuestion = testGame.nextQuestion();
+        Assertions.assertNull(nextQuestion);
+        currentQuestion = testGame.getCurrentQuestion();
+        Assertions.assertNull(currentQuestion);
+    }
+
 }
 
 

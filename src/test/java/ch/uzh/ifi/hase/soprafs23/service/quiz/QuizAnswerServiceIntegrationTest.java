@@ -13,6 +13,7 @@ import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.AnswerOptionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizAnswerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,15 +66,20 @@ public class QuizAnswerServiceIntegrationTest {
         testGame = new Game();
         testGame.setStatus(GameStatus.SELECTION);
         testGame.setGamePin("123456");
+        testGame.setTimer(40);
         testGame = gameRepository.save(testGame);
         gameRepository.flush();
 
         testPlayer = new Player();
         testPlayer.setPlayerName("testPlayer");
         testPlayer.setToken("playerToken");
-        testPlayer.setAssociatedGamePin("123456");
+        testPlayer.setAssociatedGamePin(testGame.getGamePin());
         testPlayer = playerRepository.save(testPlayer);
         playerRepository.flush();
+
+        testGame.addPlayer(testPlayer);
+        testGame = gameRepository.save(testGame);
+        gameRepository.flush();
 
         correctAnswerOption = new AnswerOption();
         correctAnswerOption.setAnswerOptionText("correct answer");
@@ -96,42 +102,28 @@ public class QuizAnswerServiceIntegrationTest {
 
     @Test
     public void addQuizAnswerToQuizQuestion() {
-        //TODO: fix or delete
-        /*Player foundPlayer = playerRepository.findByToken(testPlayer.getToken());
+        Player foundPlayer = playerRepository.findByToken(testPlayer.getToken());
         Assertions.assertNotNull(foundPlayer);
-
-        QuizQuestion foundQuizQuestion = qqRepository.findByQuestionId(testQuizQuestion.getQuestionId());
-        Assertions.assertNotNull(foundQuizQuestion);
 
         QuizAnswer created = quizAnswerService.addQuizAnswerToQuizQuestion(testQuizAnswer, testQuizQuestion, testPlayer.getToken());
         Assertions.assertEquals(testQuizAnswer.getPickedAnswerOptionId(), created.getPickedAnswerOptionId());
         Assertions.assertEquals(testQuizAnswer.getTimer(), created.getTimer());
         Assertions.assertEquals(testQuizAnswer.getAssociatedPlayer().getPlayerId(), testPlayer.getPlayerId());
         Assertions.assertNotNull(created.getQuizAnswerId());
-
-        foundQuizQuestion = qqRepository.findByQuestionId(testQuizQuestion.getQuestionId());
-        Hibernate.initialize(foundQuizQuestion.getReceivedAnswers());
-        Assertions.assertEquals(foundQuizQuestion.getReceivedAnswers().size(), 1);*/
-    }
-
-    @Test
-    public void calculateAndAddScore() {
-        //TODO: fix or delete
-        /*testQuizAnswer.setAssociatedPlayer(testPlayer);
-
-        testQuizQuestion.addReceivedAnswer(testQuizAnswer);
-        testQuizQuestion.setQuestionStatus(CompletionStatus.NOT_FINISHED);
-        testQuizQuestion = qqRepository.save(testQuizQuestion);
-        qqRepository.flush();
-
-        Assertions.assertEquals(testPlayer.getScore(), 0);
-
-        Integer receivedScore = quizAnswerService.calculateAndAddScore(testQuizAnswer, testQuizQuestion, testGame);
-        Assertions.assertEquals(receivedScore, 40);*/
     }
 
     @Test
     public void updateQuestionStatusIfAllAnswered() {
+        testGame.setPlayerGroup(List.of(testPlayer));
+        testQuizAnswer.setAssociatedPlayer(testPlayer);
+        testQuizQuestion.addReceivedAnswer(testQuizAnswer);
 
+        Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
+        Assertions.assertNotNull(foundGame);
+
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, testQuizQuestion.getQuestionStatus());
+
+        QuizQuestion updatedQuestion = quizAnswerService.updateQuestionStatusIfAllAnswered(testGame, testQuizQuestion);
+        Assertions.assertEquals(CompletionStatus.FINISHED, updatedQuestion.getQuestionStatus());
     }
 }

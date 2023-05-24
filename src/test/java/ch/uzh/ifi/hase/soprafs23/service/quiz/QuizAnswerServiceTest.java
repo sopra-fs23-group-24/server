@@ -96,6 +96,8 @@ public class QuizAnswerServiceTest {
         testQuestion.setQuestionId(999L);
 
         Mockito.when(quizQuestionRepository.findByQuestionId(Mockito.anyLong())).thenReturn(testQuestion);
+        Mockito.when(quizQuestionRepository.save(Mockito.any())).thenReturn(testQuestion);
+
     }
 
     @Test
@@ -162,4 +164,37 @@ public class QuizAnswerServiceTest {
         Assertions.assertEquals(testPlayer.getScore(), 0);
     }
 
+    @Test
+    public void updateQuestionStatusIfAllAnswered_updateToFinished(){
+        QuizAnswer quizAnswer = new QuizAnswer();
+        quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
+        quizAnswer.setAssociatedPlayer(testPlayer);
+        quizAnswer.setTimer(10);
+        testQuestion.addReceivedAnswer(quizAnswer);
+
+        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        QuizQuestion updatedQuestion = quizAnswerService.updateQuestionStatusIfAllAnswered(testGame, testQuestion);
+        Assertions.assertEquals(updatedQuestion.getQuestionStatus(), CompletionStatus.FINISHED);
+    }
+
+    @Test
+    public void findGameByPin_success(){
+        Assertions.assertNotNull(quizAnswerService.findGameByPin("123456"));
+    }
+
+    @Test
+    public void findGameByPin_invalidPin(){
+        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.findGameByPin("invalidPin"));
+    }
+
+    @Test
+    public void findQuestionById_success(){
+        Assertions.assertNotNull(quizAnswerService.findQuestionById(999L));
+    }
+
+    @Test
+    public void findQuestionById_invalidId(){
+        Mockito.when(quizQuestionRepository.findByQuestionId(Mockito.anyLong())).thenReturn(null);
+        Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.findQuestionById(1L));
+    }
 }

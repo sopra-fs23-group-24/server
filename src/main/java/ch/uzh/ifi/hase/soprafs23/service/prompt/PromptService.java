@@ -226,7 +226,7 @@ public class PromptService {
 
         for (int i = 0; i < wantedNumber; i++) {
             if (allPromptsOfType.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more text prompts than are available.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You selected more prompts of a type than are available.");
             }
             int randomIndex = rand.nextInt(allPromptsOfType.size());
             Prompt randomPrompt = allPromptsOfType.get(randomIndex);

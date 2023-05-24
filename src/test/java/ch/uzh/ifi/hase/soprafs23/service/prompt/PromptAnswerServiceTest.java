@@ -170,15 +170,25 @@ class PromptAnswerServiceTest {
 
     @Test
     void haveAllPlayersAnsweredAllPrompts_true() {
-        Prompt testPrompt = new Prompt();
-        testPrompt.setPromptType(PromptType.TEXT);
-        testPrompt.setPromptNr(99);
+        Prompt testPrompt1 = new Prompt();
+        testPrompt1.setPromptType(PromptType.TEXT);
+        testPrompt1.setPromptNr(99);
+        Prompt testPrompt2 = new Prompt();
+        testPrompt2.setPromptType(PromptType.DRAWING);
+        testPrompt2.setPromptNr(100);
+        Prompt testPrompt3 = new Prompt();
+        testPrompt3.setPromptType(PromptType.TRUEFALSE);
+        testPrompt3.setPromptNr(101);
 
-        testGame.setPromptSet(List.of(testPrompt));
+        testGame.setPromptSet(List.of(testPrompt1, testPrompt2, testPrompt3));
         testGame.setPlayerGroup(List.of(testPlayer));
 
         Mockito.when(textPromptAnswerRepository.findTextPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt()))
                 .thenReturn(testTextPromptAnswer);
+        Mockito.when(drawingPromptAnswerRepository.findDrawingPromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt()))
+                .thenReturn(testDrawingPromptAnswer);
+        Mockito.when(trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt()))
+                .thenReturn(testTFPromptAnswer);
 
         Boolean returnedBoolean = promptAnswerService.haveAllPlayersAnsweredAllPrompts(testGame.getGamePin());
         Assertions.assertTrue(returnedBoolean);

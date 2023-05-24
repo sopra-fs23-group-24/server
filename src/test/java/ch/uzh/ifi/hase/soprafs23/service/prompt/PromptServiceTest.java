@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.service.prompt;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
+import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.prompt.Prompt;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
@@ -188,4 +189,13 @@ public class PromptServiceTest {
         assertEquals(gameRepository.findByGamePin(testGame.getGamePin()).getTimer(), testDTO.getTimer());
     }
 
+    @Test
+    public void invalidQuestionType() {
+        assertThrows(ResponseStatusException.class, () -> QuestionType.transformToType("invalidType"));
+    }
+
+    @Test
+    public void invalidPromptType() {
+        assertThrows(ResponseStatusException.class, () -> PromptType.transformToType("invalidType"));
+    }
 }
