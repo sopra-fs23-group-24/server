@@ -190,7 +190,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void deletePlayer_success(){
+    public void deletePlayer_success() {
         testGame.addPlayer(testPlayer);
         Player deletedPlayer = playerService.deletePlayer(testPlayer.getPlayerId(), testPlayer.getToken(), testPlayer.getAssociatedGamePin());
         assertEquals(deletedPlayer.getPlayerName(), testPlayer.getPlayerName());
@@ -229,7 +229,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void sortPlayersByScore_success(){
+    public void sortPlayersByScore_success() {
         Player player1 = new Player();
         player1.setScore(100);
         Player player2 = new Player();
@@ -246,14 +246,10 @@ public class PlayerServiceTest {
         assertEquals(player1, sortedList.get(0));
         assertEquals(player2, sortedList.get(1));
         assertEquals(player3, sortedList.get(2));
-        for(Player player : sortedList){
+        for (Player player : sortedList) {
             int currentIndex = sortedList.indexOf(player);
-            if(currentIndex > 0){
-                assert(player.getScore() <= sortedList.get(currentIndex - 1).getScore());
-            }
-            if(currentIndex < sortedList.size() - 1){
-                assert(player.getScore() >= sortedList.get(currentIndex + 1).getScore());
-            }
+            assert currentIndex <= 0 || (player.getScore() <= sortedList.get(currentIndex - 1).getScore());
+            assert currentIndex >= sortedList.size() - 1 || (player.getScore() >= sortedList.get(currentIndex + 1).getScore());
         }
     }
 }

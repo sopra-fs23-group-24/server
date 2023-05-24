@@ -5,8 +5,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
-import ch.uzh.ifi.hase.soprafs23.service.prompt.PromptAnswerService;
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +49,7 @@ public class PlayerServiceIntegrationTest {
 
 
     @Test
-    public void createPlayerAndAddToGame(){
+    public void createPlayerAndAddToGame() {
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
 
@@ -64,7 +62,7 @@ public class PlayerServiceIntegrationTest {
     }
 
     @Test
-    public void deletePlayer(){
+    public void deletePlayer() {
         testPlayer.setToken("token");
         testPlayer.setScore(0);
         testPlayer.setLatestScore(0);
