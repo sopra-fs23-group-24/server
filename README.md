@@ -1,16 +1,16 @@
-# "Who said that?" - party game  
-We have created a party game, which makes getting to know people easier and more fun. 
+# "Who said that?" - A party quiz game  
+"Who said that?" is a party game for 4 of more players, which functions as a fun ice breaker or socialising activity when talking to new people, acquaintances or even old friends.
 
 ## Introduction
-Instead of just asking each other the same lame questions over and over again, we wanted to create a fun
-and easy way to getting to know people. To achieve this we created a quiz game, revolving around the participants
-themselves.   
+Instead of just asking each other the same lame questions over and over again, we wanted to create a fun and easy way to socialise and learn a bit about people.
+Our quiz game revolves around the participants themselves and tests their knowledge of each other.
+
 
 - roughly explained:
-  - All players answer the questions that are posed initially.
-  - Each typ of question requires a different answer: a drawing, some text or telling a true/false story.
-  - Next the quiz asks: "Who said that?" - and everybody takes a guess. 
-  - The goal is to be as correct and as fast as possible.  
+  - All players answer a set of initial prompts
+  - Each type of prompt requires a different answer: a drawing, some text or telling a true/false story.
+  - Next, the players participate in a quiz-like game that asks: "Who said that?" - and everybody takes a guess.
+  - The goal is to be as correct and as fast as possible.
 
 ## Technologies used
 
@@ -19,12 +19,17 @@ themselves.
 
 ## High-level components
 
-- Our main components are all of our services and controllers.   
-(For each entity one of each, and an additional service for generating the quiz questions.)
-  - the package with all our services: [service](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice)  
-    - the service (or class) for generating quiz questions: 
-    [QuizQuestionGenerator.java](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice%2Fquiz%2FQuizQuestionGenerator.java)
-  - the package with all our controllers: [controller](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fcontroller)
+All our controller and services hold main functionalities for our application. (For each entity there is one service and one controller, and an additional service for generating the quiz questions.)
+- the package with all our controllers: [controller](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fcontroller)
+- the package with all our services: [service](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice)
+
+These are the five most important classes:
+- [GameController]() is responsible for client/server communication as far as the game directly is concerned, that means creating games, sending game information and changing states. It is also responsible for hiding correct answers for quiz questions until all players provided a guess.
+- [GameService]() is responsible for actually applying the functionalities mentioned above to the repositories and entities.
+- [PromptAnswerService]() transforms prompt answers from users into entities that can be utilised to generate quiz questions.
+- [QuizQuestionGenerator]() combines information from a Game, its Prompts, the received PromptAnswers and our PotentialQuestions into functional and fair quiz questions.
+- [QuizAnswerService]() calculates scores for players and is reponsible for controlling the flow of the quiz.
+
 
 
 ## Launch & Deployment
@@ -61,7 +66,7 @@ themselves.
 
 - #### Development
   - To make development faster and easier, you can use the "development mode":
-    - using `./gradlew build --continuous`, to re-build with each change to the code
+    - use `./gradlew build --continuous`, to re-build to the code with every change 
   - If you want to avoid running all tests with every change, use the following command instead:
       - `./gradlew build --continuous -xtest`
   - While running one of the two commands above, run the server in another terminal:
@@ -69,7 +74,7 @@ themselves.
 
 
 - #### Deployment 
-  - On each push to the main branch, the project is automatically deployed to google cloud.  
+  - The project is set up to automatically deploy, each time you push onto the main branch. This is done via the GitHub workflow in [main.yml](.github%2Fworkflows%2Fmain.yml)
 
     
 ## Roadmap
@@ -77,6 +82,7 @@ themselves.
 - Adding new "game modes" respectively question types, like "rate this on a scale of 1-10", or other.
 - Changing the calculation of points to include "answer-streaks". 
 - Making the game even more customisable by letting the users choose how many questions the want to be generated, per prompt. 
+- allowing players to create custom prompts within the existing types
 - Adding progress indicators:
   - on how far the other players are with answering their prompts
   - in the quiz: 
