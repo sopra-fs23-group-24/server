@@ -229,7 +229,15 @@ Week 5 (24. - 28. april)
         - bugfixing for deployment and writing testcases 
 - Lara:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/server/issues/5
+	    - https://github.com/sopra-fs23-group-24/server/issues/52
+	    - bugfixes for milestone 3
 	- description:
+	    - started the answer prompt view (for host to select how many question on each type)
+	    - bug fixes for milestone 3
+	    - updated scss according to figma
+
+
 - Jan:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/29
