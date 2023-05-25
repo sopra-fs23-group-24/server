@@ -6,78 +6,84 @@
 \\comments can be made with "\\"
 \\please do not change promptNr again! potential questions are based on that
 \\
-\\ TF EXAMPLE
+\\TF EXAMPLE
 1: PLAYER: Which player told this true story about their last holiday?: false
 1: BOOLEAN: Is the following story by <i>%s</i> about their last holiday true or false?: true
-\\ DRAW EXAMPLE
+\\DRAWING EXAMPLE
 2: PLAYER: Which player drew this rat?: false
 2: PROMPTANSWER: Which rat was drawn by <i>%s</i>?: true
-\\ TEXT EXAMPLE
+\\TEXT EXAMPLE
 3: PLAYER: Who would choose <i>'%s'</i> as their weapon in a zombie apocalypse?: true
 3: PROMPTANSWER: What is the weapon of choice of <i>%s</i> in a zombie apocalypse?: true
-\\ TF
 4: PLAYER: Which player told this true story about their best friend?: false
-4: BOOLEAN: Is this story about <i>%s's</i> best friend true or false?: true
-\\ DRAW
+4: BOOLEAN: Is this story about <i>%s</i>’s best friend true or false?: true
 5: PLAYER: Which player drew this toilet?: false
 5: PROMPTANSWER: Which toilet was drawn by <i>%s</i>?: true
-\\ TEXT
 6: PLAYER: Who thinks the worst way to start a conversation is <i>'%s'</i>?: true
 6: PROMPTANSWER: What does <i>%s</i> think is the worst way to start a conversation?: true
-\\ TF
 7: PLAYER: Which player told this true story about their job/studies?: false
 7: BOOLEAN: Is this story about the job/studies of <i>%s</i> true or false?: true
-\\ DRAW
 8: PLAYER: Which player drew this unicorn?: false
 8: PROMPTANSWER: Which unicorn was drawn by <i>%s</i>?: true
-\\ TEXT
 9: PLAYER: Who would name their pet alligator <i>%s</i>?: true
 9: PROMPTANSWER: What would <i>%s</i> name a pet alligator?: true
-\\ TF
 10: PLAYER: Which player has claimed this remarkable achievement?: false
 10: BOOLEAN: Did <i>%s</i> achieve the following or not?: true
-\\ DRAW
 11: PLAYER: Which player drew this baby?: false
 11: PROMPTANSWER: Which baby was drawn by </i>%s</i>?: true
-\\ TEXT
 12: PLAYER: Who thinks that <i>'%s'</i> is the worst place to fall asleep?: true
 12: PROMPTANSWER: Where does <i>%s</i> think is the worst place to fall asleep?: true
-\\ TF
 13: PLAYER: Who did this embarrassing thing happen to?: false
 13: BOOLEAN: Did <i>%s</i> actually experience this embarrassing thing?: true
-\\ DRAW
 14: PLAYER: Which player drew this lobster?: false
 14: PROMPTANSWER: Which lobster was drawn by <i>%s</i>?: true
-\\ TEXT
 15: PLAYER: Who said that <i>'%s'</i> would be the title of a movie about their life?: true
 15: PROMPTANSWER: What does <i>%s</i> say a movie about their life would be called?: true
-\\ TF
 16: PLAYER: Who told this true fun fact?: false
 16: BOOLEAN: Did <i>%s</i> tell the truth with this fun fact?: true
-\\ DRAW
 17: PLAYER: Which player drew this alien?: false
 17: PROMPTANSWER: Which alien was drawn by <i>%s</i>?: true
-\\unfinished, just so we don't get errors - outdated
-\\
-\\ new questions
-\\ TEXT
-18: PLAYER: Who said that <i>'%s'</i> was the most expensive thing they ever bought?: true
-18: PROMPTANSWER: What does <i>%s</i> say was the most expensive thing they ever bought?: true
-\\ TF
+18: PLAYER: Who said that <i>'%s'</i> was their biggest waste of money?: true
+18: PROMPTANSWER: What does <i>%s</i> say was their biggest waste of money?: true
 19: PLAYER: Who told this true story about the most adventurous thing they have done?: false
 19: BOOLEAN: Did <i>%s</i> actually do this adventurous thing?: true
-\\ DRAW
 20: PLAYER: Which player drew this smiling piece of fruit?: false
 20: PROMPTANSWER: Which smiling piece of fruit was drawn by <i>%s</i>?: true
-\\ TEXT
-21: PLAYER: Who said that <i>'%s'</i> would be their pet, if they could have any animal as a pet?: true
-21: PROMPTANSWER: What does <i>%s</i> say would be their pet, if they could have any animal as a pet?: true
-\\ TF
+21: PLAYER: Who said that <i>'%s'</i> is their arch-nemesis?: true
+21: PROMPTANSWER: Who or what does <i>%s</i> consider their arch-nemesis?: true
 22: PLAYER: Who told this true story about their craziest dream?: false
 22: BOOLEAN: Did <i>%s</i> actually dream this crazy thing?: true
-\\ DRAW
 23: PLAYER: Which player drew this flower in a pot?: false
 23: PROMPTANSWER: Which flower in a pot was drawn by <i>%s</i>?: true
-\\ TEXT
-24: PLAYER: Who said that <i>'%s'</i> is their most useless talent?: true
-24: PROMPTANSWER: What does <i>%s</i> say is their most useless talent?: true
+24: PLAYER: Who said that they would mix <i>'%s'</i> to get the perfect pet?: true
+24: PROMPTANSWER: Which animals would <i>%s</i> mix to get the prefect pet?: true
+25: PLAYER: Who told this true story about a strange person they met?: false
+25: BOOLEAN: Did <i>%s</i> actually meet this strange person?: true
+26: PLAYER: Which player drew this robot?: false
+26: PROMPTANSWER: Which robot was drawn by <i>%s</i>?: true
+27: PLAYER: Who thinks that <i>'%s'</i> is the most useless superpower?: true
+27: PROMPTANSWER:What does <i>%s</i> think is the most useless superpower?: true
+28: PLAYER: Who told this true story about a weird gift they received?: false
+28: BOOLEAN: Did <i>%s</i> actually receive this weird gift?: true
+29: PLAYER: Which player drew this landscape?: false
+29: PROMPTANSWER: Which landscape was drawn by <i>%s</i>?: true
+30: PLAYER: Who would bring <i>'%s'</i> to a deserted island?: true
+30: PROMPTANSWER:What would <i>%s</i> bring to a deserted island?: true
+31: PLAYER: Who actually had this animal encounter?: false
+31: BOOLEAN: Did <i>%s</i> actually have this animal encounter?: true
+32: PLAYER: Which player drew this self-portrait?: false
+32: PROMPTANSWER: Which self-portrait is from <i>%s</i>?: true
+33: PLAYER: Who said that <i>'%s'</i> is their most useless talent?: true
+33: PROMPTANSWER: What does <i>%s</i> say is their most useless talent?: true
+34: PLAYER: Who told this true story about their childhood crush?: false
+34: BOOLEAN: Did <i>%s</i> actually have this childhood crush?: true
+35: PLAYER: Which player drew this meme?: false
+35: PROMPTANSWER: Which meme was drawn by <i>%s</i>?: true
+36: PLAYER: Which player unfortunately had <i>'%s'</i> stuck in their head?: true
+36: PROMPTANSWER:Which song was stuck in <i>%s</i>'s head.: true
+37: PLAYER: Who told this true story about a dumb injury?: false
+37: BOOLEAN: Did <i>%s</i> actually get this dumb injury?: true
+38: PLAYER: Which player drew this cartoon character?: false
+38: PROMPTANSWER: Which cartoon character was drawn by <i>%s</i>?: true
+39: PLAYER: Who quotes <i>'%s'</i> out of context too often?: true
+39: PROMPTANSWER: What does <i>%s</i> quote out of context too often?: true

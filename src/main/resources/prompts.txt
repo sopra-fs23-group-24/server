@@ -20,13 +20,27 @@
 13: TRUEFALSE: Tell a story about something embarrassing that happened to you. Then mark whether it is true or false.
 14: DRAWING: Draw a lobster.
 15: TEXT: What would be the title of a movie about your life?
-16: TRUEFALSE: Tell a fun-fact. Then mark whether it is true or false.
+16: TRUEFALSE: Tell a fun-fact (if you want about yourself). Then mark whether it is true or false.
 17: DRAWING: Draw an alien.
-\\
-18: TEXT: What was the most expensive thing you ever bought?
+18: TEXT: What was your biggest waste of money?
 19: TRUEFALSE: Tell a story about the most adventurous thing you have done. Then mark whether it is true or false.
-20: DRAWING: A smiling piece of fruit.
-21: TEXT: If you could have any animal as a pet, what would it be?
+20: DRAWING: Draw a smiling piece of fruit.
+21: TEXT: Who or what is your arch-nemesis?
 22: TRUEFALSE: Tell a story about your craziest dream. Then mark whether it is true or false.
-23: DRAWING: Draw a flower in a pot.
-24: TEXT: What's the most useless talent you have?
+23: DRAWING: Draw a plant in a pot.
+24: TEXT: What two animals mixed together would be your dream pet?
+25: TRUEFALSE: Tell a story about the strangest person you've met. Then mark whether it is true or false.
+26: DRAWING: Draw a robot.
+27: TEXT: What is the most useless superpower someone could have?
+28: TRUEFALSE: Tell a story about the weirdest gift you've ever received. Then mark whether it is true or false.
+29: DRAWING: Draw a landscape.
+30: TEXT: What three items would you bring to a deserted island?
+31: TRUEFALSE: Tell a story about an animal encounter. Then mark whether it is true or false.
+32: DRAWING: Draw yourself.
+33: TEXT: What is your most useless talent?
+34: TRUEFALSE: Tell us about a childhood crush (fictional or celebrity). Then mark whether it is true or false.
+35: DRAWING: Draw a meme (no words!).
+36: TEXT: What is the worst song you had stuck in your head?
+37: TRUEFALSE: Tell a story about a dumb injury you had. Then mark whether it is true or false.
+38: DRAWING: Draw a cartoon character.
+39: TEXT: What is a quote you use out of context way too often?
