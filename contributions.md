@@ -423,4 +423,16 @@ Week 9 (22. - 25. may)
 	- description:
 - Linda:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/65
+	    - https://github.com/sopra-fs23-group-24/client/issues/64
+	    - https://github.com/sopra-fs23-group-24/client/issues/63
+	    - https://github.com/sopra-fs23-group-24/server/issues/82
+	    - https://github.com/sopra-fs23-group-24/server/issues/75
+	    - https://github.com/sopra-fs23-group-24/client/issues/36
 	- description:
+	    - (with Jan) limit length of prompt submissions
+	    - (with Jan) disable leave button for users when host is in selection, also added pointer to help button on startscreen
+	    - (with Jan) disable submission of empty answerprompts in frontend
+	    - tidy up server code
+	    - update testcases, add additional tests
+	    - (with Jan and Mike) implement sound, button to turn on and off
