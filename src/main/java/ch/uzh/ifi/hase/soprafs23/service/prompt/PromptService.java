@@ -47,6 +47,7 @@ public class PromptService {
     @Autowired
     public PromptService(@Qualifier("gameRepository") GameRepository gameRepository,
                          @Qualifier("promptRepository") PromptRepository promptRepository, @Qualifier("potentialQuestionRepository") PotentialQuestionRepository potentialQuestionsRepository) throws PromptSetupException, NoSuchAlgorithmException, IOException {
+        // the NoSuchAlgorithmException is needed here.
         this.promptRepository = promptRepository;
         this.potentialQuestionsRepository = potentialQuestionsRepository;
         this.gameRepository = gameRepository;
@@ -141,7 +142,7 @@ public class PromptService {
                 String[] promptInfo = line.split(": ");
                 Prompt newPrompt = parsePrompt(promptInfo);
                 if (newPrompt == null) {
-                    System.out.println("Could not properly parse prompt input: " + line);
+                    log.debug("Could not properly parse prompt input: {}", line);
                     continue;
                 }
                 promptRepository.save(newPrompt);
@@ -165,7 +166,7 @@ public class PromptService {
                 String[] questionInfo = line.split(": ");
                 PotentialQuestion newPotentialQuestion = parsePotentialQuestion(questionInfo);
                 if (newPotentialQuestion == null) {
-                    System.out.println("Could not properly parse potential question input: " + line);
+                    log.debug("Could not properly parse potential question input: {}", line);
                     continue;
                 }
                 potentialQuestionsRepository.save(newPotentialQuestion);
@@ -215,7 +216,7 @@ public class PromptService {
             log.debug("Potential question parsed as: {}", newPotentialQuestion);
             return newPotentialQuestion;
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             log.debug("Error Thrown: {}", e.getClass());
             return null;
         }

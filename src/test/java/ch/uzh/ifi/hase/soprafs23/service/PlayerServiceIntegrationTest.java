@@ -15,7 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 @WebAppConfiguration
 @SpringBootTest
-public class PlayerServiceIntegrationTest {
+class PlayerServiceIntegrationTest {
     Game testGame;
     Player testPlayer;
 
@@ -31,7 +31,7 @@ public class PlayerServiceIntegrationTest {
     private PlayerService playerService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         playerRepository.deleteAll();
         gameRepository.deleteAll();
 
@@ -49,7 +49,7 @@ public class PlayerServiceIntegrationTest {
 
 
     @Test
-    public void createPlayerAndAddToGame() {
+    void createPlayerAndAddToGame() {
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
 
@@ -57,12 +57,12 @@ public class PlayerServiceIntegrationTest {
         Assertions.assertEquals(testPlayer.getPlayerName(), createdPlayer.getPlayerName());
         Assertions.assertNotNull(createdPlayer.getPlayerId());
         Assertions.assertNotNull(createdPlayer.getToken());
-        Assertions.assertEquals(createdPlayer.getScore(), 0);
-        Assertions.assertEquals(createdPlayer.getLatestScore(), 0);
+        Assertions.assertEquals(0, createdPlayer.getScore());
+        Assertions.assertEquals(0, createdPlayer.getLatestScore());
     }
 
     @Test
-    public void deletePlayer() {
+    void deletePlayer() {
         testPlayer.setToken("token");
         testPlayer.setScore(0);
         testPlayer.setLatestScore(0);

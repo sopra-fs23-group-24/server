@@ -23,7 +23,7 @@ import java.util.Objects;
 
 @WebAppConfiguration
 @SpringBootTest
-public class PromptServiceIntegrationTest {
+class PromptServiceIntegrationTest {
     Game testGame;
     @Qualifier("gameRepository")
     @Autowired
@@ -37,7 +37,7 @@ public class PromptServiceIntegrationTest {
     private PromptService promptService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         gameRepository.deleteAll();
 
         testGame = new Game();
@@ -48,12 +48,12 @@ public class PromptServiceIntegrationTest {
     }
 
     @Test
-    public void getPrompts() {
+    void getPrompts() {
         Assertions.assertTrue(promptRepository.findAll().size() > 0);
     }
 
     @Test
-    public void pickPrompts_success() {
+    void pickPrompts_success() {
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
         Assertions.assertTrue(foundGame.getPromptSet().isEmpty());
@@ -68,12 +68,12 @@ public class PromptServiceIntegrationTest {
         Assertions.assertTrue(pickedPrompts.size() > 0);
 
         foundGame = gameRepository.findByGamePin(testGame.getGamePin());
-        Assertions.assertEquals(foundGame.getStatus(), GameStatus.PROMPT);
-        Assertions.assertEquals(foundGame.getPromptSet().size(), 3);
+        Assertions.assertEquals(GameStatus.PROMPT, foundGame.getStatus());
+        Assertions.assertEquals(3, foundGame.getPromptSet().size());
     }
 
     @Test
-    public void getPromptsOfGame_success() {
+    void getPromptsOfGame_success() {
         Prompt tfTestPrompt = new Prompt();
         tfTestPrompt.setPromptNr(999);
         tfTestPrompt.setPromptText("Tell a story");
@@ -104,7 +104,7 @@ public class PromptServiceIntegrationTest {
         gameRepository.flush();
 
         List<Prompt> foundPrompts = promptService.getPromptsOfGame(testGame.getGamePin());
-        Assertions.assertEquals(foundPrompts.size(), 3);
+        Assertions.assertEquals(3, foundPrompts.size());
 
         for (Prompt p : foundPrompts) {
             assert (Objects.equals(p.getPromptText(), tfTestPrompt.getPromptText()) || Objects.equals(p.getPromptText(), drawTestPrompt.getPromptText()) || Objects.equals(p.getPromptText(), textTestPrompt.getPromptText()));
@@ -112,7 +112,7 @@ public class PromptServiceIntegrationTest {
     }
 
     @Test
-    public void addTimerToGame_success(){
+    void addTimerToGame_success(){
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
         Assertions.assertNull(foundGame.getTimer());
@@ -126,7 +126,7 @@ public class PromptServiceIntegrationTest {
         promptService.addTimerToGame(testDTO, testGame.getGamePin());
 
         foundGame = gameRepository.findByGamePin(testGame.getGamePin());
-        Assertions.assertEquals(foundGame.getTimer(), 40);
+        Assertions.assertEquals(40, foundGame.getTimer());
     }
 
 }

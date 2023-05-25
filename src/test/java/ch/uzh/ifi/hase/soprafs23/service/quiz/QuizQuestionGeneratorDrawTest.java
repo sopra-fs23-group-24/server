@@ -29,7 +29,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizQuestionGeneratorDrawTest {
+class QuizQuestionGeneratorDrawTest {
     private final List<Player> testPlayers = new ArrayList<>();
     private final List<DrawingPromptAnswer> testDrawingAnswers = new ArrayList<>();
     private Prompt drawTestPrompt;
@@ -58,7 +58,7 @@ public class QuizQuestionGeneratorDrawTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         testGame = new Game();
@@ -79,12 +79,12 @@ public class QuizQuestionGeneratorDrawTest {
     }
 
     @Test
-    public void transformPotentialQuestionDrawing_PLAYER() {
+    void transformPotentialQuestionDrawing_PLAYER() {
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialDrawingQuestionTypePlayer(potentialDrawingQuestionPLAYER, new ArrayList<>(testDrawingAnswers), testPlayers.get(0));
 
-        Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, generatedQuestion.getQuestionStatus());
 
-        Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 4);
+        Assertions.assertEquals(4, generatedQuestion.getAnswerOptions().size());
         for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
             assert (ao.getAnswerOptionText().equals(testPlayers.get(0).getPlayerName())
                     || ao.getAnswerOptionText().equals(testPlayers.get(1).getPlayerName())
@@ -106,13 +106,13 @@ public class QuizQuestionGeneratorDrawTest {
     }
 
     @Test
-    public void transformPotentialQuestionDrawing_PROMPANSWER() {
+    void transformPotentialQuestionDrawing_PROMPANSWER() {
 
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialDrawingQuestionTypePromptAnswer(potentialDrawingQuestionPROMPTANSWER, new ArrayList<>(testDrawingAnswers), testPlayers.get(0));
 
-        Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, generatedQuestion.getQuestionStatus());
 
-        Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 4);
+        Assertions.assertEquals(4, generatedQuestion.getAnswerOptions().size());
         for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
             assert (ao.getAnswerOptionText().equals(testDrawingAnswers.get(0).getAnswerDrawing())
                     || ao.getAnswerOptionText().equals(testDrawingAnswers.get(1).getAnswerDrawing())

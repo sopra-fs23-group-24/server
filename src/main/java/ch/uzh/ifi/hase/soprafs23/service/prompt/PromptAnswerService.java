@@ -109,7 +109,7 @@ public class PromptAnswerService {
 
     public void changeFromPromptAnsweringToQuizStage(String gamePin) {
 
-        if (haveAllPlayersAnsweredAllPrompts(gamePin)) {
+        if (Boolean.TRUE.equals(haveAllPlayersAnsweredAllPrompts(gamePin))) {
             // change Status to Quiz
             findGameByPin(gamePin).setStatus(GameStatus.QUIZ);
 

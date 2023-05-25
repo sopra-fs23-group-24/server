@@ -21,7 +21,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class QuizQuestionServiceTest {
+class QuizQuestionServiceTest {
     QuizQuestion testQuestion;
 
     @Mock
@@ -35,7 +35,7 @@ public class QuizQuestionServiceTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
         Prompt testPrompt = new Prompt();
         testPrompt.setPromptNr(999);
@@ -68,20 +68,20 @@ public class QuizQuestionServiceTest {
     }
 
     @Test
-    public void getQuizQuestions_success() {
+    void getQuizQuestions_success() {
         List<QuizQuestion> foundQQ = quizQuestionService.getQuizQuestions();
         assertEquals(foundQQ, List.of(testQuestion));
 
     }
 
     @Test
-    public void getQuizQuestionsOfGame_success() {
+    void getQuizQuestionsOfGame_success() {
         List<QuizQuestion> foundQQ = quizQuestionService.getQuizQuestionsOfGame("123456");
         assertEquals(foundQQ, List.of(testQuestion));
     }
 
     @Test
-    public void getQuizQuestions_invalidGamePin() {
+    void getQuizQuestions_invalidGamePin() {
         assertThrows(ResponseStatusException.class, () -> quizQuestionService.getQuizQuestionsOfGame("invalidPin"));
     }
 

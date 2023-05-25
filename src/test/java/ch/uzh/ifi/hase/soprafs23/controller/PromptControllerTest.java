@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PromptController.class)
-public class PromptControllerTest {
+class PromptControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -42,7 +42,7 @@ public class PromptControllerTest {
     private Prompt drawPrompt;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         textPrompt = new Prompt();
         textPrompt.setPromptNr(900);
         textPrompt.setPromptType(PromptType.TEXT);
@@ -60,7 +60,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void setPromptsForGame_returnsPromptDTOs() throws Exception {
+    void setPromptsForGame_returnsPromptDTOs() throws Exception {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
         promptPostDTO.setDrawingNr(1);
         promptPostDTO.setTextNr(1);
@@ -89,7 +89,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void setPrompts_exceedAvailableNumberOrWrongState() throws Exception {
+    void setPrompts_exceedAvailableNumberOrWrongState() throws Exception {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
         promptPostDTO.setDrawingNr(10);
         promptPostDTO.setTextNr(1);
@@ -106,7 +106,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void setPrompts_invalidGamePin() throws Exception {
+    void setPrompts_invalidGamePin() throws Exception {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
         promptPostDTO.setDrawingNr(10);
         promptPostDTO.setTextNr(1);
@@ -123,7 +123,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void getAllPrompts_returnsPromptDTOs() throws Exception {
+    void getAllPrompts_returnsPromptDTOs() throws Exception {
         PromptPostDTO promptPostDTO = new PromptPostDTO();
         promptPostDTO.setDrawingNr(1);
         promptPostDTO.setTextNr(1);
@@ -152,7 +152,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void getPromptsOfGame_returnsPromptsOfGame() throws Exception {
+    void getPromptsOfGame_returnsPromptsOfGame() throws Exception {
         Prompt prompt = new Prompt();
         prompt.setPromptNr(999);
         prompt.setPromptType(PromptType.TEXT);
@@ -175,7 +175,7 @@ public class PromptControllerTest {
     }
 
     @Test
-    public void getPromptsOfGame_invalidGamePin() throws Exception {
+    void getPromptsOfGame_invalidGamePin() throws Exception {
 
         given(promptService.getPromptsOfGame(Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 

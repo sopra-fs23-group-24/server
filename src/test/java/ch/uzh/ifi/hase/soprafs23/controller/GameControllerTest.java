@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GameController.class)
-public class GameControllerTest {
+class GameControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -40,7 +40,7 @@ public class GameControllerTest {
     private GameService gameService;
 
     @Test
-    public void createNewGame_returnsGame() throws Exception {
+    void createNewGame_returnsGame() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.LOBBY);
@@ -56,7 +56,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void getAllGames_returnsAllGames() throws Exception {
+    void getAllGames_returnsAllGames() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.LOBBY);
@@ -76,7 +76,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void getGameByPin_returnsGame_currentQuestionNull() throws Exception {
+    void getGameByPin_returnsGame_currentQuestionNull() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.LOBBY);
@@ -96,7 +96,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void getGameByPin_returnsGame_WithCorrectAnswer() throws Exception {
+    void getGameByPin_returnsGame_WithCorrectAnswer() throws Exception {
         AnswerOption testCorrectAnswer = new AnswerOption();
         testCorrectAnswer.setAnswerOptionId(999L);
         testCorrectAnswer.setAnswerOptionText("correct answer");
@@ -124,7 +124,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void getGameByPin_returnsGame_HideCorrectAnswer() throws Exception {
+    void getGameByPin_returnsGame_HideCorrectAnswer() throws Exception {
         AnswerOption testCorrectAnswer = new AnswerOption();
         testCorrectAnswer.setAnswerOptionId(999L);
         testCorrectAnswer.setAnswerOptionText("correct answer");
@@ -152,7 +152,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void getGameByPin_invalidPin_throwsNotFound() throws Exception {
+    void getGameByPin_invalidPin_throwsNotFound() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.LOBBY);
@@ -166,7 +166,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void updateGameStatus_returnsGame() throws Exception {
+    void updateGameStatus_returnsGame() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.SELECTION);
@@ -188,7 +188,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void updateGameStatus_notByHost() throws Exception {
+    void updateGameStatus_notByHost() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.SELECTION);
@@ -208,7 +208,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void updateGameStatus_BadRequest() throws Exception {
+    void updateGameStatus_BadRequest() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.SELECTION);
@@ -228,7 +228,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void requestNextQuizQuestion_success() throws Exception {
+    void requestNextQuizQuestion_success() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.QUIZ);
@@ -246,7 +246,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void requestNextQuizQuestion_notByHost() throws Exception {
+    void requestNextQuizQuestion_notByHost() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.QUIZ);
@@ -262,7 +262,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void deleteGame_success() throws Exception {
+    void deleteGame_success() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.LOBBY);
@@ -278,7 +278,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void deleteGame_notByHost() throws Exception {
+    void deleteGame_notByHost() throws Exception {
         Game game = new Game();
         game.setGamePin("123456");
         game.setStatus(GameStatus.SELECTION);

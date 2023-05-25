@@ -24,7 +24,7 @@ import java.util.List;
 
 @WebAppConfiguration
 @SpringBootTest
-public class QuizQuestionServiceIntegrationTest {
+class QuizQuestionServiceIntegrationTest {
     Game testGame;
     Player testPlayer;
     QuizQuestion testQuizQuestion;
@@ -97,20 +97,20 @@ public class QuizQuestionServiceIntegrationTest {
     }
 
     @Test
-    public void getQuizQuestions() {
+    void getQuizQuestions() {
         List<QuizQuestion> allFound = quizQuestionService.getQuizQuestions();
 
-        Assertions.assertEquals(allFound.size(), 1);
+        Assertions.assertEquals(1, allFound.size());
         QuizQuestion found = allFound.get(0);
 
         Assertions.assertEquals(found.getQuestionId(), testQuizQuestion.getQuestionId());
     }
 
     @Test
-    public void getQuizQuestionsOfGame() {
+    void getQuizQuestionsOfGame() {
         List<QuizQuestion> allFound = quizQuestionService.getQuizQuestionsOfGame(testGame.getGamePin());
 
-        Assertions.assertEquals(allFound.size(), 1);
+        Assertions.assertEquals(1, allFound.size());
         QuizQuestion found = allFound.get(0);
 
         Assertions.assertEquals(found.getQuestionId(), testQuizQuestion.getQuestionId());

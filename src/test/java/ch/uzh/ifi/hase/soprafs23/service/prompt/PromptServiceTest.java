@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PromptServiceTest {
+class PromptServiceTest {
     private Prompt tfTestPrompt;
     private Prompt textTestPrompt;
     private Prompt drawTestPrompt;
@@ -44,7 +44,7 @@ public class PromptServiceTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         tfTestPrompt = new Prompt();
@@ -75,7 +75,7 @@ public class PromptServiceTest {
     }
 
     @Test
-    public void getPrompts_success() {
+    void getPrompts_success() {
         List<Prompt> allTestPrompts = List.of(tfTestPrompt, textTestPrompt, drawTestPrompt);
 
         List<Prompt> allFound = promptService.getPrompts();
@@ -84,7 +84,7 @@ public class PromptServiceTest {
     }
 
     @Test
-    public void getPromptsOfGame_success() {
+    void getPromptsOfGame_success() {
         List<Prompt> listOfPrompts = List.of(tfTestPrompt, textTestPrompt, drawTestPrompt);
         testGame.setPromptSet(listOfPrompts);
 
@@ -96,14 +96,14 @@ public class PromptServiceTest {
     }
 
     @Test
-    public void getPromptsOfGame_invalidPin() {
+    void getPromptsOfGame_invalidPin() {
         Mockito.when(gameRepository.findByGamePin(testGame.getGamePin())).thenReturn(null);
 
         assertThrows(ResponseStatusException.class, () -> promptService.getPromptsOfGame(testGame.getGamePin()));
     }
 
     @Test
-    public void pickPrompts_addPromptsToGame_success() {
+    void pickPrompts_addPromptsToGame_success() {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
@@ -115,7 +115,7 @@ public class PromptServiceTest {
         Mockito.when(gameRepository.findByGamePin(Mockito.anyString())).thenReturn(testGame);
 
         assertTrue(gameRepository.findByGamePin(testGame.getGamePin()).getPromptSet().isEmpty());
-        assertEquals(gameRepository.findByGamePin(testGame.getGamePin()).getStatus(), GameStatus.SELECTION);
+        assertEquals(GameStatus.SELECTION, gameRepository.findByGamePin(testGame.getGamePin()).getStatus());
 
         List<Prompt> listOfPrompts = List.of(textTestPrompt, tfTestPrompt, drawTestPrompt);
 
@@ -125,11 +125,11 @@ public class PromptServiceTest {
 
         assertEquals(createdPrompts, listOfPrompts);
         assertEquals(gameRepository.findByGamePin(testGame.getGamePin()).getPromptSet(), listOfPrompts);
-        assertEquals(gameRepository.findByGamePin(testGame.getGamePin()).getStatus(), GameStatus.PROMPT);
+        assertEquals(GameStatus.PROMPT, gameRepository.findByGamePin(testGame.getGamePin()).getStatus());
     }
 
     @Test
-    public void pickPrompts_addPromptsToGame_invalidGamePin() {
+    void pickPrompts_addPromptsToGame_invalidGamePin() {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
@@ -142,7 +142,7 @@ public class PromptServiceTest {
     }
 
     @Test
-    public void pickPrompts_addPromptsToGame_gameNotInSelectionStage() {
+    void pickPrompts_addPromptsToGame_gameNotInSelectionStage() {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
@@ -156,7 +156,7 @@ public class PromptServiceTest {
     }
 
     @Test
-    public void pickPrompts_addPromptsToGame_alreadyHasPrompts() {
+    void pickPrompts_addPromptsToGame_alreadyHasPrompts() {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
@@ -171,7 +171,7 @@ public class PromptServiceTest {
     }
 
     @Test
-    public void addTimerToGame() {
+    void addTimerToGame() {
         PromptPostDTO testDTO = new PromptPostDTO();
         testDTO.setDrawingNr(1);
         testDTO.setTextNr(1);
@@ -190,12 +190,12 @@ public class PromptServiceTest {
     }
 
     @Test
-    public void invalidQuestionType() {
+    void invalidQuestionType() {
         assertThrows(ResponseStatusException.class, () -> QuestionType.transformToType("invalidType"));
     }
 
     @Test
-    public void invalidPromptType() {
+    void invalidPromptType() {
         assertThrows(ResponseStatusException.class, () -> PromptType.transformToType("invalidType"));
     }
 }

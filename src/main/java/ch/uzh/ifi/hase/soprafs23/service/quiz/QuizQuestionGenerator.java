@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service.quiz;
 
+import ch.uzh.ifi.hase.soprafs23.constant.CompletionStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.DisplayType;
 import ch.uzh.ifi.hase.soprafs23.constant.PromptType;
 import ch.uzh.ifi.hase.soprafs23.constant.QuestionType;
@@ -52,7 +53,7 @@ public class QuizQuestionGenerator {
 
     private final Random rand = SecureRandom.getInstanceStrong();
 
-    private final int nrOfQuestionPerPrompt = 2;
+    private static final int NR_OF_QUESTIONS_PER_PROMPT = 2;
     private List<QuizQuestion> createdQuestions = new ArrayList<>();
 
     @Autowired
@@ -89,13 +90,13 @@ public class QuizQuestionGenerator {
         log.debug("Started generating quiz questions.");
 
         //generate at least the desired number of questions per prompt
-        while (createdQuestions.size() < gameByPin.getPromptSet().size() * nrOfQuestionPerPrompt) {
+        while (createdQuestions.size() < gameByPin.getPromptSet().size() * NR_OF_QUESTIONS_PER_PROMPT) {
             allPlayersInRandomOrder = new ArrayList<>(gameByPin.getPlayerGroup());
             Collections.shuffle(allPlayersInRandomOrder);
             log.debug("New question is being generated.");
 
             //make sure each players gets one question per iteration
-            while (allPlayersInRandomOrder.size() > 0) {
+            while (!allPlayersInRandomOrder.isEmpty()) {
                 if (allPromptsInRandomOrder.isEmpty()) {
                     allPromptsInRandomOrder = reshufflePrompts(gameByPin.getPromptSet());
                 }
@@ -234,7 +235,7 @@ public class QuizQuestionGenerator {
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         drawingPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
-        log.debug("for prompt of " + selectedCorrectPromptAnswer.getAssociatedPlayerId() + "set to true");
+        log.debug("for prompt of {} set to true", selectedCorrectPromptAnswer.getAssociatedPlayerId());
 
         newQuestion.setImageToDisplay(selectedCorrectPromptAnswer.getAnswerDrawing());
 
@@ -261,7 +262,7 @@ public class QuizQuestionGenerator {
             allAnswers.remove(selectedPromptAnswer);
         }
 
-        log.debug("new question is: " + newQuestion);
+        log.debug("new question is: {}", newQuestion);
         return newQuestion;
     }
 
@@ -278,7 +279,7 @@ public class QuizQuestionGenerator {
         }
         selectedCorrectPromptAnswer.setUsedAsCorrectAnswer(true);
         drawingPromptAnswerRepository.saveAndFlush(selectedCorrectPromptAnswer);
-        log.debug("for prompt of " + selectedCorrectPromptAnswer.getAssociatedPlayerId() + " set to true");
+        log.debug("for prompt of {} set to true", CompletionStatus.NOT_FINISHED);
 
         newQuestion.setQuizQuestionText(generateQuizQuestionText(pq, pickedCorrectPlayer.getPlayerName()));
 
@@ -297,7 +298,7 @@ public class QuizQuestionGenerator {
             log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }
 
-        log.debug("new question is: " + newQuestion);
+        log.debug("new question is: {}", newQuestion);
         return newQuestion;
     }
 
@@ -378,7 +379,7 @@ public class QuizQuestionGenerator {
 
         //if the selected player did not tell a true story, then this type of QuizQuestion cannot be generated for this player
         TrueFalsePromptAnswer selectedCorrectPromptAnswer = trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(pickedCorrectPlayer.getPlayerId(), pq.getAssociatedPrompt().getPromptNr());
-        if (!selectedCorrectPromptAnswer.getAnswerBoolean()) {
+        if (Boolean.FALSE.equals(selectedCorrectPromptAnswer.getAnswerBoolean())) {
             log.debug("Selected prompt was an untrue story and hence does not fit requirement, will not transform question.");
             return null;
         }
@@ -437,7 +438,7 @@ public class QuizQuestionGenerator {
         allAnswers.remove(selectedCorrectPromptAnswer);
         log.debug("Correct answer:{}", newQuestion.getCorrectAnswer().getAnswerOptionText());
 
-        if (selectedCorrectPromptAnswer.getAnswerBoolean()) {
+        if (Boolean.TRUE.equals(selectedCorrectPromptAnswer.getAnswerBoolean())) {
             AnswerOption wrongAnswer = saveAsAnswerOption("false", newQuestion);
             log.debug("Incorrect answer:{}", wrongAnswer.getAnswerOptionText());
         }

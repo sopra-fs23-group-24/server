@@ -37,7 +37,7 @@ class QuizQuestionControllerTest {
     private QuizQuestion exampleQuizQuestion;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         exampleQuizQuestion = new QuizQuestion();
         exampleQuizQuestion.setQuestionStatus(CompletionStatus.NOT_FINISHED);
         exampleQuizQuestion.setQuizQuestionText("test question");
@@ -45,7 +45,7 @@ class QuizQuestionControllerTest {
     }
 
     @Test
-    public void getAllQuizQuestions_returnAllQuizQuestions() throws Exception {
+    void getAllQuizQuestions_returnAllQuizQuestions() throws Exception {
         List<QuizQuestion> allQuizQuestions = Collections.singletonList(exampleQuizQuestion);
 
         given(quizQuestionService.getQuizQuestions()).willReturn(allQuizQuestions);
@@ -62,7 +62,7 @@ class QuizQuestionControllerTest {
     }
 
     @Test
-    public void getAllQuiZQuestionsOfGame_returnsAllQuizQuestions() throws Exception {
+    void getAllQuiZQuestionsOfGame_returnsAllQuizQuestions() throws Exception {
         List<QuizQuestion> allQuizQuestions = Collections.singletonList(exampleQuizQuestion);
 
         given(quizQuestionService.getQuizQuestionsOfGame(Mockito.anyString())).willReturn(allQuizQuestions);
@@ -78,7 +78,7 @@ class QuizQuestionControllerTest {
     }
 
     @Test
-    public void getAllQuiZQuestionsOfGame_invalidGamPin() throws Exception {
+    void getAllQuiZQuestionsOfGame_invalidGamPin() throws Exception {
         given(quizQuestionService.getQuizQuestionsOfGame(Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         MockHttpServletRequestBuilder getRequest = get("/games/654321").contentType(MediaType.APPLICATION_JSON);

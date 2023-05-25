@@ -137,9 +137,6 @@ public class QuizQuestion implements Serializable {
         return receivedAnswers;
     }
 
-    /*public void setReceivedAnswers(List<QuizAnswer> receivedAnswers) {
-        this.receivedAnswers = receivedAnswers;
-    }*/
 
     public void addAnswerOption(AnswerOption option) {
         this.answerOptions.add(option);

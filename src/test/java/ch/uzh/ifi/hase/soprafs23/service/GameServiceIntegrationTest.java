@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @WebAppConfiguration
 @SpringBootTest
-public class GameServiceIntegrationTest {
+class GameServiceIntegrationTest {
     @Qualifier("gameRepository")
     @Autowired
     private GameRepository gameRepository;
@@ -28,7 +28,7 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void createGame_success() {
+    void createGame_success() {
         assertTrue(gameRepository.findAll().isEmpty());
 
         Game createdGame = gameService.createGame();

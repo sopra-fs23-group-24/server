@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PlayerController.class)
-public class PlayerControllerTest {
+class PlayerControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -41,7 +41,7 @@ public class PlayerControllerTest {
     private Player testPlayer;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         testPlayer = new Player();
         testPlayer.setPlayerName("test");
         testPlayer.setAssociatedGamePin("123456");
@@ -51,7 +51,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void newPlayerInGame_returnsPlayerAndToken() throws Exception {
+    void newPlayerInGame_returnsPlayerAndToken() throws Exception {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -72,7 +72,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void newPlayerInGame_invalidPin() throws Exception {
+    void newPlayerInGame_invalidPin() throws Exception {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -88,7 +88,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void newPlayerInGame_gameRunning() throws Exception {
+    void newPlayerInGame_gameRunning() throws Exception {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -104,7 +104,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void newPlayerInGame_gameAlreadyHasHostOrUsernameDuplicate() throws Exception {
+    void newPlayerInGame_gameAlreadyHasHostOrUsernameDuplicate() throws Exception {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -120,7 +120,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void getAllPlayers_returnsAllPlayers() throws Exception {
+    void getAllPlayers_returnsAllPlayers() throws Exception {
         List<Player> allPlayers = Collections.singletonList(testPlayer);
 
         given(playerService.getPlayers()).willReturn(allPlayers);
@@ -135,7 +135,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void getAllPlayersOfGame_returnsAllPlayersOfGame() throws Exception {
+    void getAllPlayersOfGame_returnsAllPlayersOfGame() throws Exception {
         List<Player> allPlayers = Collections.singletonList(testPlayer);
 
         given(playerService.getPlayersWithPin(Mockito.anyString())).willReturn(allPlayers);
@@ -152,7 +152,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void getAllPlayersOfGame_invalidGamePin() throws Exception {
+    void getAllPlayersOfGame_invalidGamePin() throws Exception {
         given(playerService.getPlayersWithPin(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         MockHttpServletRequestBuilder getRequest = get("/games/123456/players").contentType(MediaType.APPLICATION_JSON);
@@ -162,7 +162,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void changeUsername_success() throws Exception {
+    void changeUsername_success() throws Exception {
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("newName");
 
@@ -186,7 +186,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void changeUsername_invalidPlayerId() throws Exception {
+    void changeUsername_invalidPlayerId() throws Exception {
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("newName");
 
@@ -202,7 +202,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void changeUsername_idAndTokenDoNotMatch() throws Exception {
+    void changeUsername_idAndTokenDoNotMatch() throws Exception {
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("newName");
 
@@ -218,7 +218,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void changeUsername_usernameIsBlankOrAlreadyUsed() throws Exception {
+    void changeUsername_usernameIsBlankOrAlreadyUsed() throws Exception {
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("");
 
@@ -234,7 +234,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void deletePlayer_success() throws Exception {
+    void deletePlayer_success() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willReturn(testPlayer);
 
         MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")
@@ -249,7 +249,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void deletePlayer_playerIsHost() throws Exception {
+    void deletePlayer_playerIsHost() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")
@@ -262,7 +262,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void deletePlayer_notLoggedInAsHostOrPlayer() throws Exception {
+    void deletePlayer_notLoggedInAsHostOrPlayer() throws Exception {
         given(playerService.deletePlayer(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
         MockHttpServletRequestBuilder deleteRequest = delete("/games/123456/players/2")

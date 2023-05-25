@@ -17,7 +17,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import java.util.List;
 
 @DataJpaTest
-public class QuizQuestionRepositoryIntegrationTest {
+class QuizQuestionRepositoryIntegrationTest {
     QuizQuestion testQuizQuestion;
 
     @Autowired
@@ -63,12 +63,12 @@ public class QuizQuestionRepositoryIntegrationTest {
     }
 
     @Test
-    public void findAllByAssociatedGamePin_success() {
+    void findAllByAssociatedGamePin_success() {
         List<QuizQuestion> foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
 
-        Assertions.assertEquals(foundQuestions.size(), 1);
+        Assertions.assertEquals(1, foundQuestions.size());
         Assertions.assertEquals(foundQuestions.get(0).getQuestionId(), testQuizQuestion.getQuestionId());
-        Assertions.assertEquals(foundQuestions.get(0).getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, foundQuestions.get(0).getQuestionStatus());
         Assertions.assertEquals(foundQuestions.get(0).getQuizQuestionText(), testQuizQuestion.getQuizQuestionText());
         Assertions.assertEquals(foundQuestions.get(0).getImageToDisplay(), testQuizQuestion.getImageToDisplay());
         Assertions.assertEquals(foundQuestions.get(0).getStoryToDisplay(), testQuizQuestion.getStoryToDisplay());
@@ -81,14 +81,14 @@ public class QuizQuestionRepositoryIntegrationTest {
     }
 
     @Test
-    public void deleteAllByAssociatedGamePin_success() {
+    void deleteAllByAssociatedGamePin_success() {
         List<QuizQuestion> foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
-        Assertions.assertEquals(foundQuestions.size(), 1);
+        Assertions.assertEquals(1, foundQuestions.size());
 
         quizQuestionRepository.deleteAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
 
         foundQuestions = quizQuestionRepository.findAllByAssociatedGamePin(testQuizQuestion.getAssociatedGamePin());
-        Assertions.assertEquals(foundQuestions.size(), 0);
+        Assertions.assertEquals(0, foundQuestions.size());
     }
 
 

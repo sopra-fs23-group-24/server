@@ -23,7 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-public class QuizAnswerServiceTest {
+class QuizAnswerServiceTest {
     AnswerOption answerOption1;
     AnswerOption answerOption2;
     AnswerOption answerOption3;
@@ -50,7 +50,7 @@ public class QuizAnswerServiceTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         testPlayer = new Player();
@@ -101,49 +101,49 @@ public class QuizAnswerServiceTest {
     }
 
     @Test
-    public void addQuizAnswerToQuizQuestion_success() {
+    void addQuizAnswerToQuizQuestion_success() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
 
         Mockito.when(quizAnswerRepository.save(Mockito.any())).thenReturn(quizAnswer);
 
-        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, testQuestion.getQuestionStatus());
         QuizAnswer newAnswer = quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion, testPlayer.getToken());
 
         Assertions.assertEquals(newAnswer.getAssociatedPlayer(), testPlayer);
-        Assertions.assertEquals(testQuestion.getReceivedAnswers().size(), 1);
+        Assertions.assertEquals(1, testQuestion.getReceivedAnswers().size());
         Assertions.assertEquals(testQuestion.getReceivedAnswers().get(0).getAssociatedPlayer(), testPlayer);
     }
 
 
     @Test
-    public void addQuizAnswerToQuizQuestion_invalidToken() {
+    void addQuizAnswerToQuizQuestion_invalidToken() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
 
-        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, testQuestion.getQuestionStatus());
 
         Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion, "invalidToken"));
     }
 
     @Test
-    public void addQuizAnswerToQuizQuestion_alreadyAnsweredQuestion() {
+    void addQuizAnswerToQuizQuestion_alreadyAnsweredQuestion() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
         quizAnswer.setAssociatedPlayer(testPlayer);
         testQuestion.addReceivedAnswer(quizAnswer);
-        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, testQuestion.getQuestionStatus());
 
         Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.addQuizAnswerToQuizQuestion(quizAnswer, testQuestion, testPlayer.getToken()));
     }
 
     @Test
-    public void calculateAndAddScore_correctAnswer() {
+    void calculateAndAddScore_correctAnswer() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
         quizAnswer.setAssociatedPlayer(testPlayer);
         quizAnswer.setTimer(10);
-        Assertions.assertEquals(testPlayer.getScore(), 0);
+        Assertions.assertEquals(0, testPlayer.getScore());
 
         int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion, testGame);
 
@@ -152,48 +152,48 @@ public class QuizAnswerServiceTest {
     }
 
     @Test
-    public void calculateAndAddScore_incorrectAnswer() {
+    void calculateAndAddScore_incorrectAnswer() {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption2.getAnswerOptionId());
         quizAnswer.setAssociatedPlayer(testPlayer);
-        Assertions.assertEquals(testPlayer.getScore(), 0);
+        Assertions.assertEquals(0, testPlayer.getScore());
 
         int score = quizAnswerService.calculateAndAddScore(quizAnswer, testQuestion, testGame);
 
-        Assertions.assertEquals(score, 0);
-        Assertions.assertEquals(testPlayer.getScore(), 0);
+        Assertions.assertEquals(0, score);
+        Assertions.assertEquals(0, testPlayer.getScore());
     }
 
     @Test
-    public void updateQuestionStatusIfAllAnswered_updateToFinished(){
+    void updateQuestionStatusIfAllAnswered_updateToFinished(){
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setPickedAnswerOptionId(answerOption1.getAnswerOptionId());
         quizAnswer.setAssociatedPlayer(testPlayer);
         quizAnswer.setTimer(10);
         testQuestion.addReceivedAnswer(quizAnswer);
 
-        Assertions.assertEquals(testQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, testQuestion.getQuestionStatus());
         QuizQuestion updatedQuestion = quizAnswerService.updateQuestionStatusIfAllAnswered(testGame, testQuestion);
-        Assertions.assertEquals(updatedQuestion.getQuestionStatus(), CompletionStatus.FINISHED);
+        Assertions.assertEquals(CompletionStatus.FINISHED, updatedQuestion.getQuestionStatus());
     }
 
     @Test
-    public void findGameByPin_success(){
+    void findGameByPin_success(){
         Assertions.assertNotNull(quizAnswerService.findGameByPin("123456"));
     }
 
     @Test
-    public void findGameByPin_invalidPin(){
+    void findGameByPin_invalidPin(){
         Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.findGameByPin("invalidPin"));
     }
 
     @Test
-    public void findQuestionById_success(){
+    void findQuestionById_success(){
         Assertions.assertNotNull(quizAnswerService.findQuestionById(999L));
     }
 
     @Test
-    public void findQuestionById_invalidId(){
+    void findQuestionById_invalidId(){
         Mockito.when(quizQuestionRepository.findByQuestionId(Mockito.anyLong())).thenReturn(null);
         Assertions.assertThrows(ResponseStatusException.class, () -> quizAnswerService.findQuestionById(1L));
     }

@@ -41,7 +41,7 @@ class QuizAnswerControllerTest {
     private QuizAnswerService quizAnswerService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         testPlayer.setPlayerName("test");
         testPlayer.setAssociatedGamePin("123456");
         testPlayer.setHost(true);
@@ -67,7 +67,7 @@ class QuizAnswerControllerTest {
     }
 
     @Test
-    public void postQuizAnswer_success() throws Exception {
+    void postQuizAnswer_success() throws Exception {
         MockHttpServletRequestBuilder postRequest = post("/games/123456/quiz-questions/80/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(quizAnswerPostDTO))
@@ -79,7 +79,7 @@ class QuizAnswerControllerTest {
     }
 
     @Test
-    public void postQuizAnswer_GameNotFound() throws Exception {
+    void postQuizAnswer_GameNotFound() throws Exception {
         given(quizAnswerService.findGameByPin(Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         MockHttpServletRequestBuilder postRequest = post("/games/123456/quiz-questions/80/answers")
@@ -92,7 +92,7 @@ class QuizAnswerControllerTest {
     }
 
     @Test
-    public void postQuizAnswer_QuestionNotFound() throws Exception {
+    void postQuizAnswer_QuestionNotFound() throws Exception {
         given(quizAnswerService.findQuestionById(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         MockHttpServletRequestBuilder postRequest = post("/games/123456/quiz-questions/80/answers")
@@ -105,7 +105,7 @@ class QuizAnswerControllerTest {
     }
 
     @Test
-    public void postQuizAnswer_PlayerNotFound() throws Exception {
+    void postQuizAnswer_PlayerNotFound() throws Exception {
         given(quizAnswerService.addQuizAnswerToQuizQuestion(Mockito.any(), Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         MockHttpServletRequestBuilder postRequest = post("/games/123456/quiz-questions/80/answers")
@@ -118,7 +118,7 @@ class QuizAnswerControllerTest {
     }
 
     @Test
-    public void postQuizAnswer_PlayerAlreadyGaveAnswer() throws Exception {
+    void postQuizAnswer_PlayerAlreadyGaveAnswer() throws Exception {
         given(quizAnswerService.addQuizAnswerToQuizQuestion(Mockito.any(), Mockito.any(), Mockito.anyString())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         MockHttpServletRequestBuilder postRequest = post("/games/123456/quiz-questions/80/answers")

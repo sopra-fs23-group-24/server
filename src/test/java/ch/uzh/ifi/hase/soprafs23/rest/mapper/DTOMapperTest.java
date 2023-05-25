@@ -27,10 +27,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class DTOMapperTest {
+class DTOMapperTest {
 
     @Test
-    public void convertToGameGetDTO_fromGame_success() {
+    void convertToGameGetDTO_fromGame_success() {
         QuizQuestion exampleQuestion = new QuizQuestion();
 
         Game testGame = new Game();
@@ -50,7 +50,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromGamePutDTO_toGame_success() {
+    void convertFromGamePutDTO_toGame_success() {
         GamePutDTO gamePutDTO = new GamePutDTO();
         gamePutDTO.setStatus(GameStatus.SELECTION);
 
@@ -59,7 +59,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertToPlayerGetDTO_fromPlayer_success() {
+    void convertToPlayerGetDTO_fromPlayer_success() {
         Player testPlayer = new Player();
         testPlayer.setPlayerId(1L);
         testPlayer.setPlayerName("test");
@@ -74,7 +74,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromPlayerPostDTO_toPlayer_success() {
+    void convertFromPlayerPostDTO_toPlayer_success() {
         PlayerPostDTO playerPostDTO = new PlayerPostDTO();
         playerPostDTO.setPlayerName("test");
         playerPostDTO.setIsHost(true);
@@ -85,7 +85,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromPlayerPutDTO_toPlayer_success() {
+    void convertFromPlayerPutDTO_toPlayer_success() {
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
         playerPutDTO.setPlayerName("test");
 
@@ -94,7 +94,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertToPromptGetDTO_fromPrompt_success() {
+    void convertToPromptGetDTO_fromPrompt_success() {
         Prompt testPrompt = new Prompt();
         testPrompt.setPromptId(1L);
         testPrompt.setPromptNr(999);
@@ -109,7 +109,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromTextPromptAnswerPostDTO_toTextPromptAnswer_success() {
+    void convertFromTextPromptAnswerPostDTO_toTextPromptAnswer_success() {
         TextPromptAnswerPostDTO postDTO = new TextPromptAnswerPostDTO();
         postDTO.setAssociatedPromptNr(1);
         postDTO.setAnswer("some answer");
@@ -120,7 +120,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromTrueFalsePromptAnswerPostDTO_toTrueFalsePromptAnswer_success() {
+    void convertFromTrueFalsePromptAnswerPostDTO_toTrueFalsePromptAnswer_success() {
         TrueFalsePromptAnswerPostDTO postDTO = new TrueFalsePromptAnswerPostDTO();
         postDTO.setAssociatedPromptNr(1);
         postDTO.setAnswerBoolean(true);
@@ -133,7 +133,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromDrawingPromptAnswerPostDTO_toDrawingPromptAnswer_success() {
+    void convertFromDrawingPromptAnswerPostDTO_toDrawingPromptAnswer_success() {
         DrawingPromptAnswerPostDTO postDTO = new DrawingPromptAnswerPostDTO();
         postDTO.setAssociatedPromptNr(1);
         postDTO.setAnswerDrawing("some drawing");
@@ -144,7 +144,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertToQuizQuestionGetDTO_fromQuizQuestion_success() {
+    void convertToQuizQuestionGetDTO_fromQuizQuestion_success() {
         QuizQuestion testQuizQuestion = new QuizQuestion();
         testQuizQuestion.setQuestionId(1L);
         testQuizQuestion.setQuizQuestionText("text");
@@ -167,7 +167,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void convertFromQuizAnswerPostDTO_toQuizAnswer_success() {
+    void convertFromQuizAnswerPostDTO_toQuizAnswer_success() {
         QuizAnswerPostDTO postDTO = new QuizAnswerPostDTO();
         postDTO.setPickedAnswerOptionId(99L);
         postDTO.setTimer(10);

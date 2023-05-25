@@ -13,6 +13,7 @@ import ch.uzh.ifi.hase.soprafs23.repository.quiz.QuizQuestionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,10 +23,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class GameServiceTest {
+class GameServiceTest {
     private Game testGame;
 
     private Player testPlayer;
@@ -51,7 +51,7 @@ public class GameServiceTest {
     private GameService gameService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         testPlayer = new Player();
@@ -74,7 +74,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void createGame_success() {
+    void createGame_success() {
         Game createdGame = gameService.createGame();
         Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
 
@@ -86,13 +86,13 @@ public class GameServiceTest {
     }
 
     @Test
-    public void getGames_success() {
+    void getGames_success() {
         List<Game> allGames = gameService.getGames();
         assertEquals(allGames, List.of(testGame));
     }
 
     @Test
-    public void getGameByPin_success() {
+    void getGameByPin_success() {
         Game foundGame = gameService.getGameByPin(testGame.getGamePin());
 
         assertEquals(testGame.getGameId(), foundGame.getGameId());
@@ -103,7 +103,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void getGameByPin_failure() {
+    void getGameByPin_failure() {
         Mockito.when(gameRepository.findByGamePin("invalidPin")).thenReturn(null);
 
         assertThrows(ResponseStatusException.class, () -> gameService.getGameByPin("invalidPin"));
@@ -111,7 +111,7 @@ public class GameServiceTest {
 
 
     @Test
-    public void changeGameStatus_ToSelection_success() {
+    void changeGameStatus_ToSelection_success() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -124,7 +124,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeGameStatus_ToSelection_notEnoughPlayers() {
+    void changeGameStatus_ToSelection_notEnoughPlayers() {
         testGame.setPlayerGroup(List.of(testPlayer));
 
         Player testHost = new Player();
@@ -135,7 +135,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeGameStatus_ToLobby_success() {
+    void changeGameStatus_ToLobby_success() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -148,12 +148,12 @@ public class GameServiceTest {
         Game updatedGame = gameService.changeGameStatus(GameStatus.LOBBY, testGame.getGamePin(), testHost.getToken());
 
         assertEquals(GameStatus.LOBBY, updatedGame.getStatus());
-        assertEquals(testHost.getScore(), 0);
-        assertEquals(testPlayer.getScore(), 0);
+        assertEquals(0, testHost.getScore());
+        assertEquals(0, testPlayer.getScore());
     }
 
     @Test
-    public void changeGameStatus_invalidStatus() {
+    void changeGameStatus_invalidStatus() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -166,7 +166,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeGameStatus_invalidToken() {
+    void changeGameStatus_invalidToken() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -177,7 +177,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeGameStatus_notHost() {
+    void changeGameStatus_notHost() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -191,7 +191,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void deleteGameByPin_success() {
+    void deleteGameByPin_success() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -199,10 +199,12 @@ public class GameServiceTest {
         Mockito.when(playerRepository.findByToken(Mockito.anyString())).thenReturn(testHost);
 
         gameService.deleteGameByPin(testGame.getGamePin(), testHost.getToken());
-    }
+        //needs assert
+        assertEquals(testGame, gameService.deleteGameByPin(testGame.getGamePin(), testHost.getToken()));
+        }
 
     @Test
-    public void deleteGameByPin_invalidToken() {
+    void deleteGameByPin_invalidToken() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -213,7 +215,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void deleteGameByPin_notHost() {
+    void deleteGameByPin_notHost() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -227,7 +229,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void changeToNextQuestion_success_endGame() {
+    void changeToNextQuestion_success_endGame() {
         testGame.setStatus(GameStatus.QUIZ);
         List<QuizQuestion> aQuestion = new ArrayList<>();
         aQuestion.add(new QuizQuestion());
@@ -235,14 +237,14 @@ public class GameServiceTest {
         testGame.setCurrentQuestion(null);
 
         Game returnedGame = gameService.changeToNextQuestion(testGame.getGamePin(), testPlayer.getToken());
-        assertEquals(returnedGame.getStatus(), GameStatus.QUIZ);
+        assertEquals( GameStatus.QUIZ, returnedGame.getStatus());
 
         returnedGame = gameService.changeToNextQuestion(testGame.getGamePin(), testPlayer.getToken());
-        assertEquals(returnedGame.getStatus(), GameStatus.END);
+        assertEquals(GameStatus.END, returnedGame.getStatus());
     }
 
     @Test
-    public void changeToNextQuestion_notHost() {
+    void changeToNextQuestion_notHost() {
         Player testHost = new Player();
         testHost.setPlayerId(testGame.getHostId());
         testHost.setToken("1");
@@ -256,7 +258,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void game_nextQuestion() {
+    void game_nextQuestion() {
         Assertions.assertTrue(testGame.getQuizQuestionSet().isEmpty());
         Assertions.assertNull(testGame.getCurrentQuestion());
 

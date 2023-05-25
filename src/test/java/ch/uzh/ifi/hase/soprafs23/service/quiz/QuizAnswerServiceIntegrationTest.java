@@ -25,7 +25,7 @@ import java.util.List;
 
 @WebAppConfiguration
 @SpringBootTest
-public class QuizAnswerServiceIntegrationTest {
+class QuizAnswerServiceIntegrationTest {
     Game testGame;
     Player testPlayer;
     QuizQuestion testQuizQuestion;
@@ -56,7 +56,7 @@ public class QuizAnswerServiceIntegrationTest {
     private QuizAnswerService quizAnswerService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         qqRepository.deleteAll();
         answerOptionRepository.deleteAll();
         quizAnswerRepository.deleteAll();
@@ -101,7 +101,7 @@ public class QuizAnswerServiceIntegrationTest {
     }
 
     @Test
-    public void addQuizAnswerToQuizQuestion() {
+    void addQuizAnswerToQuizQuestion() {
         Player foundPlayer = playerRepository.findByToken(testPlayer.getToken());
         Assertions.assertNotNull(foundPlayer);
 
@@ -113,7 +113,7 @@ public class QuizAnswerServiceIntegrationTest {
     }
 
     @Test
-    public void updateQuestionStatusIfAllAnswered() {
+    void updateQuestionStatusIfAllAnswered() {
         testGame.setPlayerGroup(List.of(testPlayer));
         testQuizAnswer.setAssociatedPlayer(testPlayer);
         testQuizQuestion.addReceivedAnswer(testQuizAnswer);

@@ -26,7 +26,7 @@ import java.util.List;
 
 @WebAppConfiguration
 @SpringBootTest
-public class PromptAnswerServiceIntegrationTest {
+class PromptAnswerServiceIntegrationTest {
 
     Game testGame;
     Player testPlayer;
@@ -59,7 +59,7 @@ public class PromptAnswerServiceIntegrationTest {
     private PromptAnswerService promptAnswerService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         textPromptAnswerRepository.deleteAll();
         trueFalsePromptAnswerRepository.deleteAll();
         drawingPromptAnswerRepository.deleteAll();
@@ -81,7 +81,7 @@ public class PromptAnswerServiceIntegrationTest {
     }
 
     @Test
-    public void saveTextPromptAnswer_success() {
+    void saveTextPromptAnswer_success() {
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
         Player foundPlayer = playerRepository.findByToken(testPlayer.getToken());
@@ -99,7 +99,7 @@ public class PromptAnswerServiceIntegrationTest {
     }
 
     @Test
-    public void saveTrueFalsePromptAnswer_success() {
+    void saveTrueFalsePromptAnswer_success() {
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
         Player foundPlayer = playerRepository.findByToken(testPlayer.getToken());
@@ -119,7 +119,7 @@ public class PromptAnswerServiceIntegrationTest {
     }
 
     @Test
-    public void saveDrawingPromptAnswer_success() {
+    void saveDrawingPromptAnswer_success() {
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
         Player foundPlayer = playerRepository.findByToken(testPlayer.getToken());
@@ -137,7 +137,7 @@ public class PromptAnswerServiceIntegrationTest {
     }
 
     @Test
-    public void haveAllPlayersAnsweredAllPrompts_shouldReturnTrue() {
+    void haveAllPlayersAnsweredAllPrompts_shouldReturnTrue() {
         Prompt testPrompt = new Prompt();
         testPrompt.setPromptType(PromptType.TEXT);
         testPrompt.setPromptText("prompt text");
@@ -165,8 +165,8 @@ public class PromptAnswerServiceIntegrationTest {
 
         Game foundGame = gameRepository.findByGamePin(testGame.getGamePin());
         Assertions.assertNotNull(foundGame);
-        Assertions.assertEquals(foundGame.getPromptSet().size(), 1);
-        Assertions.assertEquals(foundGame.getStatus(), GameStatus.PROMPT);
+        Assertions.assertEquals(1, foundGame.getPromptSet().size());
+        Assertions.assertEquals(GameStatus.PROMPT, foundGame.getStatus());
 
         Boolean haveAllAnswered = promptAnswerService.haveAllPlayersAnsweredAllPrompts(testGame.getGamePin());
         Assertions.assertTrue(haveAllAnswered);

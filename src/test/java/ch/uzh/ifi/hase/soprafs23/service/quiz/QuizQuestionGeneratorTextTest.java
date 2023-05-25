@@ -27,7 +27,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizQuestionGeneratorTextTest {
+class QuizQuestionGeneratorTextTest {
     private final List<Player> testPlayers = new ArrayList<>();
     private final List<TextPromptAnswer> testTextAnswers = new ArrayList<>();
     private Prompt textTestPrompt;
@@ -51,7 +51,7 @@ public class QuizQuestionGeneratorTextTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         testGame = new Game();
@@ -70,13 +70,13 @@ public class QuizQuestionGeneratorTextTest {
     }
 
     @Test
-    public void transformPotentialQuestionText_PLAYER() {
+    void transformPotentialQuestionText_PLAYER() {
 
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTextQuestionTypePlayer(potentialTextQuestionPLAYER, new ArrayList<>(testTextAnswers), testPlayers.get(0));
 
-        Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, generatedQuestion.getQuestionStatus());
 
-        Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 4);
+        Assertions.assertEquals(4, generatedQuestion.getAnswerOptions().size());
         for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
             assert (ao.getAnswerOptionText().equals(testPlayers.get(0).getPlayerName())
                     || ao.getAnswerOptionText().equals(testPlayers.get(1).getPlayerName())
@@ -96,13 +96,13 @@ public class QuizQuestionGeneratorTextTest {
     }
 
     @Test
-    public void transformPotentialQuestionText_PROMPTANSWER() {
+    void transformPotentialQuestionText_PROMPTANSWER() {
 
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTextQuestionTypePromptAnswer(potentialTextQuestionPROMPTANSWER, new ArrayList<>(testTextAnswers), testPlayers.get(0));
 
-        Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, generatedQuestion.getQuestionStatus());
 
-        Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 4);
+        Assertions.assertEquals(4, generatedQuestion.getAnswerOptions().size());
         for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
             assert (ao.getAnswerOptionText().equals(testTextAnswers.get(0).getAnswer())
                     || ao.getAnswerOptionText().equals(testTextAnswers.get(1).getAnswer())

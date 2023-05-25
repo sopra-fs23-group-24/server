@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-public class PromptRepositoryIntegrationTest {
+class PromptRepositoryIntegrationTest {
     Prompt testPrompt;
 
     @Autowired
@@ -41,7 +41,7 @@ public class PromptRepositoryIntegrationTest {
 
 
     @Test
-    public void findByPromptNr() {
+    void findByPromptNr() {
         Prompt found = promptRepository.findByPromptNr(testPrompt.getPromptNr());
 
         assertEquals(testPrompt.getPromptNr(), found.getPromptNr());
@@ -50,7 +50,7 @@ public class PromptRepositoryIntegrationTest {
     }
 
     @Test
-    public void findAllByPromptType() {
+    void findAllByPromptType() {
         List<Prompt> allFound = promptRepository.findAllByPromptType(testPrompt.getPromptType());
         Prompt found = allFound.get(0);
 

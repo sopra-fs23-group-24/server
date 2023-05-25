@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-public class AnswerOptionRepositoryIntegrationTest {
+class AnswerOptionRepositoryIntegrationTest {
     AnswerOption testAnswerOption;
 
     @Autowired

@@ -27,7 +27,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizQuestionGeneratorTrueFalseTest {
+class QuizQuestionGeneratorTrueFalseTest {
     private final List<Player> testPlayers = new ArrayList<>();
     private Prompt tfPrompt;
     private PotentialQuestion potentialTFQuestionBOOLEAN;
@@ -55,7 +55,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         testGame = new Game();
@@ -74,14 +74,14 @@ public class QuizQuestionGeneratorTrueFalseTest {
     }
 
     @Test
-    public void transformPotentialQuestionTF_PLAYER() {
+    void transformPotentialQuestionTF_PLAYER() {
         Mockito.when(trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testTrueFalseAnswers.get(0));
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypePlayer(potentialTFQuestionPLAYER,
                 new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
 
-        Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, generatedQuestion.getQuestionStatus());
 
-        Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 4);
+        Assertions.assertEquals(4, generatedQuestion.getAnswerOptions().size());
         for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
             assert (ao.getAnswerOptionText().equals(testPlayers.get(0).getPlayerName())
                     || ao.getAnswerOptionText().equals(testPlayers.get(1).getPlayerName())
@@ -102,7 +102,7 @@ public class QuizQuestionGeneratorTrueFalseTest {
     }
 
     @Test
-    public void transformPotentialQuestionTF_PLAYER_notATrueStory() {
+    void transformPotentialQuestionTF_PLAYER_notATrueStory() {
         setUpTFPromptAnswers_allFalse();
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypePlayer(potentialTFQuestionPLAYER,
                 new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
@@ -110,21 +110,21 @@ public class QuizQuestionGeneratorTrueFalseTest {
     }
 
     @Test
-    public void transformPotentialQuestionTF_BOOLEAN() {
+    void transformPotentialQuestionTF_BOOLEAN() {
         Mockito.when(trueFalsePromptAnswerRepository.findTrueFalsePromptAnswerByAssociatedPlayerIdAndAssociatedPromptNr(Mockito.anyLong(), Mockito.anyInt())).thenReturn(testTrueFalseAnswers.get(0));
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialTFQuestionTypeBoolean(potentialTFQuestionBOOLEAN,
                 new ArrayList<>(testTrueFalseAnswers), testPlayers.get(0));
 
-        Assertions.assertEquals(generatedQuestion.getQuestionStatus(), CompletionStatus.NOT_FINISHED);
+        Assertions.assertEquals(CompletionStatus.NOT_FINISHED, generatedQuestion.getQuestionStatus());
 
-        Assertions.assertEquals(generatedQuestion.getAnswerOptions().size(), 2);
+        Assertions.assertEquals(2, generatedQuestion.getAnswerOptions().size());
         for (AnswerOption ao : generatedQuestion.getAnswerOptions()) {
             assert (ao.getAnswerOptionText().equals("true")
                     || ao.getAnswerOptionText().equals("false")
             );
         }
 
-        Assertions.assertEquals(generatedQuestion.getCorrectAnswer().getAnswerOptionText(), "true");
+        Assertions.assertEquals("true", generatedQuestion.getCorrectAnswer().getAnswerOptionText());
         Assertions.assertTrue(generatedQuestion.getAnswerOptions().contains(generatedQuestion.getCorrectAnswer()));
 
         Assertions.assertTrue(generatedQuestion.getReceivedAnswers().isEmpty());

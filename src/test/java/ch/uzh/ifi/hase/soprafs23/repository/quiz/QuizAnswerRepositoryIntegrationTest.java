@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-public class QuizAnswerRepositoryIntegrationTest {
+class QuizAnswerRepositoryIntegrationTest {
     QuizAnswer testQuizAnswer;
     Player testPlayer;
 

@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-public class GameRepositoryIntegrationTest {
+class GameRepositoryIntegrationTest {
 
     private Game game;
 
@@ -58,7 +58,7 @@ public class GameRepositoryIntegrationTest {
     }
 
     @Test
-    public void findByGamePin_success() {
+    void findByGamePin_success() {
         Game found = gameRepository.findByGamePin(game.getGamePin());
 
         assertNotNull(found.getGameId());
@@ -72,7 +72,7 @@ public class GameRepositoryIntegrationTest {
     }
 
     @Test
-    public void deleteByGamePin_success() {
+    void deleteByGamePin_success() {
         Game found = gameRepository.findByGamePin(game.getGamePin());
 
         assertNotNull(found);

@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-public class PlayerRepositoryIntegrationTest {
+class PlayerRepositoryIntegrationTest {
     Player testPlayer;
 
     @Autowired
@@ -43,7 +43,7 @@ public class PlayerRepositoryIntegrationTest {
     }
 
     @Test
-    public void findByPlayerId_success() {
+    void findByPlayerId_success() {
         Player found = playerRepository.findByPlayerId(testPlayer.getPlayerId());
 
         assertEquals(testPlayer.getPlayerId(), found.getPlayerId());
@@ -57,7 +57,7 @@ public class PlayerRepositoryIntegrationTest {
 
 
     @Test
-    public void findByToken_success() {
+    void findByToken_success() {
         Player found = playerRepository.findByToken(testPlayer.getToken());
 
         assertEquals(testPlayer.getPlayerId(), found.getPlayerId());
@@ -70,10 +70,10 @@ public class PlayerRepositoryIntegrationTest {
     }
 
     @Test
-    public void findAllByAssociatedGamePin_success() {
+    void findAllByAssociatedGamePin_success() {
         List<Player> foundPlayers = playerRepository.findAllByAssociatedGamePin(testPlayer.getAssociatedGamePin());
 
-        assertEquals(foundPlayers.size(), 1);
+        assertEquals(1, foundPlayers.size());
 
         Player found = foundPlayers.get(0);
 
@@ -87,7 +87,7 @@ public class PlayerRepositoryIntegrationTest {
     }
 
     @Test
-    public void findByPlayerNameAndAssociatedGamePin() {
+    void findByPlayerNameAndAssociatedGamePin() {
         Player found = playerRepository.findByPlayerNameAndAssociatedGamePin(testPlayer.getPlayerName(), testPlayer.getAssociatedGamePin());
 
         assertEquals(testPlayer.getPlayerId(), found.getPlayerId());
