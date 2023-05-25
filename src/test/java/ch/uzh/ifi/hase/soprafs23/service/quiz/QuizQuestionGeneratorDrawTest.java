@@ -53,7 +53,6 @@ public class QuizQuestionGeneratorDrawTest {
     private PromptRepository promptRepository;
 
 
-
     @InjectMocks
     private QuizQuestionGenerator quizQuestionGenerator;
 
@@ -79,17 +78,6 @@ public class QuizQuestionGeneratorDrawTest {
 
     }
 
-    @Test
-    public void generateQuestionForTextPrompt(){
-        /*QuizQuestion generatedQuestion = quizQuestionGenerator.generateQuestionForDrawingPrompt(drawTestPrompt, testPlayers.get(0), testGame);
-        Assertions.assertNotNull(generatedQuestion);*/
-    }
-
-    @Test
-    public void createQuizQuestions(){
-        /*List<QuizQuestion> generatedQuestions = quizQuestionGenerator.createQuizQuestions(testGame.getGamePin());
-        Assertions.assertEquals(4, generatedQuestions.size());*/
-    }
     @Test
     public void transformPotentialQuestionDrawing_PLAYER() {
         QuizQuestion generatedQuestion = quizQuestionGenerator.transformPotentialDrawingQuestionTypePlayer(potentialDrawingQuestionPLAYER, new ArrayList<>(testDrawingAnswers), testPlayers.get(0));
