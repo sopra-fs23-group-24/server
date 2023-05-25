@@ -427,7 +427,17 @@ Week 9 (22. - 25. may)
 	- description:
 - Jan:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/65
+	    - https://github.com/sopra-fs23-group-24/client/issues/64
+	    - https://github.com/sopra-fs23-group-24/client/issues/63
+	    - https://github.com/sopra-fs23-group-24/client/issues/61
+	    - https://github.com/sopra-fs23-group-24/client/issues/36
 	- description:
+	    - answer length check for TFprompt and textprompt
+	    - disabled leave button when host is in selection screen
+	    - check for empty answers (frontend)
+	    - implemented sad questionmark image when user gets question wrong
+	    - produced and implemented soundtrack
 - Mike:
 	- work on: 
 	- description:
