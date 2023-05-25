@@ -24,11 +24,11 @@ All our controller and services hold main functionalities for our application. (
 - the package with all our services: [service](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice)
 
 These are the five most important classes:
-- [GameController]() is responsible for client/server communication as far as the game directly is concerned, that means creating games, sending game information and changing states. It is also responsible for hiding correct answers for quiz questions until all players provided a guess.
-- [GameService]() is responsible for actually applying the functionalities mentioned above to the repositories and entities.
-- [PromptAnswerService]() transforms prompt answers from users into entities that can be utilised to generate quiz questions.
-- [QuizQuestionGenerator]() combines information from a Game, its Prompts, the received PromptAnswers and our PotentialQuestions into functional and fair quiz questions.
-- [QuizAnswerService]() calculates scores for players and is reponsible for controlling the flow of the quiz.
+- [GameController.java](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fcontroller%2FGameController.java) is responsible for client/server communication as far as the game directly is concerned, that means creating games, sending game information and changing states. It is also responsible for hiding correct answers for quiz questions until all players provided a guess.
+- [GameService.java](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice%2FGameService.java) is responsible for actually applying the functionalities mentioned above to the repositories and entities.
+- [PromptAnswerService.java](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice%2Fprompt%2FPromptAnswerService.java) transforms prompt answers from users into entities that can be utilised to generate quiz questions.
+- [QuizQuestionGenerator.java](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice%2Fquiz%2FQuizQuestionGenerator.java) combines information from a Game, its Prompts, the received PromptAnswers and our PotentialQuestions into functional and fair quiz questions.
+- [QuizAnswerService.java](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice%2Fquiz%2FQuizAnswerService.java) calculates scores for players and is reponsible for controlling the flow of the quiz.
 
 
 
