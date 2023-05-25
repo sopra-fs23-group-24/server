@@ -122,8 +122,6 @@ public class PlayerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "May not delete host.");
         }
 
-        System.out.println("ID of logged in player: " + loggedInPlayer.getPlayerId());
-        System.out.println("ID of delete in player: " + playerToBeDeletedId);
         if (playerToBeDeletedId != loggedInPlayer.getPlayerId() && !checkIfHost(gamePin, loggedInPlayer.getPlayerId())) {
 
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorised to do this action.");

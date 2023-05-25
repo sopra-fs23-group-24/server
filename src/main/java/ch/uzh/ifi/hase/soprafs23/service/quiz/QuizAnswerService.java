@@ -79,7 +79,6 @@ public class QuizAnswerService {
         AnswerOption correctAnswer = associatedQuestion.getCorrectAnswer();
 
         if (chosenAnswer.equals(correctAnswer)) {
-            System.out.println("correct answer");
             int gameTimer = associatedGame.getTimer();
             if (gameTimer == -1) {
                 score = scoreToAddInCaseOfNoTimer;
