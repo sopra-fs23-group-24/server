@@ -20,13 +20,13 @@ Our quiz game revolves around the participants themselves and tests their knowle
 ## High-level components
 
 All our controller and services hold main functionalities for our application. (For each entity there is one service and one controller, and an additional service for generating the quiz questions.)
-- the package with all our services: [service](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice)
 - the package with all our controllers: [controller](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fcontroller)
+- the package with all our services: [service](src%2Fmain%2Fjava%2Fch%2Fuzh%2Fifi%2Fhase%2Fsoprafs23%2Fservice)
 
 These are the five most important classes:
 - [GameController]() is responsible for client/server communication as far as the game directly is concerned, that means creating games, sending game information and changing states. It is also responsible for hiding correct answers for quiz questions until all players provided a guess.
 - [GameService]() is responsible for actually applying the functionalities mentioned above to the repositories and entities.
-- [PromptAnswerService]() transforms prompts answers from users into entities that can be utilised to generate quiz questions.
+- [PromptAnswerService]() transforms prompt answers from users into entities that can be utilised to generate quiz questions.
 - [QuizQuestionGenerator]() combines information from a Game, its Prompts, the received PromptAnswers and our PotentialQuestions into functional and fair quiz questions.
 - [QuizAnswerService]() calculates scores for players and is reponsible for controlling the flow of the quiz.
 
@@ -66,7 +66,7 @@ These are the five most important classes:
 
 - #### Development
   - To make development faster and easier, you can use the "development mode":
-    - using `./gradlew build --continuous`, to re-build with each change to the code
+    - use `./gradlew build --continuous`, to re-build to the code with every change 
   - If you want to avoid running all tests with every change, use the following command instead:
       - `./gradlew build --continuous -xtest`
   - While running one of the two commands above, run the server in another terminal:
@@ -74,7 +74,7 @@ These are the five most important classes:
 
 
 - #### Deployment 
-  - On each push to the main branch, the project is automatically deployed to google cloud.  
+  - The project is set up to automatically deploy, each time you push onto the main branch. This is done via the GitHub workflow in [main.yml](.github%2Fworkflows%2Fmain.yml)
 
     
 ## Roadmap
