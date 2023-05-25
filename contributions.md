@@ -440,7 +440,18 @@ Week 9 (22. - 25. may)
 	    - produced and implemented soundtrack
 - Mike:
 	- work on: 
-	- description:
+	    - https://github.com/sopra-fs23-group-24/client/issues/34
+	    - https://github.com/sopra-fs23-group-24/client/issues/36
+	    - https://github.com/sopra-fs23-group-24/client/issues/67
+	    - https://github.com/sopra-fs23-group-24/client/issues/68
+	    - https://github.com/sopra-fs23-group-24/client/issues/69
+	  	- https://github.com/sopra-fs23-group-24/client/issues/70	
+	
+	 - description:
+	    - adaptive view for Prompt, Selection, Quiz and Leaderboard (lot of css bug fixes)
+	    - Button turning music on and off
+	    - removed code smells
+	    - fixed issue of scrolling while drawing on phone
 - Linda:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/65
