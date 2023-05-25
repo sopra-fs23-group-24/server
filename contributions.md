@@ -331,8 +331,10 @@ Week 7 (08. - 14. may)
 	    - worked on 404 error at beginning of the game (loading time), not fixed yet
 - Mike:
 	- work on: 
-	    -JOKER
+	    - JOKER
 	- description:
+        - JOKER
+
 - Linda:
 	- work on:
 	    -  https://github.com/sopra-fs23-group-24/server/issues/78
@@ -350,7 +352,7 @@ Week 8 (15. - 21. may)
 	- work on:
         - https://github.com/sopra-fs23-group-24/server/issues/80
         - https://github.com/sopra-fs23-group-24/server/issues/81
-	    - ReadMe files (in progress, will finish today) 
+	    - ReadMe files (in progress)
 	        - https://github.com/sopra-fs23-group-24/client/issues/49
             - https://github.com/sopra-fs23-group-24/server/issues/79
 	- description:
@@ -411,7 +413,15 @@ Week 8 (15. - 21. may)
 Week 9 (22. - 25. may)
 - Tim:
 	- work on: 
+	    - testing the application 
+        - README files
+                - https://github.com/sopra-fs23-group-24/client/issues/49
+                - https://github.com/sopra-fs23-group-24/server/issues/79
+	    - Report
 	- description:
+	    - testing the application
+        - finalising README's
+        - work on report 
 - Lara:
 	- work on: 
 	- description:
