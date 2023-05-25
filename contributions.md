@@ -424,7 +424,18 @@ Week 9 (22. - 25. may)
         - work on report 
 - Lara:
 	- work on: 
+	    - https://github.com/sopra-fs23-group-24/client/issues/56
+	    - https://github.com/sopra-fs23-group-24/client/issues/62
+	    - https://github.com/sopra-fs23-group-24/client/issues/61
+	    - report
+	    - testing the application
 	- description:
+	    - tidied up code (unnecessary imports etc)
+	    - drew the sad version of the question mark
+	    - spell check of the user interface
+	    - worked on the report
+
+
 - Jan:
 	- work on: 
 	    - https://github.com/sopra-fs23-group-24/client/issues/65
